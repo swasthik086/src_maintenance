@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.suzuki"> <!-- &lt;!&ndash;<uses-sdk tools:overrideLibrary="com.sachinvarma.easypermission" />&ndash;&gt; //com.intuit.sdp -->
+    <uses-sdk tools:overrideLibrary="com.sachinvarma.easypermission,com.mmi.navigation" />
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ANSWER_PHONE_CALLS" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!--     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />-->
+    <!--    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    -->
+
+    <!--<uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" /> &lt;!&ndash; <uses-permission android:name="android.permission.CAMERA"/> &ndash;&gt;-->
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <uses-permission
+        android:name="android.permission.READ_LOGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CBIND_NOTIFICATION_LISTENER_SERVICEALL_PHONE" />
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.MODIFY_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
+    <!-- <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" /> -->
+    <uses-permission android:name="android.Manifest.permission.READ_PHONE_STATE" /> <!-- <uses-permission android:name="android.permission.WRITE_CONTACTS" /> -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <!--    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" /> &lt;!&ndash; <uses-permission android:name="android.permission.ANSWER_PHONE_CALLS" /> &ndash;&gt;-->
+    <!--    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />-->
+
+    <uses-permission android:name="oppo.permission.OPPO_COMPONENT_SAFE" />
+    <uses-permission android:name="com.huawei.permission.external_app_settings.USE_COMPONENT" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <uses-feature android:name="android.hardware.sensor.accelerometer" />
+
+
+    <!--    <uses-permission android:name="android.permission.BLUETOOTH" />-->
+    <!--    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />-->
+
+        <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+        <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"
+            />
+        <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+            android:usesPermissionFlags="neverForLocation"
+            tools:targetApi="s" />
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="true" />
+    <application
+        android:name=".application.SuzukiApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher_suzuki"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_suzuki_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppFullScreenTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <activity android:name=".activity.FaqDescriptionActivity"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
+        <activity android:name=".activity.FaqOptionsActivity"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
+        <activity android:name=".activity.FaqActivity"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
+        <activity android:name=".activity.BluetoothDisabledActivity"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
+        <activity
+            android:name=".activity.SplashActivity"
+            android:screenOrientation="portrait"
+
+            tools:ignore="LockedOrientationActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <!--                <data-->
+                <!--                    android:host="www.maps.google.com"-->
+                <!--                    android:scheme="https"/>-->
+                <data android:host="maps.mapmyindia.com"
+                    android:scheme="https"/>
+            </intent-filter>
+        </activity>
+
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider> <!-- android:configChanges="keyboardHidden|orientation|screenSize" -->
+        <activity
+            android:name=".activity.HomeScreenActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan"
+            tools:ignore="LockedOrientationActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activity.RouteNearByActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            tools:ignore="LockedOrientationActivity"
+            android:exported="false"/>
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            tools:ignore="LockedOrientationActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activity.DeviceListingScanActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            tools:ignore="LockedOrientationActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activity.AboutUsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            tools:ignore="LockedOrientationActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activity.TripActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            tools:ignore="LockedOrientationActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activity.ImagePickerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            tools:ignore="LockedOrientationActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activity.RouteActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustNothing"
+            tools:ignore="LockedOrientationActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activity.NavigationActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
+
+        <activity
+            android:name=".activity.LastParkedLocationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:exported="false"/>
+
+        <activity
+            android:name=".activity.RiderProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustNothing|stateUnchanged"
+            android:exported="false"/>
+        <activity
+            android:name=".activity.UserguideActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:exported="false"/> <!-- <service -->
+        <!-- android:name=".services.MyNotificationService" -->
+        <!-- android:enabled="true" /> -->
+
+        <activity
+            android:name=".activity.IntroscreenActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppFullScreenTheme"
+            android:exported="false"/>
+
+        <activity
+            android:name=".activity.TermsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:exported="false"/>
+
+        <activity
+            android:name=".activity.PrivacyActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:exported="false"/>
+
+        <activity
+            android:name=".activity.ConnectedDataActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:exported="false"/>
+
+        <activity
+            android:name=".activity.HelpActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:exported="false"/>
+
+        <activity
+            android:name=".activity.ProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:exported="false"/>
+
+        <activity
+            android:name=".activity.CreateProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:exported="false"/>
+
+        <activity
+            android:name=".activity.ZoomProfileImageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:exported="false"/>
+
+        <activity
+            android:name=".activity.TripDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:exported="true">
+            <!--
+            <intent-filter>
+
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="linkmmi.com"
+                    android:scheme="https" />
+
+                <data
+                    android:host="linkmmi.com"
+                    android:scheme="http" />
+
+            </intent-filter>
+            -->
+        </activity>
+
+        <activity android:name=".activity.test"
+            android:exported="false"/>
+
+
+        <activity
+            android:name=".activity.OnDisconnect"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:exported="false"/> <!-- <service -->
+        <!-- android:name=".services.BluetoothLeService" -->
+        <!-- android:enabled="true" /> -->
+        <!-- <receiver -->
+        <!-- android:name=".broadcaster.CallReceiver" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.PHONE_STATE" /> -->
+        <!-- &lt;!&ndash;<action android:name="android.provider.Telephony.SMS_RECEIVED" />&ndash;&gt; -->
+        <!-- &lt;!&ndash;<action android:name="android.provider.Telephony.SMS_DELIVER" />&ndash;&gt; -->
+        <!-- &lt;!&ndash;<action android:name="android.intent.action.NEW_OUTGOING_CALL" />&ndash;&gt; -->
+        <!-- &lt;!&ndash;<action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />&ndash;&gt; -->
+        <!-- &lt;!&ndash;<category android:name="android.intent.category.DEFAULT" />&ndash;&gt; -->
+        <!-- &lt;!&ndash;<data android:scheme="sms" />&ndash;&gt; -->
+        <!-- &lt;!&ndash;<data android:scheme="smsto" />&ndash;&gt; -->
+        <!-- &lt;!&ndash;<data android:scheme="mms" />&ndash;&gt; -->
+        <!-- &lt;!&ndash;<data android:scheme="mmsto" />&ndash;&gt; -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+        <receiver
+            android:name=".broadcaster.IncomingSms"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".broadcaster.CallReceiverBroadcast"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+                <action android:name="android.intent.action.NEW_INCOMING_CALL " />
+                <action android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+
+                <!-- <action android:name="android.provider.Telephony.SMS_DELIVER" /> -->
+                <!-- <action android:name="android.intent.action.NEW_OUTGOING_CALL" /> -->
+                <!-- <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" /> -->
+                <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+                <!-- <data android:scheme="sms" /> -->
+                <!-- <data android:scheme="smsto" /> -->
+                <!-- <data android:scheme="mms" /> -->
+                <!-- <data android:scheme="mmsto" /> -->
+            </intent-filter>
+        </receiver>
+
+
+
+        <!-- android:name=".broadcaster.IncomingCallReceiver" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.PHONE_STATE" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+        <receiver
+            android:name=".broadcaster.BleConnection"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+
+                <!-- <action android:name="android.provider.Telephony.SMS_RECEIVED" /> -->
+                <action android:name="status" />
+                <!-- and some more actions if you want -->
+            </intent-filter>
+        </receiver>
+
+
+        <receiver
+            android:name=".broadcaster.MapShortDistBroadcast"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+
+                <!-- <action android:name="android.provider.Telephony.SMS_RECEIVED" /> -->
+                <action android:name="shortdist" />
+                <!-- and some more actions if you want -->
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".broadcaster.DataFromBle"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+
+                <!-- <action android:name="android.provider.Telephony.SMS_RECEIVED" /> -->
+                <action android:name="ble" />
+                <!-- and some more actions if you want -->
+            </intent-filter>
+        </receiver> <!-- <service -->
+        <!-- android:name=".services.NLService" -->
+        <!-- android:label="@string/app_name" -->
+        <!-- android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.service.notification.NotificationListenerService" /> -->
+        <!-- </intent-filter> -->
+        <!-- </service> -->
+        <service
+            android:name=".services.MyBleService"
+            android:enabled="true"
+            android:exported="true"/>
+
+        <!--<service
+            android:name=".services.AccessService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibilityservice" />
+        </service>
+        -->
+        <service
+            android:name=".services.NotificationService"
+            android:label="@string/app_name"
+            android:exported="true"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <!-- android:process=":externalprocess" -->
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+        <!--<meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="f1b39a71b8085750342413b4a6f1a5cad151f894" />
+        -->
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="true" />
+    </application>
+
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+
+</manifest>

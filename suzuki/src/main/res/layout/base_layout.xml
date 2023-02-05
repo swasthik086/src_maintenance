@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlMainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <com.mappls.sdk.maps.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <RelativeLayout
+        android:id="@+id/rlMaplayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerInParent="true"
+            android:theme="@style/progressBarBlue"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/rlSearchBar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/location_search"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:id="@+id/llSearchBar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/location_pointer" />
+
+                <EditText
+
+                    android:id="@+id/etSearchLoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="3"
+                    android:background="@color/transaparent"
+                    android:backgroundTint="@color/white"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:hint="Where do you want to go ?"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:textSize="17sp"
+                    android:visibility="visible" />
+
+
+                <EditText
+                    android:id="@+id/etNearbySearchLoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/transaparent"
+                    android:backgroundTint="@color/white"
+                    android:gravity="center_vertical"
+                    android:hint="Where do you want to go ?"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:textSize="17sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/api_progress_bar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="20dp"
+                android:theme="@style/progressBarBlue"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/llRedAlertBle"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_below="@+id/rlSearchBar"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:background="#cc0814"
+            android:gravity="center"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/Connect_Alert"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/addressInfoTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/llRedAlertBle"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/location_search"
+            android:gravity="center"
+            android:minHeight="50dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="Tap and Hold to select Address on Map"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/homeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_below="@+id/addressInfoTv"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="25dp"
+            android:background="@android:color/white"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/homeConstraintLayout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.5">
+
+                <ImageView
+                    android:id="@+id/ic_home"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_home" />
+
+                <TextView
+                    android:id="@+id/homeTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="8dp"
+                    android:ellipsize="end"
+                    android:paddingEnd="8dp"
+                    android:text="Home"
+                    android:textColor="#4D4949"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/editHome"
+                    app:layout_constraintHeight_percent="0.5"
+                    app:layout_constraintStart_toEndOf="@id/ic_home"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/homeAddress"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="8dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingEnd="8dp"
+                    android:text="Set Address"
+                    android:textColor="#4D4848"
+                    app:layout_constraintEnd_toStartOf="@+id/editHome"
+                    app:layout_constraintHeight_percent="0.5"
+                    app:layout_constraintStart_toEndOf="@id/ic_home"
+                    app:layout_constraintTop_toBottomOf="@id/homeTitle" />
+
+                <ImageButton
+                    android:id="@+id/editHome"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/ic_edit_black"
+                    app:layout_constraintBottom_toTopOf="@id/deleteHome"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/deleteHome"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@drawable/ic_delete_black"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:background="#C8000000"
+                app:layout_constraintBottom_toBottomOf="@id/homeConstraintLayout"
+                app:layout_constraintEnd_toStartOf="@id/workConstraintLayout"
+                app:layout_constraintStart_toEndOf="@id/homeConstraintLayout"
+                app:layout_constraintTop_toTopOf="@id/homeConstraintLayout" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/workConstraintLayout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/homeConstraintLayout"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/ic_work"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_work" />
+
+                <TextView
+                    android:id="@+id/workTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:ellipsize="end"
+                    android:paddingRight="8dp"
+                    android:text="Work"
+                    android:textColor="#4D4949"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/editWork"
+                    app:layout_constraintHeight_percent="0.5"
+                    app:layout_constraintStart_toEndOf="@id/ic_work"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/workAddress"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingRight="8dp"
+                    android:text="Set Address"
+                    android:textColor="#4D4848"
+                    app:layout_constraintEnd_toStartOf="@+id/deleteWork"
+                    app:layout_constraintHeight_percent="0.5"
+                    app:layout_constraintStart_toEndOf="@id/ic_work"
+                    app:layout_constraintTop_toBottomOf="@id/workTitle" />
+
+                <ImageButton
+                    android:id="@+id/editWork"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/ic_edit_black"
+                    app:layout_constraintBottom_toTopOf="@id/deleteWork"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/deleteWork"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@drawable/ic_delete_black"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/gapView"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_below="@id/homeLayout"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:background="@android:color/transparent"
+            android:visibility="visible"
+            app:layout_constraintTop_toBottomOf="@id/homeLayout" />
+
+        <ListView
+            android:id="@+id/recentSearchList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/gapView"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="80dp"
+            android:divider="@android:color/transparent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gapView"
+            tools:listitem="@layout/auto_complete_list_item" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAutosuggest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rlSearchBar"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="60dp"
+            android:background="@android:color/white"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/auto_complete_list_item" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvNearbyAutosuggest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rlSearchBar"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="60dp"
+            android:background="@android:color/white"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/auto_complete_list_item" />
+
+        <jahirfiquitiva.libs.fabsmenu.FABsMenuLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="50dp"
+            fab:fabs_menu_clickableOverlay="true"
+            fab:fabs_menu_overlayColor="@android:color/transparent">
+
+            <jahirfiquitiva.libs.fabsmenu.FABsMenu
+                android:id="@+id/FabMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:clipChildren="true"
+                fab:fab_expandDirection="up"
+                fab:fab_labelsPosition="right"
+                fab:fab_menuMargins="16dp"
+                fab:fab_moreButtonBackgroundColor="@color/float_button_color"
+                fab:fab_moreButtonPlusIcon="@drawable/location_more"
+                fab:fab_moreButtonRippleColor="@color/white"
+                fab:fab_moreButtonSize="normal">
+
+                <jahirfiquitiva.libs.fabsmenu.TitleFAB
+                    android:id="@+id/TFab1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    fab:backgroundTint="@color/float_button_color"
+                    fab:fabSize="mini"
+                    fab:fab_title="Suzuki service"
+                    fab:fab_title_backgroundColor="@color/float_button_color"
+                    fab:fab_title_textColor="@color/white"
+                    fab:rippleColor="@color/float_button_color"
+                    fab:srcCompat="@drawable/suzuki_logo" />
+                <!-- This is the item that appears at the top of the menu -->
+                <jahirfiquitiva.libs.fabsmenu.TitleFAB
+                    android:id="@+id/TFab2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    fab:backgroundTint="@color/float_button_color"
+                    fab:fabSize="mini"
+                    fab:fab_title="Fuel station"
+                    fab:fab_title_backgroundColor="@color/float_button_color"
+                    fab:fab_title_textColor="@color/white"
+                    fab:rippleColor="@color/float_button_color"
+                    fab:srcCompat="@drawable/gas_icon" />
+
+                <jahirfiquitiva.libs.fabsmenu.TitleFAB
+                    android:id="@+id/TFab3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    fab:backgroundTint="@color/float_button_color"
+                    fab:fabSize="mini"
+                    fab:fab_title="Favorite route"
+                    fab:fab_title_backgroundColor="@color/float_button_color"
+                    fab:fab_title_textColor="@color/white"
+                    fab:rippleColor="@color/float_button_color"
+                    fab:srcCompat="@drawable/fav_menu_icon" />
+
+                <jahirfiquitiva.libs.fabsmenu.TitleFAB
+                    android:id="@+id/TFab4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    fab:backgroundTint="@color/float_button_color"
+                    fab:fabSize="mini"
+                    fab:fab_title="Hospitals"
+                    fab:fab_title_backgroundColor="@color/float_button_color"
+                    fab:fab_title_textColor="@color/white"
+                    fab:rippleColor="@color/float_button_color"
+                    fab:srcCompat="@drawable/hos" />
+
+                <!-- This item will appear just above the menu FAB -->
+                <jahirfiquitiva.libs.fabsmenu.TitleFAB
+                    android:id="@+id/TFMore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    fab:backgroundTint="@color/float_button_color"
+                    fab:fabSize="mini"
+                    fab:fab_title="More"
+                    fab:fab_title_backgroundColor="@color/float_button_color"
+                    fab:fab_title_textColor="@color/white"
+                    fab:rippleColor="@color/float_button_color"
+                    fab:srcCompat="@drawable/more_menu_map_icon" />
+
+            </jahirfiquitiva.libs.fabsmenu.FABsMenu>
+
+
+            <!--<jahirfiquitiva.libs.fabsmenu.TitleFAB-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--android:layout_marginBottom="60dp"-->
+            <!--fab:backgroundTint="@color/app_bar_color"-->
+            <!--fab:fabSize="mini"-->
+            <!--fab:fab_enableTitleClick="true"-->
+            <!--fab:fab_title=""-->
+            <!--fab:fab_title_textColor="@color/colorAccent"-->
+            <!--fab:rippleColor="@color/colorAccent"-->
+            <!--fab:srcCompat="@drawable/current_loc" />-->
+
+        </jahirfiquitiva.libs.fabsmenu.FABsMenuLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlCurrentLocation"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="68dp"
+            android:background="@drawable/rounded_float_button"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/current_loc" />
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

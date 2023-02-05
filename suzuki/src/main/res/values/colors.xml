@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#000</color>
+    <color name="colorPrimaryDark">#000</color>
+    <color name="colorAccent">#000</color>
+    <color name="app_theme_color">#00c1d9</color>
+    <color name="app_bar_color">#003145</color>
+
+    <color name="transaparent">#00FFFFFF</color>
+    <color name="float_button_color">#333333</color>
+    <color name="progress_gray">#FFD8D8D8</color>
+    <color name="progress_gray_dark">#FF383838</color>
+    <color name="default_blue_light">#ff33b5e5</color>
+    <color name="blacktrans">#80000000</color>
+    <color name="black">#000000</color>
+    <color name="blackopaque">#D9000000</color>
+    <color name="drag_color">#565656</color>
+    <color name="blue">#003399</color>
+    <color name="white">#ffffff</color>
+    <color name="red">#cc0814</color>
+    <color name="nav_blue">#07389b</color>
+    <color name="appBarGrey">#222222</color>
+    <color name="light">#00c1d9</color>
+
+    <color name="appGreen">#3dcb44</color>
+    <color name="setColor">#242424</color>
+    <color name="app_background_grey">#212121</color>
+    <color name="app_back_light_grey">#7f000000</color>
+    <color name="action_bar_app_color">#003145</color>
+    <color name="feedbackMail">#696969</color>
+    <color name="actionBar">#003145</color>
+    <color name="theme_grey">#1f212121</color>
+    <color name="grey">#252528</color>
+
+    <color name="view_color">#62000000</color>
+
+    <!--mmi colors-->
+
+
+    <color name="lightGrey">#d4d3d4</color>
+    <color name="darkGrey">#2d2d2d</color>
+    <color name="darkBlue">#0d101e</color>
+
+    <color name="colorGray400">#bdbdbd</color>
+    <color name="app_blue">#385167</color>
+    <color name="colorGray700">#616161</color>
+    <color name="common_gray">#ff727171</color>
+    <color name="color_white">#ffffff</color>
+    <color name="marker_color">#E74747</color>
+    <color name="mapboxGreen">#39f10b</color>
+    <color name="translucent_base_color">#39f10b</color>
+
+
+    <color name="navigation_eta_text_color_with_traffic">#e53935</color>
+    <color name="navigation_eta_text_color_with_out_traffic">#43a047</color>
+    <color name="navigation_eta_text_color_with_low_traffic">#e8831e</color>
+    <color name="yellow">#FFC107</color>
+    <color name="sky">#17B5D0</color>
+</resources>

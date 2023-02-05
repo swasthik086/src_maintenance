@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/back_ground"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/back_ground"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rlSetCon"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:background="@color/action_bar_app_color"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/arrow"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.09"
+                    android:lineSpacingExtra="0sp"
+                    android:text="SETTINGS"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="normal" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="80dp"
+            android:background="@drawable/back_ground"
+            android:isScrollContainer="true"
+            android:fillViewport="true"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:animateLayoutChanges="true">
+
+                <LinearLayout
+                    android:id="@+id/llRedAlertBle"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="#cc0814"
+                    android:gravity="center"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/Connect_Alert"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/gradient_grey">
+
+                    <Switch
+                        android:id="@+id/switchSocial"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/gradient_grey"
+                        android:checked="false"
+                        android:text="Notifications"
+                        android:textColor="#ffff"
+                        android:textSize="16sp"
+                        android:theme="@style/SCBSwitch" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/llFirstLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:background="@color/progress_gray_dark"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/phone_call" />
+
+                        <Switch
+                            android:id="@+id/switchIncomingCall"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="20dp"
+                            android:gravity="left|center_vertical"
+                            android:text="SIM Incoming Calls "
+                            android:textColor="#ffff"
+                            android:textSize="14sp"
+                            android:theme="@style/SCBSwitch" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/set_message" />
+
+                        <Switch
+                            android:id="@+id/switchIncomingSMS"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="20dp"
+                            android:gravity="left|center_vertical"
+                            android:text="SIM Incoming SMS "
+                            android:textColor="#ffff"
+                            android:textSize="14sp"
+                            android:theme="@style/SCBSwitch" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/set_whatsapp" />
+
+                        <Switch
+                            android:id="@+id/switchWhatsappCall"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="20dp"
+                            android:gravity="left|center_vertical"
+                            android:text="WhatsApp Calls"
+                            android:textColor="#ffff"
+                            android:textSize="14sp"
+                            android:theme="@style/SCBSwitch" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/set_whatmessage" />
+
+                        <Switch
+                            android:id="@+id/switchWhatsappMSG"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="20dp"
+                            android:gravity="left|center_vertical"
+                            android:text="WhatsApp Text"
+                            android:textColor="#ffff"
+                            android:textSize="14sp"
+                            android:theme="@style/SCBSwitch" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/gradient_grey">
+
+                    <Switch
+                        android:id="@+id/switchSms"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="10dp"
+                        android:checked="false"
+                        android:text="Auto-Reply SMS"
+                        android:paddingBottom="5dp"
+                        android:textColor="#ffff"
+                        android:textSize="16sp"
+                        android:theme="@style/SCBSwitch" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Standard SMS Charges Applies*"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="10dp"
+                        android:textSize="7sp"
+                        android:textColor="#CCD4D3D4"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llSecondLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/progress_gray_dark"
+                    android:orientation="vertical"
+
+                    android:visibility="gone">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="20dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:text="I'll Call You Later"
+                            android:textColor="#fff"
+                            android:textSize="14sp" />
+
+                        <CheckBox
+                            android:id="@+id/cbCallYouback"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="25dp"
+                            android:background="@drawable/checkbox_layout"
+                            android:button="@null" />
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:id="@+id/rlBusy"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:text="I'm Busy"
+                            android:textColor="#fff"
+                            android:textSize="14sp" />
+
+                        <CheckBox
+                            android:id="@+id/cbBusy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="25dp"
+                            android:background="@drawable/checkbox_layout"
+                            android:button="@null" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rlRide"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:text="I'm Riding"
+                            android:textColor="#fff"
+                            android:textSize="14sp" />
+
+                        <CheckBox
+                            android:id="@+id/cbRiding"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="25dp"
+                            android:background="@drawable/checkbox_layout"
+                            android:button="@null" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rlCustom"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="15dp"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:id="@+id/llcustomMsg"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_marginLeft="10dp"
+                                android:imeOptions="actionDone"
+                                android:text="Custom Message"
+                                android:textColor="#fff"
+                                android:textSize="14sp" />
+
+
+                            <!--<ImageView-->
+                            <!--android:id="@+id/et_view"-->
+                            <!--android:layout_width="15dp"-->
+                            <!--android:layout_height="15dp"-->
+                            <!--android:layout_gravity="center"-->
+                            <!--android:src="@drawable/setpencil" />-->
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="50dp"
+                                android:letterSpacing="0.09"
+                                android:text="Max. 150 char."
+                                android:textColor="#7b7b7b"
+                                android:textSize="10sp"
+                                android:textStyle="normal"
+                                android:visibility="gone" />
+                        </RelativeLayout>
+
+
+                        <CheckBox
+                            android:id="@+id/cbCustomMsgCheck"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="25dp"
+                            android:background="@drawable/checkbox_layout"
+                            android:button="@null" />
+
+                        <RelativeLayout
+                            android:id="@+id/llEditCustomMsg"
+                            android:layout_width="match_parent"
+                            android:layout_height="90dp"
+                            android:layout_below="@+id/llcustomMsg"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginRight="25dp"
+
+                            android:background="@drawable/edittext_border_withblue"
+                            android:visibility="gone">
+
+                            <EditText
+                                android:id="@+id/etCustommsg"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/transaparent"
+                                android:hint="Type Message"
+                                android:imeOptions="actionDone"
+                                android:maxLength="160"
+                                android:padding="10dp"
+                                android:singleLine="true"
+                                android:text=""
+                                android:textColor="#fff"
+                                android:textColorHint="@color/progress_gray_dark"
+                                android:textCursorDrawable="@drawable/color_cursor"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/tvTextCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignBottom="@+id/etCustommsg"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginEnd="20dp"
+                                android:layout_marginBottom="10dp"
+                                android:text="0/160"
+                                android:textColor="@color/white"
+                                android:textSize="10sp" />
+                        </RelativeLayout>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/gradient_grey">
+
+                    <Switch
+                        android:id="@+id/switchSaveAllTrips"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/gradient_grey"
+                        android:text="Save All Trips"
+                        android:textColor="#ffff"
+                        android:textSize="16sp"
+                        android:theme="@style/SCBSwitch"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/gradient_grey">
+
+                    <Switch
+                        android:id="@+id/SpeedSwitch"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/gradient_grey"
+                        android:text="Speed Warning"
+                        android:textColor="#ffff"
+                        android:textSize="16sp"
+                        android:theme="@style/SCBSwitch"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/SpeedLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/progress_gray_dark"
+                    android:orientation="vertical"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:focusable="false"
+                        android:focusableInTouchMode="true"
+                        android:orientation="horizontal"
+                        android:weightSum="5">
+
+                        <SeekBar
+                            android:id="@+id/SpeedSeekbar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="4"
+                            android:maxHeight="4dp"
+                            android:minHeight="20dp"
+                            android:theme="@style/SeekTheme"
+                            android:thumb="@drawable/thumb" />
+
+                        <EditText
+                            android:id="@+id/SpeedValue"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight=".5"
+                            android:background="@color/colorPrimary"
+                            android:gravity="center"
+                            android:imeOptions="actionDone"
+                            android:inputType="phone"
+                            android:digits="1234567890"
+                            android:maxLength="3"
+                            android:singleLine="true"
+                            android:text="0"
+                            android:imeActionId="666"
+                            android:imeActionLabel="Some Label"
+                            android:textColor="@color/app_theme_color"
+                            android:textCursorDrawable="@drawable/color_cursor"
+                            android:textSize="22sp" />
+
+                        <TextView
+                            android:id="@+id/ccc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight=".5"
+                            android:gravity="center"
+                            android:text="km/h"
+                            android:textColor="@color/app_theme_color"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/gradient_grey"
+                    android:visibility="gone">
+
+                    <Switch
+                        android:id="@+id/switchClock"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/gradient_grey"
+                        android:text="Sync clock"
+                        android:textColor="#ffff"
+                        android:textSize="16sp"
+                        android:theme="@style/SCBSwitch" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

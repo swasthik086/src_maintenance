@@ -1,0 +1,294 @@
+<resources>
+    <string name="app_name">Suzuki Ride Connect</string>
+    <string name="no_internet_connection">No internet</string>
+    <string name="ble_not_supported">BLE is not supported</string>
+    <string name="turn_ble">Please turn on Bluetooth</string>
+    <string name="turn_loc">Gps seems off. Please turn on location from settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="notifytitle">Settings</string>
+    <string name="fail">Connection failed</string>
+    <string name="settings">Location settings</string>
+    <string name="label_data">Data:</string>
+    <string name="label_device_address">Device address:</string>
+    <string name="label_state">State:</string>
+    <string name="no_data">No data</string>
+    <string name="connected">Connection Success</string>
+    <string name="disconnected">Disconnected from device</string>
+    <string name="title_devices">BLE Device Scan</string>
+    <string name="error_bluetooth_not_supported">Bluetooth not supported.</string>
+    <string name="switch_on">Switch on device</string>
+    <string name="unknown_device">Unknown device</string>
+    <string name="unknown_characteristic">Unknown characteristic</string>
+    <string name="unknown_service">Unknown service</string>
+    <string name="Choose_pic">Choose picture</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="remove">Remove </string>
+    <string name="Session_Message">It seems that navigation is recently used in some other device.
+        You have to finish navigation earlier navigation to start new navigation. Would you like to proceed ?</string>
+    <string name="Pair_Button">PAIR WITH SUZUKI</string>
+    <string name="Connect_Suzuki">CONNECT TO SUZUKI</string>
+    <string name="Search_Device">SEARCHING VEHICLES</string>
+    <string name="Connect_Alert">Pair with Suzuki</string>
+    <string-array name="header_titles">
+        <item>Social Notifications</item>
+        <item>Auto-reply sms</item>
+        <item>Speed warning</item>
+        <item>Always record route</item>
+        <item>Sync clock</item>
+    </string-array>
+
+    <string-array name="h1_items">
+        <item>SIM Incoming calls</item>
+        <item>SIM Incoming sms</item>
+        <item>Whatsapp calls</item>
+        <item>Whatsapp text</item>
+    </string-array>
+
+    <string-array name="h2_items">
+        <item>Call you back later</item>
+        <item>Im Busy</item>
+        <item>Im Riding</item>
+        <item>Custom Message</item>
+    </string-array>
+
+    <string-array name="acc_type">
+        <item>Choose your ride type</item>
+        <item>Bike</item>
+        <item>Scooter</item>
+    </string-array>
+
+    <string name="suzukiservice">Suzuki Service</string>
+    <string name="fuel">Fuel Station</string>
+    <string name="hospitals">Hospitals</string>
+    <string name="atm">Banks and ATM</string>
+    <string name="food">Food and Restaurants</string>
+    <string name="sales">Suzuki Sales</string>
+    <string name="tyrerepair">Tyre Repair Shops</string>
+    <string name="medicals">Medical Stores</string>
+    <string name="parking">Parking</string>
+    <!--<string name="favourites">Favourites</string>-->
+    <string name="convenience">Convenience Stores</string>
+    <!--mmi strings-->
+    <string name="AutoSuggestTagExplaination">Explaination</string>
+    <string name="AutoSuggestTagSuggestion">Suggestion</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="current_location_not_available">Current location not available</string>
+    <string name="gps_connection_lost">GPS connection lost</string>
+    <string name="gps_connection_restored">GPS connection restored</string>
+    <string name="take_possible_u_turn">Take possible U-Turn</string>
+    <string name="re_routing">Re-routing&#8230;</string>
+    <string name="rerouting">Re-routing</string>
+    <string name="destination_reached">Destination arrived</string>
+    <string name="point_on_map">Point on map</string>
+    <string name="then">Then</string>
+    <string name="recenter">Recenter</string>
+    <string name="muted">Muted</string>
+    <string name="unmuted">Unmuted</string>
+
+
+    <!--faq -->
+    <string name="question1">How can I start the navigation ?</string>
+    <string name="question2">
+        <item>Lorem ipsum dolor sit amet ?</item></string>
+    <string name="question3"> <item>sed do eiusmod tempor incididunt ut
+labore et dolore magna aliqua ?</item></string>
+
+    <string name="answer1">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+sed do eiusmod tempor incididunt ut labore et dolore magna
+aliqua. Ut enim ad minim veniam.</string>
+    <string name="answer2">ut labore et dolore magna
+aliqua. Ut enim ad minim veniam.</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="splash_logo_desc">Splash Logo</string>
+    <string name="want_to_proceed">Do you want to proceed?</string>
+    <string name="set_work_address">Set Work Address</string>
+    <string name="edit_work_address">Edit Work Address</string>
+    <string name="set_home_address">Set Home Address</string>
+    <string name="edit_home_address">Edit Home Address</string>
+    <string name="confirm_home_address">Please confirm Home Address</string>
+    <string name="confirm_work_address">Please confirm Work Address</string>
+    <string name="delete_home_address">Delete Home Address</string>
+    <string name="delete_work_address">Delete Work Address</string>
+    <string name="delete_recent_search">Delete Selected Search</string>
+    <string name="faq_s">FAQ\'s</string>
+    <string name="profile">Profile</string>
+    <string name="question_list">Profile Question List</string>
+    <string name="main_list">Profile Main List</string>
+    <string name="search">Search Your Question Here…</string>
+    <string name="battery">Battery</string>
+    <string name="help">Help</string>
+    <string name="features">Features</string>
+    <string name="navigation">Navigation</string>
+    <string name="bluetooth">Bluetooth Connection</string>
+    <string name="profile_settings">Profile Settings</string>
+    <string name="setting">Settings</string>
+    <string name="general">General</string>
+    <string name="about">About</string>
+    <string name="welcome">Welcome</string>
+    <string name="rides">Rides</string>
+    <string name="title">title</string>
+    <string name="last_parked_location">Last Parked Location</string>
+    <string name="privacy_policy"><b>We at SUZUKI MOTORCYCLE INDIA PRIVATE LIMITED have adopted following Philosophy and culture:</b>\n\n<b>SUZUKI MOTORCYCLE INDIA PRIVATE LIMITED (\“SMIPL\”), is the owner of the mobile application titled SUZUKI RIDE CONNECT (\"Application\").</b>\n\nSMIPL
+        is devoted to protecting your personal information and privacy with respect to the personal information collected on this Application and this privacy policy sets forth how such personal information collected on this Application is protected.\n\nCertain
+        sections of the Application may require you to provide personal information in order for us to efficiently provide the services or information requested by you while visiting the Application. The purpose of this Privacy Policy is to bring to your knowledge the nature of information collected by SMIPL, the purpose of collection such data and its use, subsequent processing of such data and your rights relating to such data shared with us. This privacy policy further sets out your rights pertaining to personal data protection. You are requested to read and understand the terms and condition stipulated below in connection with the use of our Application. Usage of the Application includes unconditional acceptance of these terms. Therefore, kindly proceed with using the Application only if you agree to this Privacy Policy.\n\nSMIPL
+        reserves the right to modify this privacy policy from time to time.\n\nThe
+        Privacy Policy adopted by SMIPL to secure the aforementioned goal is as follows:\n\n<b>NATURE
+    OF PERSONAL INFORMATION COLLECTED BY US</b>\n\nSMIPL
+        collects the following Personal Information shared by the user on the Application-\n\n
+• Name as provided by user during profile creation in application. (Stored locally on mobile phone only).\n
+• Current city/town as per current location information that is allowed by user while creating profile. (Stored locally on mobile phone only).\n
+• Vehicle’s type, model and color that is provided by user during profile creation (stored locally on mobile phone only).\n
+• The contact information provided by user during feedback process (only used for communication purpose and not shared with third party or stored permanently).\n
+• The user image provided by user at the time of creating profile (stored locally on mobile phone only).\n
+• Call information restricted to incoming caller name in case of saved contact and to incoming caller number in case of unsaved contact and the number of unread missed calls. This information is accessed for the sole purpose of displaying alert notification on the connected vehicle display and in no way stored or shared.\n
+• SMS information restricted to received SMS sender name and the number of unread SMS only. This information is accessed for the sole purpose of displaying alert notification on the connected vehicle display and in no way stored or shared.\n
+• The navigation route information is saved purely on the user’s decision, which is stored locally on the user’s device. This information is stored temporarily as long as the application is installed in the user’s device or until the user deletes it and in no way stored or shared to any remote sever for geo-fencing or analytics.\n
+• This application collects background location data to enable navigation services while using the application at foreground and background.\n
+• Your vehicle’s last known location is stored locally on the user’s device and is not sent to any remote server. This location is stored for the sole purpose of providing user with their vehicle’s last known location.\n\nAll
+        the information provided by user as stated above shall be stored in the user\'s device locally and will not be send to any remote servers.
+Such information is stored temporarily as long as the application is installed in the user\'s device.\n\n<b>INFORMATION
+    NOT COLLECTED/STORED BY SMIPL</b>\n\nSuzuki
+        Ride Connect Application is standalone mobile application.It is not connected to  It is not connected to any backend database or server. Application does not generate any log or trace file and does not collect any sensitive information from user’s device. There are no malicious undertakings in our application and there will be no misuse of the data received by SMIPL from the user. In particular, the following data is not collected or stored by SMIPL-\n\n
+
+• Contents of SMS (not even for internal purposes).\n
+• Call information, call recording, contact storage data (not even for internal purpose).\n
+• User financial information via SMS.\n
+• Personal data from user’s device.\n
+• User location in the background.\n
+• Tracking details or profile user’s location information,
+• Any information from user’s device anonymously for analytics purpose.\n
+• Granted permissions, outside the scope of application features, shall never be used by SMIPL.\n
+• SMIPL shall not use granted permissions to make calls or send SMS on behalf of the user.\n
+• Application does not collect anonymous device information for performance analysis.\n
+• The application bug report is sent only in case of application crash, which will not contain any sensitive information related to user or user’s device by SMIPL. Application bug report helps us to understand the reason for crash and be sent via a secured path to the Google’s firebase server.\n\n<b>METHOD
+    OF RECEIPT/COLLECTION OF INFORMATION</b>\n\n
+• SMIPL collects data directly from you through your interactions with us via our Application, social media applications or internet sites, telephone, email or by writing to us.\n
+• SMIPL may also collect your personal information from third party sources such as our dealers, vendors, business partners, government authorities, judicial authorities, any other sources legally acquired by us.\n
+• SMIPL receives data in the form of “notifications” such as incoming call, SMS notification, and number of unread SMS which are received on the application upon being connected to the cluster via Bluetooth. The application also enables the user to send an auto reply in case of unanswered calls.  However, being sensitive in nature, none of the aforementioned data is stored/saved by SMIPL.\n\n<b>PURPOSE
+    OF COLLECTION OF SUCH PERSONAL INFORMATION</b>\n\nUnless
+        otherwise provided in the Policy, we may use personal information collected from the Sites/Apps in various ways including:\n\n
+• Authenticate the user’s account or information on the Application.\n
+• Provide user with requisite services under the Application.\n
+• Contact users for confirming registration on the Application.\n
+• Communication with users for responding to queries or seeking feedback or resolving issues pertaining to any product or services.\n
+• Maintaining record of users consent for sharing personal information.\n
+• Conduct customer relationship surveys or other surveys.\n
+• Educate users about SMIPL  and services provided via the Application.\n
+• Maintenance of efficiency while providing high quality and standard of services on the Application.\n
+• To send you important information regarding the Application, changes in terms and conditions, user agreements, and policies and/or other administrative information.\n
+• To enhance the safety of users by allowing the users to view important notifications on the vehicle\'s dashboard display while riding.\n
+• To review performance of the Application, collect Application usage statistics, maintain security of the Application.\n
+• Comply with our legal obligations or as otherwise permitted by law.\n
+• Investigate potential breaches, or to protect the rights, property or safety of SMIPL and the Users of the Application.\n
+• For any other purpose incidental to business.\n\nIn
+        case where Personal Information collected is used for any other purpose other than the aforementioned purposes, users shall be notified about such specific purposes prior to processing of your personal information.\n\nBy
+        providing any personal information on the Application, the user consents to the transfer of such information across country borders, and to the use, processing, and disclosure of such information in global locations, including those that may have different levels of privacy protection than in your own country.\n\nBy
+        giving your contact details on the Application, the user agrees to receive communication from SMIPL or any of its associate over email/SMS/ Call/ WhatsApp.\n\n<b>RIGHTS
+    OF USERS</b>\n\nAll
+        the information provided by the user as stated above will be stored in the user’s device locally and will not be sent to any remote servers. All the information provided by the user is stored temporarily as long as the application is installed in user’s device. In tune with the same, the users have the following rights while using the Application-\n\n
+
+• Anyone having user account on the Application can access their information under the profile section and can update/modify/correct/delete their personal data.\n
+• Users can request details of their Personal Information available with us, purposes for which they are being used or might be used in the future and with whom such data has been shared.\n
+• Users may contact the Grievance Officer in case they wish to make a complaint regarding the manner in which their personal information has been handled by us.\n
+• Users need not provide reasons for seeking access to their details on the Application subject to furnishing proof of identity.\n
+• Users may opt-out of receiving non-essential, promotional or marketing-related communications from SMIPL.\n
+• Users can withdraw their consent to the storage or processing of their Personal Information and such data shall be erased by SMIPL. If there are any contractual obligations, legal obligations to retain such data, the same shall not be erased inspite of a request for withdrawal made by the user.\n\n<b>PARTIES
+    WITH WHOM INFORMATION IS SHARED</b>\n\nSMIPL
+        may share the Personal Information collected from the Application with third parties as outlined herewith-\n\n
+
+• Affiliates\n\nSMIPL\'s
+        parent company and joint ventures. These entities may use this information for the purposes outlined herein.\n\n
+
+• Business Partners\n\n
+a. Service Providers who perform services on behalf of SMIPL and which require the user’s information for performing their functions including but not limited to service partners, call centre operators, marketing partners, IT agencies operating handling the Application who work for SMIPL.\n\n
+
+b. Authorized dealers of SMIPL, sub-dealers, franchise etc. which are independently owned and operated.\n\n
+
+c.Vendors including but not limited to suppliers, research and development vendors, advisors, agents, representatives etc.\n\n
+
+• Other Partners\n\nParties
+        with whom SMIPL co-brands or partners with or collaborates for business purposes or for investigation of potential data incidents or to protect the rights, property and safety of SMIPL and its Users.\n\n
+
+• Legal Authorities\n\nPersonal
+        Information in response to any notice, order, investigation or demand or request or any other communication from a law enforcement agency which necessitate or mandate the sharing of such personal information, or to otherwise comply with applicable laws.\n\nSMIPL
+        does not use or disclose any information for purposes other than as mentioned in this Policy, except with the consent of User providing such Information or as required by law.\n\n<b>PROTECTION
+    OF INFORMATION PROVIDED TO SMIPL</b>\n\nThe
+        Application has strict security measures for protection of personal information provided to SMIPL. SMIPL stores all personal information in a secure manner preventing its loss, misuse, wrongful disclosure, alteration or destruction. The said security measures are periodically updated. However, SMIPL is not liable for breach of security during internet transmission of personal information, including any unintended loss, misuse, alteration or disclosure of such information. Furthermore, notwithstanding anything contained in this privacy policy, SMIPL will not be responsible for any loss, damage or misuse of personal information, if such loss, damage or misuse is attributable to an event of Force Majeure or to any reason attributable to the user.\n\nSMIPL
+        may disclose your Personal Data in the good faith that such action is whenever necessary to comply with a legal obligation or if disclosure was required by any law or by order of any competent court or statutory authority, to protect and defend the legal rights or IPR of SMIPL.\n\n<b>RESTRICTIONS
+    ON USE</b>\n\nUser
+        shall not modify, copy, distribute, transmit, display, reproduce, publish, license, create derivative works from, transfer, or sell any information, services obtained from the Application without our prior consent, directly or indirectly in any medium. Neither these materials nor any portion thereof may be stored in a computer except for personal and non-commercial use.\n\n<b>NO
+    UNLAWFUL OR PROHIBITED USE</b>\n\nAll
+        users warrant to SMIPL that they will not use the Application for any purpose that is illegal or prohibited by these terms of use. Users shall not use the Application in any manner which could damage, disable, overburden or impair the Application or interfere with any other party\'s use and enjoyment of this Application.\n\n<b>USE
+    OF COMMUNICATION SERVICES</b>\n\nThe
+        Application may contain some areas or communication facilities (e.g. Feedback form, Survey site etc.) for you to communicate or give feedback to us or other associates (collectively, \"Communication Services\").  The users agree to use the Communication Services only to post, send and receive messages and material that are proper and related to the particular communication. By way of example, and not as a limitation, you agree that when using a Communication Service, user shall not:\n\n
+
+• Defame, abuse, harass, stalk, threaten or otherwise violate the legal rights or privacy of others.\n
+• Publish, post, upload, distribute or disseminate any inappropriate, defamatory, obscene, indecent or unlawful material or information.\n
+• Upload files that contain software or other material protected by <in></in>tellectual property laws unless you own or control the rights thereto or have received all necessary consents.\n
+• Upload files that contain viruses, corrupted files, or any other similar software or programs that may damage the operation of another\'s computer.\n
+• Falsify or delete any author attributions, legal or other notices or proprietary designations or labels of the origin or source of software or other material contained in a file that is uploaded.\n
+• Restrict or inhibit any other user from using and enjoying the Communication Services.\n\n<b>TERMINATION/ACCESS
+    RESTRICTION</b>\n\nSMIPL
+        reserves the right, in its sole discretion, to terminate the user’s access to whole or any part of Application and the related services or any portion thereof at any time without notice.\n\n<b>GOOGLE
+    PLAY PRIVACY POLICY:</b>\n\nSMIPL
+        agrees that its products that is available through Google Play will protect the user’s privacy and legal rights. SMIPL assures that the information that is available with it shall only be provided with legally adequate privacy notice and protection (as and when necessary). The product shall use that information listed herein for the limited purposes for which the policy of Google Play permits.
+
+\n\nThe product shall store the user’s personal or sensitive information securely and only for the duration necessary. On any occasion where the user opts into a separate agreement with SMIPL comprising of a separate set of terms, conditions and policies, which allows SMIPL to store or use personal or sensitive information directly related to SMIPL’s products, then the terms of such separate agreement shall govern the use of such information provided therein.
+
+\n\nFurthermore, in case the user provides their Google Account information while accessing the Application, SMIPL shall use such information only to access the user’s Google Account for the limited purposes for which the permission has been given by the user.\n\n<b>CONTACT
+    INFORMATION:</b>\n\nIn
+        case of any complaint or grievance or incidence of security violation that comes to your knowledge you may contact the following:\n\n<b>Grievance
+    Officer</b>\n\nC/o Suzuki Motorcycle India Pvt. Ltd.\n\nCorrespondence Address: 2nd Floor, Plot No.-1, Nelson Mandela Road, Vasant Kunj, New Delhi -110070\n\nPhone: 011- 43127000\n\nTime: 10:00 am – 5:00 pm\n\nEmail:  mathur.rajat@suzukimotorcycle.in\n\nEmails
+        received on mathur.rajat@suzukimotorcycle.in other than context of Privacy Policy will not be entertained. Please do not send emails to this email id for queries, complaints related to Sales, Service, and Recruitment etc.\n\n<b>GOVERNING
+    LAW/JURISDICTION</b>\n\nThis
+        Privacy Policy shall be governed by the laws of India and the courts in New Delhi, India shall have the exclusive jurisdiction to try any dispute arising thereof.\n\nThis
+        Privacy Policy was last updated on 6th October, 2020 and remains current until the date it is replaced with another version. SMIPL may modify and update its Privacy Policy from time to time by publishing it on Sites.\n\n
+</string>
+
+    <string name="terms_and_conditions">
+        <b>Terms &amp; Conditions</b>\n\nBy downloading or using the app, these terms automatically become applicable to you and hence, ensure having read and understood them carefully before using the app. You are not allowed to copy, or modify the app, any part of the app, or our trademarks in any manner whatsoever. You are not allowed to attempt extraction of the source code of the app, and you are also not allowed to translate the app into other languages, or make derivative versions of it. The app itself, and all the trade marks, copyright, database rights and other intellectual property rights related to it exclusively belongs to <b>Suzuki Motorcycle India Pvt. Ltd</b>.\n<b>Suzuki Motorcycle India Pvt Ltd</b> is committed to ensuring that the app is as useful and efficient as possible. For that reason, we reserve the right to make changes to the app or to charge for its services, at any time and for any reason. We will never charge you for the app or its services without making its very clear to you exactly what you’re paying for.\nBy downloading the app you agree to comply with each of the <b>Terms and Conditions</b>.\nThe <b>Suzuki</b> app stores and processes personal data that you have provided to us, in order to provide our service. The app may need to access your device and information stored therein for efficient and smooth functioning of the app. By using the app you consent to this. In addition to the <b>Terms and Conditions</b> herein, you shall also bound by the Privacy Policy which is construed in addendum to these <b>Terms and Conditions</b>, and read as part and parcel of the said <b>Terms and Conditions</b>. It shall be your responsibility to keep your phone and access to the app secure. We therefore recommend that you do not jailbreak or root your phone, which is the process of removing software restrictions and limitations imposed by the official operating system of your device. It could make your phone vulnerable to malware/viruses/malicious programs, compromise your phone’s security features and it could result in the app not functioning either partially or completely.\nThe app processes location data provided by your phone’s GPS, in order to provide our Map service which relies upon third-party Map service provider. Maps information from a third-party Map service provider are for planning purposes only. You may find that construction projects, traffic, weather or other events may cause conditions to differ from the map results and you should plan your route accordingly. <b>Suzuki Motorcycle India Pvt Ltd</b> will not take responsibility for difference in Map results from actual. We also recommend that you must obey all the signs or the notices regarding your route.\nYou should be aware that there are certain things that <b>Suzuki Motorcycle India Pvt Ltd</b> will not take responsibility for. Certain functions of the app will require the app to have an active internet connection or preferably high-speed internet connection. The connection can be Wi-Fi, or provided by your mobile network provider, but <b>Suzuki Motorcycle India Pvt Ltd</b> cannot take responsibility for the app not working as the functioning of app is dependent on several factors including Wi Fi access, third-party service provider engaged by <b>Suzuki Motorcycle India Pvt Ltd</b>. You acknowledge that use of the app is dependent on third-parties, including your own network providers, and that we are not liable for any acts or omissions of those third-parties. If you’re using the app outside of an area with Wi-Fi, you should remember that your terms of the agreement with your mobile network provider will still apply. As a result, you may be charged by your mobile provider for the cost of data for the duration of the connection while accessing the app, or other third-party charges. In using the app, you’re accepting responsibility for any such charges, including roaming data charges if you use the app outside of your home territory (i.e. region or country) without turning off data roaming. If you are not the bill payer for the device on which you’re using the app, please be aware that we assume that you have received permission from the bill payer for using the app.\nAlong the same lines, <b>Suzuki Motorcycle India Pvt Ltd</b> cannot always take responsibility for the way you use the app i.e you need to make sure that your device stays charged – if it runs out of battery and you can’t turn it on to avail the service, <b>Suzuki Motorcycle India Pvt Ltd</b> cannot accept responsibility.\nWith respect to <b>Suzuki Motorcycle India Pvt Ltd.’s</b> responsibility for your use of the app, it is important to bear in mind that although we endeavour to ensure that it is updated and correct at all times, we do rely on third-parties to provide information to us so that we can make it available to you. <b>Suzuki Motorcycle India Pvt Ltd</b> accepts no liability for any loss, direct or indirect, that you experience as a result of relying wholly on this functionality of the app.\nThe app is provided to you on as is where is basis, without any express or implied warranty of any sort. In particular, but without limitation, no warranty is given as to the accuracy, suitability, reliability, completeness, performance, fitness, freedom from viruses or timeliness of the content contained on the app. At some point, we may wish to update the app. The app is currently available on Android only and the operating system requirements may change in the future, and you’ll need to download the updates if you want to keep using the app. <b>Suzuki Motorcycle India Pvt Ltd</b> does not promise that it will always update the app so that it is relevant to you and/or works with the Android version that you have installed on your device. However, you promise to always accept updates to the application when offered to you. We may also wish to stop providing the app, and may terminate use of it at any time without giving notice of termination to you. Unless we tell you otherwise, upon any termination, (a) the rights and licenses granted to you in these terms will end; (b) you must stop using the app, and (if needed) delete it from your device. <b>Suzuki Motorcycle India Pvt Ltd</b> does not guarantee the unlimited compatibility and functionality of your mobile device in combination with the vehicle interface.\n\n<b>Changes in Terms and Conditions</b>\nWe may update our <b>Terms and Conditions</b> from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new <b>Terms and Conditions</b> on this page. These changes shall be effective immediately after they are posted on this page. If you continue using the app, you will be bound by all such modifications made thereto.\n\n<b>Indemnification</b>\nYou shall indemnify us (and you shall keep us indemnified) and hold us and our directors, employees, agents and representatives harmless against any claim, loss, expense, liability or damages suffered by us resulting from you committing breach of the instant <b>Terms and Conditions</b>.\n\n<b>Usage of the app</b>\nYou may only use the app for your own personal use and not in connection with any commercial endeavours. You must not send it to anyone else or copy or modify any part of it in any way.\nYou must not attempt to extract any source code from the app, disassemble it or make any derivative versions, or attempt to interrupt or decipher the transmissions between the app and our systems.\nYou must not use the app for any of the following purposes:\n(a) Anything unlawful or illegal or which is fraudulent or malicious or which promotes any criminal activity or provides information about the same.\n(b) Anything which is defamatory, harassing or threatening or which otherwise infringes or violates the rights of others. This includes any information that you may add or upload to the app.\n(c) Interfering in any way with any other user of the app. and/or\n(d) Knowingly introducing viruses or other malicious or harmful material or using it in connection with unsolicited communications.\nYou must not use the app in a way that may damage or impair the app, the service or our underlying systems and security.\n<b>Suzuki Motorcycle India Pvt Ltd</b> shall not bear any Responsibility for\n(a) Malfunctions in communications facilities which cannot reasonably be considered to be under our control and that may affect the accuracy or timeliness of messages you send or the material you access via the app.\n(b) Any losses or delays in transmission of messages or material you access arising out of the use of any Internet access service provider or mobile network service provider or caused by any browser or other software which is not under our control.\n(c) Viruses that may affect your device or other property on account of your access to or use of the app or your accessing any materials on the app.\n(d) Any unauthorised use or interception of any message or information before it reaches the app or our servers from the app.\n\n<b>Intellectual property rights</b>\nOwnership right, title, interest, database rights and other intellectual property rights associated with the App along with the software coding and all other related data are the property of Suzuki Motorcycle India Pvt. Ltd. and/or its licensors. The user does not acquire any right, title or interest whatsoever upon use of the App.\n\n<b>Jurisdiction</b>\nAll issues or disputes arising among the parties where judicial intervention is required, the same shall be subject to the exclusive jurisdiction of courts at Delhi.\n\n
+    </string>
+
+    <string name="build_version">App Version :v2.15.08.02</string> //2.16.05.31
+    <string name="disconnect_vehicle">Do you want to disconnect the vehicle?</string>
+    <string name="change_colour">Do you want to change vehicle colour?</string>
+    <string name="client_id_test">U549QW-s8awJszTT6_NSBnICy6suUdfowlCeIzIkjG1Yn6v6wTq5vlvMF1n-x6LLGtR0s2V5nCGeWIqVjP154iSZ3SSSI8ao</string>
+    <string name="client_secret_test">lrFxI-iSEg-NGr046lG9BQCCJT8EJRGfUoVbSUQTjY_xz7lg5yEaasOW6vMXb8E5bc70Zhmt12FPNUN0NB0-hEl3E7IexGDJb-dMnYXbgpI=</string>
+    <string name="map_sdk_test">g8wu99l78tqm3syaiglszlg6qarnam7p</string>
+    <string name="rest_api_test">bgedfp1qyn9jfxqzuqizb81c6tuaxou8</string>
+    <string name="client_id_prod">33OkryzDZsIAW5OoVKSMNQ6qRjrX8vdvA3XND069c6fqxGrn2_hLcOi26u1qUA41QAOEqbGLiYzP88-E-uAkj45ZYp6XPgpHnxSrEzV9OYq61Fom0aYuow==</string>
+    <string name="client_secret_prod">lrFxI-iSEg89cIy1NhM5fHmmYnjTFAZoUL-RzTrnuPuXtWfeQzbsIb9Lx_KdzJLRFBLLQfY_rcs19AFwia58-zNeVDhUJFid3Ftal-2DshpxiKj_nERNwNaoKvB77nck</string>
+    <string name="map_sdk_prod">d8sqvkrfbt1vg5g6j995u2dgjzvf6wzi</string>
+    <string name="rest_api_prod">gs8bob2c43jvjy127midnvti71wcww6o</string>
+    <string name="BLUETOOTH_OFF">Your Bluetooth Seems Off. Now no bluetooth service will work. Do you initialize service again?</string>
+    <string name="test_warning">PLEASE USE THE LATEST TEST BUILD</string>
+    <string name="request">To ensure application runs smoothly in background, Please follow below steps: \n1. Long press on ‘Suzuki Ride Connect’ application icon on home screen. \n2. Select ‘app info’ option. \n3. Select ‘battery control’ or ‘battery usage’ \n4. Enable ‘allow background activity’ / ‘unrestricted’ option. \nThis will prevent the Android OS from closing the application in background.</string>
+    <string name="exit_app">Are you sure you want to exit the application?</string>
+
+    <string name="v_strom_red">Red</string>
+    <string name="v_strom_yellow">Yellow</string>
+    <string name="v_strom_black">Black</string>
+
+    <string name="access_black">Black</string>
+    <string name="access_dualtone">Dual Tone</string>
+    <string name="access_matteblue">Matte Blue</string>
+    <string name="access_glossybronze">Glossy Bronze</string>
+    <string name="access_white">White</string>
+    <string name="access_glossygrey">Glossy Grey</string>
+    <string name="avenis_blue">Blue</string>
+    <string name="avenis_green">Green</string>
+    <string name="avenis_grey">Grey</string>
+    <string name="avenis_red">Red</string>
+    <string name="avenis_white">White</string>
+    <string name="burgman_fibroingrey">Fibroin Grey</string>
+    <string name="burgman_matteblack">Matte Black</string>
+    <string name="burgman_matteblue">Matte Blue</string>
+    <string name="burgman_mattered"> Matte Red</string>
+    <string name="burgman_miragewhite">Mirage White</string>
+    <string name="burgmanex_black">Black</string>
+    <string name="burgmanex_bronze">Bronze</string>
+    <string name="burgmanex_silver">Silver</string>
+
+</resources>

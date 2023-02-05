@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "857530776677",
+    "firebase_url": "https://suzuki-82e54.firebaseio.com",
+    "project_id": "suzuki-82e54",
+    "storage_bucket": "suzuki-82e54.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857530776677:android:4bcd4e81044c0d05e69a8c",
+        "android_client_info": {
+          "package_name": "suzuki.com.suzuki"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "857530776677-5dfag0gqq0gurhh3g12cr4enh0je1lku.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "suzuki.com.suzuki",
+            "certificate_hash": "b6744ece5652611d9e0d6bdcdedde59f3e38ef67"
+          }
+        },
+        {
+          "client_id": "857530776677-amtbl04uj96d1a7i67qjn9upvlmbj6qu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIKZM0hXRPZ5SVJIE6c4BxE5L1GB375hk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "857530776677-amtbl04uj96d1a7i67qjn9upvlmbj6qu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

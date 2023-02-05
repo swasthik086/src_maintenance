@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <shape xmlns:android="http://schemas.android.com/apk/res/android"
+        android:shape="rectangle">
+        <gradient
+            android:startColor="#696969"
+            android:endColor="#696969"
+            android:angle="90"/>
+
+        <corners android:radius="6dp" />
+    </shape>
+    <!-- we define background color -->
+    <!--<solid android:color="#696969" />-->
+        <!-- we define corner radius, note that radius can be different for each corner -->
+
+

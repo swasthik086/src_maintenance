@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="true"
+    android:isScrollContainer="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/back_ground">
+
+        <LinearLayout
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/rlSetCon"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/actionBar"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:id="@+id/llEditProfileBack"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="0.5"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/imArrow"
+                    android:layout_width="30dp"
+                    android:layout_height="20sp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/arrow" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1.8"
+                android:fontFamily="@font/roboto"
+                android:gravity="center"
+                android:text="RIDER PROFILE"
+                android:textColor="#FFFF"
+                android:textSize="16dp" />
+
+            <LinearLayout
+                android:id="@+id/llEditProfileSave"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="30dp"
+                android:layout_weight="0.3"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/ivAdd"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/right" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/rNameTv"
+            app:layout_constraintTop_toBottomOf="@+id/rlSetCon"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.037"
+            android:layout_marginLeft="45dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/roboto"
+            android:text="Rider's Name"
+            android:textColor="#fff"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/etUserName"
+            app:layout_constraintTop_toBottomOf="@+id/rNameTv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.09"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:backgroundTint="@color/light"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+            android:focusedByDefault="false"
+            android:textColorHint="#534F4F"
+            android:hint="Abc..."
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textAlignment="gravity"
+            android:fontFamily="@font/roboto"
+            android:inputType="textCapCharacters"
+            android:maxLength="20"
+            android:textColor="@color/light"
+            android:textCursorDrawable="@drawable/color_cursor" />
+
+        <TextView
+            android:id="@+id/locationTv"
+            app:layout_constraintTop_toBottomOf="@id/etUserName"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.037"
+            android:layout_marginLeft="45dp"
+            android:fontFamily="@font/roboto"
+            android:text="Location"
+            android:textColor="#fff"
+            android:textSize="14sp" />
+
+        <EditText
+            app:layout_constraintTop_toBottomOf="@id/locationTv"
+            android:id="@+id/etLocation"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.09"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:backgroundTint="@color/light"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+            android:ems="10"
+            android:textColorHint="#534F4F"
+            android:hint="Abc... OR Click on location icon"
+            android:inputType="textPersonName"
+            android:maxLength="20"
+            android:textColor="@color/light"
+            android:textCursorDrawable="@drawable/color_cursor" />
+
+        <ImageView
+            android:id="@+id/currentLocIv"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_location"
+            app:layout_constraintStart_toEndOf="@+id/etLocation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/etLocation"
+            app:layout_constraintBottom_toBottomOf="@+id/etLocation"/>
+
+        <TextView
+            app:layout_constraintTop_toBottomOf="@+id/etLocation"
+            android:id="@+id/rideTv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.037"
+            android:layout_marginLeft="45dp"
+            android:fontFamily="@font/roboto"
+            android:text="Your Ride"
+            android:textColor="#fff"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            app:layout_constraintTop_toBottomOf="@+id/rideTv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/classLayout"
+            app:layout_constraintHeight_percent="0.1"
+            android:weightSum="1"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/classSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_below="@+id/tvDemo"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="60dp"
+                android:layout_weight="0.9"
+                android:background="@drawable/spinner_drop"
+                android:backgroundTint="@color/light"
+                android:entries="@array/acc_type"
+                android:popupBackground="#404040"
+                android:theme="@style/Spinner" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="43dp"
+                android:layout_marginRight="42dp"
+                android:background="@drawable/blue_bottom_line"/>
+
+
+            <TextView
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.28"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="45dp"
+                android:gravity="top"
+                android:textAlignment="gravity"
+                android:text="_______________________________________________________________________"
+                android:textColor="@color/light" />
+        </LinearLayout>
+
+        <LinearLayout
+            app:layout_constraintTop_toBottomOf="@+id/classLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/divLayout"
+            app:layout_constraintHeight_percent="0.1"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/divSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.9"
+                android:layout_below="@id/classSpinner"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="60dp"
+                android:layout_toLeftOf="@id/classSpinner"
+                android:background="@drawable/spinner_drop"
+                android:backgroundTint="@color/light"
+                android:saveEnabled="false"
+                android:visibility="visible" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="43dp"
+                android:layout_marginRight="42dp"
+                android:background="@drawable/blue_bottom_line"/>
+
+            <TextView
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.28"
+                android:paddingTop="0dp"
+                android:layout_gravity="top"
+                android:gravity="top"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="45dp"
+                android:text="_______________________________________________________________________"
+                android:textColor="@color/light" />
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            app:layout_constraintTop_toBottomOf="@+id/divLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.358"
+            android:paddingTop="5dp"
+            android:orientation="vertical"
+            android:id="@+id/profile_viewpager">
+            <androidx.viewpager.widget.ViewPager
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHeight_percent="0.8"
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"/>
+
+            <TextView
+                android:id="@+id/slideText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintHeight_percent="0.1"
+                app:layout_constraintTop_toBottomOf="@+id/viewPager"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="(Slide To Change Color)"
+                android:textColor="#7b7b7b"
+                android:textSize="10sp" />
+
+            <LinearLayout
+                android:id="@+id/SliderDots"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintHeight_percent="0.1"
+                app:layout_constraintTop_toBottomOf="@+id/slideText"
+                android:layout_marginTop="2dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="horizontal" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

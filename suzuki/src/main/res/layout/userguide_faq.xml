@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back_ground"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rlSetCon"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/actionBar">
+
+        <RelativeLayout
+            android:id="@+id/rlUserGuide"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/ivUserGuide"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/arrow" />
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_marginRight="30dp"
+            android:gravity="center"
+            android:text="USER GUIDE &amp; FAQ"
+            android:textColor="#FFFF"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/user_guide"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="User Guide"
+            android:textColor="#00c1d9"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:text="1. To get connected with your bike"
+            android:textColor="#eeeeee"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="2dp"
+            android:text="2. Turn by turn assistance"
+            android:textColor="#eeeeee"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="2dp"
+            android:text="3. Trip details"
+            android:textColor="#eeeeee"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btUserbtn"
+            android:layout_width="90dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="35dp"
+            android:background="@drawable/round_white_btn"
+            android:drawableRight="@drawable/view"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:paddingRight="15dp"
+            android:text="View"
+            android:textAllCaps="false"
+            android:textColor="#205fa4" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/faq_bg"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/faqTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="FAQ"
+            android:textColor="#00c1d9"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:text="1. To know about Application"
+            android:textColor="#eeeeee"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="2dp"
+            android:text="2. Settings"
+            android:textColor="#eeeeee"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="2dp"
+            android:text="3. Bluetooth"
+            android:textColor="#eeeeee"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/faqBtn"
+            android:layout_width="90dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="35dp"
+            android:background="@drawable/round_white_btn"
+            android:drawableRight="@drawable/view"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:paddingRight="15dp"
+            android:text="View"
+            android:textAllCaps="false"
+            android:textColor="#205fa4" />
+
+    </LinearLayout>
+
+    <!--<TextView
+        android:id="@+id/faqTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="30dp"
+        android:text="FAQ"
+        android:textColor="#00c1d9"
+        android:textSize="18sp"
+        android:textStyle="bold" />-->
+
+    <ExpandableListView
+        android:visibility="gone"
+        android:id="@+id/expan"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="30dp"
+        android:divider="#3f3f3f"
+        android:dividerHeight="2dp"
+        android:transcriptMode="alwaysScroll">
+
+    </ExpandableListView>
+
+</LinearLayout>

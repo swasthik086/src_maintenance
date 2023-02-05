@@ -1,0 +1,19 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back_ground"
+    tools:context="com.suzuki.fragment.faqFragments.Rides">
+
+    <ExpandableListView
+        android:id="@+id/expandLv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="24dp"
+        android:divider="#3f3f3f"
+        android:dividerHeight="2dp"
+        android:transcriptMode="alwaysScroll">
+
+    </ExpandableListView>
+
+</FrameLayout>

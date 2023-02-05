@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.mappls.sdk.maps.MapView
+    android:id="@+id/mapBoxId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
+        <RelativeLayout
+            android:id="@+id/rlLocDetails"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:background="@color/app_bar_color"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:id="@+id/llBack"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="10dp"
+                    android:orientation="horizontal"
+                    android:paddingTop="12dp">
+
+                    <ImageView
+                        android:id="@+id/ivBack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:src="@drawable/arrow" />
+
+
+                </LinearLayout>
+
+
+                <ImageView
+                    android:layout_width="27dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@+id/llBack"
+                    android:layout_gravity="top"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:src="@drawable/trip_marker"
+                    android:visibility="gone" />
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fillViewport="true"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="12dp"
+                        android:orientation="vertical"
+                        android:weightSum="4">
+
+                        <EditText
+                            android:id="@+id/tvCurrentloc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="60dp"
+                            android:layout_weight="2"
+                            android:background="@drawable/rect_bg"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical|start"
+                            android:inputType="text"
+                            android:lines="1"
+                            android:maxLines="1"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="Current location"
+                            android:textAlignment="gravity"
+                            android:textColor="#e3e3e3" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="70dp"
+                            android:background="@color/white"
+                            android:visibility="gone" />
+
+                        <EditText
+                            android:id="@+id/tvDestination"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginRight="60dp"
+                            android:layout_weight="2"
+                            android:background="@drawable/rect_bg"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical|start"
+                            android:inputType="text"
+                            android:lines="1"
+                            android:maxLines="1"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="Destination"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/app_theme_color" />
+                        <!--<LinearLayout
+                            android:visibility="gone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        <EditText
+                            android:id="@+id/tvDestination2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="60dp"
+                            android:gravity="center_vertical|start"
+                            android:layout_marginTop="4dp"
+                            android:maxLines="1"
+                            android:lines="1"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:inputType="text"
+                            android:ellipsize="end"
+                            android:background="@drawable/rect_bg"
+                            android:text="Vai1"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/app_theme_color" />
+                        <EditText
+                            android:id="@+id/tvDestination22"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="60dp"
+                            android:gravity="center_vertical|start"
+                            android:layout_marginTop="4dp"
+                            android:maxLines="1"
+                            android:lines="1"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:inputType="text"
+                            android:ellipsize="end"
+                            android:background="@drawable/rect_bg"
+                            android:text="Via2"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/app_theme_color" />
+                        </LinearLayout>-->
+                    </LinearLayout>
+                </androidx.core.widget.NestedScrollView>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/viaPointRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginEnd="40dp"
+                    tools:listitem="@layout/via_point_item" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentBottom="true"
+                android:gravity="center_vertical|bottom"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="14dp"
+                android:weightSum="2">
+
+
+                <RelativeLayout
+                    android:id="@+id/rlSwapLoc"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/ivSwapLoc"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_swap_blue" />
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/rlBookMark"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/ivBookMark"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/book_mark"
+                        android:visibility="visible" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlAddVia"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/ivAddVia"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_more_blue"
+                        android:visibility="visible" />
+
+
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAutosuggest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rlLocDetails"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="130dp"
+            android:background="@android:color/white"
+            android:visibility="visible"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/auto_complete_list_item" />
+
+
+        <RelativeLayout
+            android:id="@+id/rlNavigationDetails"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_alignParentBottom="true"
+            android:background="#212121"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:id="@+id/llHeaderNavDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="90dp"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/tvPlaceAddress"
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingEnd="4dp"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_weight="1"
+                    android:maxLines="1"
+                    android:text=""
+                    android:textColor="@color/app_theme_color"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvDestinationAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/llHeaderNavDetails"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="120dp"
+                android:layout_marginBottom="10dp"
+                android:ellipsize="end"
+                android:lineSpacingExtra="3sp"
+                android:maxLines="3"
+                android:text=""
+                android:textColor="#e3e3e3"
+                android:textSize="14sp"
+                android:textStyle="normal"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/llStartNavigation"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="25dp"
+                android:background="@drawable/route_square"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:id="@+id/ivNav"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/nav" />
+
+                <TextView
+                    android:id="@+id/tvTimeForTravel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:text=""
+                    android:textAllCaps="true"
+                    android:textColor="@color/nav_blue"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/api_progress_bar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+
+        android:theme="@style/progressBarBlue"
+        android:visibility="gone" />
+
+</RelativeLayout>

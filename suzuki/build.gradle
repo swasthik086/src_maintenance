@@ -1,0 +1,200 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'realm-android'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+
+
+allprojects {
+    repositories {
+        jcenter()
+        flatDir {
+            dirs 'libs'
+        }
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+
+        }
+        maven {
+            url 'https://maven.mappls.com/repository/mappls/'
+        }
+    }
+}
+
+android {
+
+    compileSdkVersion 31
+    defaultConfig {
+        applicationId "suzuki.com.suzuki"
+        minSdkVersion 23
+        targetSdkVersion 31
+        versionCode 56
+        versionName "2.15.08.02"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled = true
+
+    }
+
+    signingConfigs {
+        release {
+            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+                storeFile file(MYAPP_RELEASE_STORE_FILE)
+                storePassword MYAPP_RELEASE_STORE_PASSWORD
+                keyAlias MYAPP_RELEASE_KEY_ALIAS
+                keyPassword MYAPP_RELEASE_KEY_PASSWORD
+            }
+        }
+    }
+    buildTypes {
+
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+
+        }
+    }
+    compileOptions {
+
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
+    kotlinOptions{
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    configurations {
+
+        all {
+            exclude group: 'org.json', module: 'json'
+        }
+    }
+
+    buildFeatures{
+        viewBinding true
+    }
+}
+
+
+dependencies {
+  def work_version = "2.7.1"
+   // def work_version = "2.4.2"
+    // (Java only)
+    implementation "androidx.work:work-runtime:$work_version"
+    //implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude:
+            [])
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation project(':meowbottomnavigation')
+
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:26.1.1')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'me.relex:circleindicator:2.1.2'
+    implementation 'me.relex:circleindicator:2.1.2@aar'
+    implementation 'com.github.Cutta:GifView:1.4'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.core:core:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.github.sachinvarma:EasyPermission:1.0.1'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation "com.karumi:dexter:5.0.0"
+    implementation 'com.github.yalantis:ucrop:2.2.2'
+
+
+// mmi gradle
+//implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:7.0.3'
+ //   implementation 'com.mapmyindia.sdk:mapmyindia-android-sdk:6.7.12'
+
+
+//    implementation 'com.mapbox.mapboxsdk:mapbox-sdk-turf:3.1.0'
+//    implementation 'com.mapbox.mapboxsdk:mapbox-android-gestures:0.3.0'
+//    implementation 'com.mapbox.mapboxsdk:mapbox-sdk-geojson:3.3.0'
+//    implementation 'com.mapbox.mapboxsdk:mapbox-android-core:0.2.1'
+    implementation 'androidx.room:room-runtime:2.2.5'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.google.firebase:firebase-invites:17.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.firebase:firebase-config:20.0.2'
+    kapt 'androidx.room:room-compiler:2.2.5'
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0'
+    implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
+
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+    implementation 'com.afollestad:sectioned-recyclerview:0.5.0'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.6.1'
+    /*implementation 'com.squareup.okhttp3:okhttp:4.1.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.1.1'*/
+
+    implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
+    implementation 'me.jahirfiquitiva:FABsMenu:1.1.4'
+
+    // Recommended: Add the Firebase SDK for Google Analytics.
+    implementation 'com.google.firebase:firebase-analytics:18.0.0'
+
+    // Add the Firebase Crashlytics SDK.
+    implementation 'com.google.firebase:firebase-crashlytics:17.3.0'
+
+    implementation 'org.greenrobot:eventbus:3.1.1'
+//    implementation project(path: ':FastBleLib')
+    implementation 'com.clj.fastble:FastBleLib:2.3.4'
+    implementation 'com.facebook.soloader:soloader:0.10.4'
+//    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+    implementation 'com.google.firebase:firebase-dynamic-links'
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation platform('com.google.firebase:firebase-bom:30.4.1')
+
+    // emoticon remove
+    implementation 'com.vdurmont:emoji-java:5.1.1'
+
+    //auto start
+    implementation 'com.github.judemanutd:autostarter:1.0.8'
+    compile 'com.stepstone.apprating:app-rating:2.3.1'
+    implementation platform('com.google.firebase:firebase-bom:28.3.1')
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-firestore'
+
+    ///Mappls
+
+    implementation 'com.mappls.sdk:place-widget:2.0.1'
+    implementation 'com.mappls.sdk:mappls-android-sdk:8.0.0'
+    implementation 'android.arch.persistence.room:runtime:1.1.1'
+    annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
+    //Annotation Plugin
+    implementation 'com.mappls.sdk:annotation-plugin:1.0.0'
+    implementation 'com.mappls.sdk:directions-plugin:1.0.1'
+    implementation 'com.mappls.sdk:scalebar-plugin:1.0.0'
+    implementation 'com.mappls.sdk:geofence-ui:1.0.0'
+    //for nearby widget
+    implementation 'com.mappls.sdk:nearby-ui:1.0.0'
+    implementation 'com.mappls.sdk:driving-range-plugin:1.0.0'
+    //for direction widget
+    implementation 'com.mappls.sdk:direction-ui:1.0.3'
+
+    //Geoanalytics plugin
+    implementation 'com.mappls.sdk:geoanalytics-plugin:1.0.0'
+    implementation 'com.google.android.gms:play-services-location:20.0.0'
+    implementation 'com.github.QuadFlask:colorpicker:0.0.15'
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0'
+    implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
+    implementation 'com.mappls.sdk:navigation-camera:1.0.0'
+    implementation 'com.mappls.sdk:navigation-sdk:0.13.1'
+}

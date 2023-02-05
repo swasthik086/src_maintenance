@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+
+        android:id="@+id/strip_item_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_blue"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:padding="16dp"
+
+        >
+
+        <LinearLayout
+            android:id="@+id/repeat_current_instructions_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="25dp"
+            android:gravity="center"
+            android:minWidth="60dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/maneuver_image_view"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+
+            <TextView
+                android:id="@+id/navigation_strip_dist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textColor="@color/color_white"
+                app:autoSizeMaxTextSize="20sp"
+                app:autoSizeMinTextSize="14sp"
+                app:autoSizeStepGranularity="1sp"
+                app:autoSizeTextType="uniform" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/navigation_strip_text"
+            android:layout_width="match_parent"
+
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginRight="25dp"
+            android:gravity="center"
+
+            android:textColor="@color/color_white"
+
+            app:autoSizeMaxTextSize="22sp"
+            app:autoSizeMinTextSize="13sp"
+            app:autoSizeStepGranularity="1sp"
+
+            app:autoSizeTextType="uniform" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/lane_guidance_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/strip_item_container"
+    >
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTurnLanes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_horizontal"
+            tools:listitem="@layout/turn_lane_listitem_layout" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_below="@+id/strip_item_container"
+        android:background="@drawable/shadow_top" />
+
+</RelativeLayout>

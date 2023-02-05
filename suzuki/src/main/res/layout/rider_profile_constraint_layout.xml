@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back_ground">
+
+    <LinearLayout
+        android:id="@+id/rlSetCon"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/actionBar"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/llArrowLayout"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="0.5"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/ivriderBack"
+                android:layout_width="25dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center"
+                android:src="@drawable/arrow" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_weight="2.0"
+            android:gravity="center"
+            android:text="RIDER PROFILE"
+            android:textColor="#FFFF"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="40dp"
+            android:gravity="end">
+
+            <ImageView
+                android:id="@+id/ivriderEdit"
+                android:layout_width="0dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:src="@drawable/pencil" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/profileLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.2"
+        app:layout_constraintTop_toBottomOf="@id/rlSetCon">
+
+        <com.suzuki.widgets.CircleImageView
+            android:id="@+id/img_profile"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/rider_photo"
+            app:civ_border_color="@color/light"
+            app:civ_border_width="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/profileGuideLine"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.65" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/profileGuideLine2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.56" />
+
+        <ImageView
+            android:id="@+id/camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rider_pic"
+            app:layout_constraintBottom_toBottomOf="@id/img_profile"
+            app:layout_constraintStart_toEndOf="@id/profileGuideLine2"
+            app:layout_constraintTop_toBottomOf="@id/profileGuideLine" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tvRiderName"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/roboto"
+        android:gravity="center"
+        android:text="Suzuki"
+        android:textAllCaps="true"
+        android:textColor="@color/light"
+        android:textColorHint="@color/light"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileLayout" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/locationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.05"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvRiderName">
+
+        <ImageView
+            android:id="@+id/markerIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/user_loc"
+            app:layout_constraintBottom_toBottomOf="@id/tvRiderLocation"
+            app:layout_constraintEnd_toStartOf="@id/tvRiderLocation"
+            app:layout_constraintStart_toStartOf="parent"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="@+id/tvRiderLocation" />
+
+        <TextView
+            android:id="@+id/tvRiderLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:textColor="#fff"
+            android:textColorHint="#fff"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:maxWidth="300dp"
+            android:textAllCaps="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/markerIv"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tvBikeName"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:text="Suzuki burgman street 125"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        app:layout_constraintHeight_percent="0.05"
+        app:layout_constraintTop_toBottomOf="@id/locationLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
+        android:id="@+id/ivUserBike"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintHeight_percent="0.23"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvBikeName"
+        android:src="@drawable/bike_image" />
+
+    <TextView
+        android:id="@+id/overAllStatStatic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="OVERALL STATS"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivUserBike"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:background="#68404040"
+        app:layout_constraintTop_toBottomOf="@+id/overAllStatStatic"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/odometerStatic"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lineHeight="25sp"
+            android:text="Odometer "
+            android:textColor="#aaaaaa"
+            android:textSize="12sp"
+            app:layout_constraintWidth_percent="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/tvOdoRead"
+            app:layout_constraintVertical_chainStyle="packed"/>
+        <TextView
+            android:id="@+id/rideCountsStatic"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintWidth_percent="0.5"
+            app:layout_constraintStart_toEndOf="@+id/odometerStatic"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/tvRide"
+            android:gravity="center"
+            android:lineHeight="25sp"
+            android:text="Total Ride Count"
+            android:textColor="#aaaaaa"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tvOdoRead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="   0km    "
+            app:layout_constraintTop_toBottomOf="@+id/odometerStatic"
+            app:layout_constraintStart_toStartOf="@+id/odometerStatic"
+            app:layout_constraintEnd_toEndOf="@+id/odometerStatic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="#fff"
+            android:textColorHint="#fff"
+            android:textSize="22sp" />
+        <TextView
+            android:id="@+id/tvRide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:lineHeight="25sp"
+            android:text="   0    "
+            app:layout_constraintTop_toBottomOf="@+id/rideCountsStatic"
+            app:layout_constraintStart_toStartOf="@+id/rideCountsStatic"
+            app:layout_constraintEnd_toEndOf="@+id/rideCountsStatic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="#fff"
+            android:textSize="22sp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

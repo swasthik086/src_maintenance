@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back_ground"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/rlSetCon"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:background="@color/actionBar"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/ivTerms"
+            android:layout_width="20dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="0.2"
+            android:src="@drawable/arrow" />
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="80dp"-->
+        <!--android:gravity="center"-->
+        <!--android:layout_gravity="center"-->
+        <!--&gt;-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="30dp"
+            android:layout_weight="1.8"
+            android:gravity="center"
+            android:text="TERMS &amp; CONDITIONS"
+            android:textColor="#FFFF"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <!--</LinearLayout>`-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="40dp"
+                android:justificationMode="inter_word"
+                android:lineHeight="20sp"
+                android:lineSpacingExtra="6sp"
+                android:text="@string/terms_and_conditions"
+                android:textColor="#fff"
+                android:textSize="14sp" />
+
+            <!--<LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:text="Suzuki Motorcycles India Pvt Ltd is committed to ensuring that the app is as
+useful and efficient as possible. For that reason, we reserve the right to make changes
+to the app or to charge for its services, at any time and for any reason. We will never
+charge you for the app or its services without making it very clear to you exactly what
+you’re paying for."
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:text="By downloading the App, you agree to comply with each of the Terms and Conditions."
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:text="The Suzuki app stores and processes personal data that you have provided to
+us, in order to provide our Service. Certain functionality of the App may need to access
+your Device and information stored on it so that it works properly. By using the App, you
+consent to this. In addition to the T&amp;C herein, you are also bound by the Privacy Policy
+which is construed as addendum to this T&amp;C, and read as part and parcel of T&amp;C. It’s
+your responsibility to keep your phone and access to the app secure. We therefore
+recommend that you do not jailbreak or root your phone, which is the process of
+removing software restrictions and limitations imposed by the official operating system of
+your device. It could make your phone vulnerable to malware/viruses/malicious
+programs, compromise your phone’s security features and it could mean that the Suzuki
+app won’t work properly or at all."
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:text="The SUZUKI app processes location data provided by your phone’s GPS, in order to provide
+our Map Service which do rely on third party Map service provider.Maps information from a
+third party Map service provider are for planning purposes only.You may find that
+construction projects ,traffic,weather or other events may cause conditions to differ from the
+map results and you should plan your route accordingly.Suzuki Motorcycle India Pvt Ltd will
+not take responsibility for difference in Map results from actual.We also recommend that you
+must obey all the signs or the notices regarding your route."
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:text="You should be aware that there are certain things that Suzuki Motorcycle India Pvt Ltd will
+not take responsibility for. Certain functions of the app will require the app to have an active
+internet connection or preferrably high speed internet connection. The connection can be Wi-
+Fi, or provided by your mobile network provider, but Suzuki Motorcycle India Pvt Ltd cannot
+take responsibility for the app not working as the functioning of app is dependent on several
+factors including Wi Fi access, third party service provider engaged by Suzuki Motorcycle
+India Pvt Ltd. You acknowledge that use of the App is dependent on third parties, including
+your own network providers, and that we are not liable for any acts or omissions of those
+third parties.If you’re using the app outside of an area with Wi-Fi, you should remember that
+your terms of the agreement with your mobile network provider will still apply. As a result,
+you may be charged by your mobile provider for the cost of data for the duration of the
+connection while accessing the app, or other third party charges. In using the app, you’re
+accepting responsibility for any such charges, including roaming data charges if you use the app outside of your home territory (i.e. region or country) without turning off data roaming. If you are not the bill payer for the device on which you’re using the app, please be aware that we assume that you have received permission from the bill payer for using the app.
+"
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:text="Along the same lines, Suzuki Motorcycle India Pvt Ltd cannot always take responsibility for the way you use the app i.e. you need to make sure that your device stays charged – if it runs out of battery and you can’t turn it on to avail the Service, Suzuki Motorcycle India Pvt Ltd cannot accept responsibility
+With respect to Suzuki Motorcycle India Pvt Ltd.’s responsibility for your use of the app, it is important to bear in mind that although we endeavor to ensure that it is updated and correct at all times, we do rely on third parties to provide information to us so that we can make it available to you. Suzuki Motorcycle India Pvt Ltd accepts no liability for any loss, direct or indirect, that you experience as a result of relying wholly on this functionality of the app.
+"
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:text="The App is provided to you on as is where is basis, without any express or implied warranty of any sort. In particular, but without limitation, no warranty is given as to the accuracy, suitability, reliability, completeness, performance, fitness, freedom from viruses or timeliness of the content contained on the App.At some point, we may wish to update the app. The app is currently available on Android only and the operating system requirements may change in the future, and you’ll need to download the updates if you want to keep using the app. Suzuki Motorcycle India Pvt Ltd does not promise that it will always update the app so that it is relevant to you and/or works with the Android version that you have installed on your device. However, you promise to always accept updates to the application when offered to you. We may also wish to stop providing the app, and may terminate use of it at any time without giving notice of termination to you. Unless we tell you otherwise, upon any termination, (a) the rights and licenses granted to you in these terms will end; (b) you must stop using the app, and (if needed) delete it from your device.Suzuki Motorcycle India Pvt Ltd does not guarantee the unlimited compatibility and functionality of your mobile device in combination with the vehicle interface.
+"
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:text="Changes to This Terms and Conditions"
+                    android:textSize="16sp"
+                    android:textColor="#fff"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:text="We may update our Terms and Conditions from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Terms and Conditions on this page. These changes are effective immediately after they are posted on this page. If you continue using the App, you will be bound by any or all modifications made to it."
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:text="Indemnify"
+                    android:textSize="16sp"
+                    android:textColor="#fff"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:text="You shall indemnify us (and you shall keep us indemnified) and hold us and our directors, employees, agents and representatives harmless against any claim, loss, expense, liability or damages suffered by us resulting from your breach of these App TandCs."
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:text="Your use of App"
+                    android:textSize="16sp"
+                    android:textColor="#fff"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:text="You may only use the App for your own personal use and not in connection with any commercial endeavours. You must not send it to anyone else or copy or modify any part of it in any way.
+You must not attempt to extract any source code from the App, disassemble it or make any derivative versions, or attempt to interrupt or decipher the transmissions between the App and our systems.
+You must not use the App for any of the following purposes:
+(a) anything unlawful or illegal or which is fraudulent or malicious or which promotes any criminal activity or provides information about the same;
+(b) anything which is defamatory, harassing or threatening or which otherwise infringes or violates the rights of others. This includes any information that you may add or upload to the App;
+(c) interfering in any way with any other user of the App; and/or
+(d) knowingly introducing viruses or other malicious or harmful material or using it in connection with unsolicited communications.
+You must not use the App in a way that may damage or impair the App, the Service or our underlying systems and security.
+Suzuki Motorcycle India Pvt Ltd does not accept Responsibility for
+(a) malfunctions in communications facilities which cannot reasonably be considered to be under our control and that may affect the accuracy or timeliness of messages you send or the material you access via the App;
+(b) any losses or delays in transmission of messages or material you access arising out of the use of any Internet access service provider or mobile network service provider or caused by any browser or other software which is not under our control;
+(c) viruses that may infect your devise or other property on account of your access to or use of the App or your accessing any materials on the App;
+(d) any unauthorised use or interception of any message or information before it reaches the App or our servers from the App;
+"
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:text="Intellectual property rights"
+                    android:textSize="16sp"
+                    android:textColor="#fff"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:text="The App and all copyright, database rights, trade marks and other intellectual property rights related to it belong to us or our licensors."
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:text="Jurisdiction"
+                    android:textSize="16sp"
+                    android:textColor="#fff"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:text="All issues or disputes arising among the Parties where judicial intervention is required, the same is subject to the exclusive jurisdiction of courts at Delhi."
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:text="Contact Us"
+                    android:textSize="16sp"
+                    android:textColor="#fff"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:text="If you have any questions or suggestions about our Terms and Conditions, do not hesitate to contact us."
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="40dp"
+                    android:justificationMode="inter_word"
+                    android:lineHeight="20sp"
+                    android:lineSpacingExtra="6sp"
+                    android:text=""
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+            </LinearLayout>-->
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

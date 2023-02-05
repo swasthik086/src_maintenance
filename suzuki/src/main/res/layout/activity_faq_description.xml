@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back_ground"
+    android:focusableInTouchMode="true"
+    tools:context="com.suzuki.activity.FaqDescriptionActivity">
+
+    <!--toolbar-->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolBarFaqDesc"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="@color/app_bar_color">
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="32dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/splash_logo_desc"
+                android:background="@drawable/ic_arrow_back_black_24dp"/>
+            <TextView
+                android:id="@+id/titleTv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/faq_s"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:paddingStart="10dp"
+                android:paddingEnd="@dimen/padding_10"
+                android:gravity="start|center_vertical" />
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+    
+    <EditText
+        android:id="@+id/searchEt"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+        android:layout_margin="16sp"
+        android:hint="@string/search"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:textSize="16sp"
+        android:drawableEnd="@drawable/ic_search_grey_24dp"
+        android:cursorVisible="true"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+        android:textCursorDrawable="@drawable/cursor_color"
+        android:background="@drawable/rect_bg"
+        android:textColor="@color/white"
+        android:textColorHint="@color/lightGrey"
+        android:autofillHints=""
+        android:inputType="text" />
+
+    <ExpandableListView
+        android:id="@+id/descExpandableLv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/searchEt"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="16dp"
+        android:divider="#3f3f3f"
+        android:dividerHeight="2dp">
+    </ExpandableListView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
