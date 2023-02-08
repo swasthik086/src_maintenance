@@ -36,7 +36,7 @@
             android:layout_gravity="center"
             android:layout_marginRight="30dp"
             android:gravity="center"
-            android:text="USER GUIDE &amp; FAQ"
+            android:text="QUICK START GUIDE &amp; FAQ"
             android:textColor="#FFFF"
             android:textSize="16sp" />
     </RelativeLayout>
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:text="User Guide"
+            android:text="Quick Start Guide"
             android:textColor="#00c1d9"
             android:textSize="18sp" />
 

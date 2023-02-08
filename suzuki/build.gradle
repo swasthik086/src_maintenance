@@ -35,7 +35,7 @@ android {
         applicationId "suzuki.com.suzuki"
         minSdkVersion 23
         targetSdkVersion 31
-        versionCode 56
+        versionCode 59
         versionName "2.15.08.02"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

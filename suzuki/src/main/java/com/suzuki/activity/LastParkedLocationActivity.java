@@ -1,6 +1,8 @@
 package com.suzuki.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -92,6 +94,7 @@ import static com.suzuki.activity.HomeScreenActivity.TOAST_DURATION;
 import static com.suzuki.activity.RouteNearByActivity.dpToPx;
 
 import static com.suzuki.fragment.DashboardFragment.logData;
+import static com.suzuki.fragment.MapMainFragment.eLocation;
 import static com.suzuki.utils.Common.BikeBleName;
 
 
@@ -180,7 +183,17 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         mStateModel = new StateModel();
 
         llStartNavigation.setOnClickListener(v -> {
-            startNavigation();
+
+            LatLng currentLatlng= new LatLng(lastPark_Lat,lastPark_Lng);
+            LatLng destinationLatlng= new LatLng(eLocation.latitude,eLocation.longitude);
+            if(currentLatlng.distanceTo(destinationLatlng) < 30 ){
+                showExitNavigationAlert();
+
+
+            }else {
+                startNavigation();
+            }
+           // startNavigation();
         });
 
         ivBack.setOnClickListener(new View.OnClickListener() {
@@ -204,6 +217,46 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         });
 
         mapView.getMapAsync(this);
+    }
+
+    public void showExitNavigationAlert() {
+        Dialog dialog = new Dialog(this, R.style.custom_dialog);
+        dialog.setContentView(R.layout.custom_dialog);
+
+        TextView tvAlertText = dialog.findViewById(R.id.tvAlertText);
+        tvAlertText.setText("This place seems to be nearby. Please look around.");
+        ImageView ivCross = dialog.findViewById(R.id.ivCross);
+        ivCross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                //  updateDisplay(maneuverID, "00000", dataShortDistanceUnit, dataEta, dataRemainingDistance, dataRemainingDistanceUnit, "1", "0");
+
+//                getActivity().onBackPressed();
+
+            }
+        });
+
+        ImageView ivCheck = dialog.findViewById(R.id.ivCheck);
+
+
+        ivCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                if (this== null)
+                    return;
+                //   updateDisplay(maneuverID, "00000", dataShortDistanceUnit, dataEta, dataRemainingDistance, dataRemainingDistanceUnit, "1", "0");
+                if (RouteActivity.routeActivity != null) {
+                    RouteActivity.routeActivity.finish();
+                } else if (RouteNearByActivity.routeNearByActivity != null) {
+                    RouteNearByActivity.routeNearByActivity.finish();
+                }
+
+
+            }
+        });
+        dialog.show();
     }
 
     private void shareIt() {
@@ -531,15 +584,14 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         Point origin = Point.fromLngLat(wayPoints.get(0).getLongitude(), wayPoints.get(0).getLatitude());
         Point destination = Point.fromLngLat(wayPoints.get(wayPoints.size() - 1).getLongitude(), wayPoints.get(wayPoints.size() - 1).getLatitude());
 
-        MapplsDirections directions = MapplsDirections.builder()
+        @SuppressLint("HardwareIds") MapplsDirections.Builder directions = MapplsDirections.builder()
                 .origin(origin)
                 .steps(true)
                 .resource(DirectionsCriteria.RESOURCE_ROUTE_ETA)
                 .profile(DirectionsCriteria.PROFILE_DRIVING)
                 .overview(DirectionsCriteria.OVERVIEW_FULL)
-                .destination(destination)
-                .build();
-        MapplsDirectionManager.newInstance(directions).call(new OnResponseCallback<DirectionsResponse>() {
+                .destination(destination);
+        MapplsDirectionManager.newInstance(directions.build()).call(new OnResponseCallback<DirectionsResponse>() {
             @Override
             public void onSuccess(DirectionsResponse response) {
 
@@ -930,8 +982,10 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         LocationComponentOptions options = LocationComponentOptions.builder(this)
                 .trackingGesturesManagement(true)
                 .accuracyColor(ContextCompat.getColor(this, R.color.colorAccent))
-                .foregroundDrawable(R.drawable.location_pointer)
+
                 .build();
+
+        // .foregroundDrawable(R.drawable.location_pointer)
 // Get an instance of the component LocationComponent
         locationComponent = mapboxMap.getLocationComponent();
         LocationComponentActivationOptions locationComponentActivationOptions = LocationComponentActivationOptions.builder(this, style)
@@ -961,6 +1015,7 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
 // Set the component's camera mode
         locationComponent.setCameraMode(CameraMode.TRACKING);
         locationComponent.setRenderMode(RenderMode.COMPASS);
+
     }
 
     @Override

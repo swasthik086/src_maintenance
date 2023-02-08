@@ -43,18 +43,19 @@ public class BleConnector {
     BleConnector(BleBluetooth bleBluetooth) {
         this.mBleBluetooth = bleBluetooth;
         this.mBluetoothGatt = bleBluetooth.getBluetoothGatt();
+
         this.mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 switch (msg.what) {
-
                     case BleMsg.MSG_CHA_NOTIFY_START: {
                         BleNotifyCallback notifyCallback = (BleNotifyCallback) msg.obj;
                         if (notifyCallback != null)
                             notifyCallback.onNotifyFailure(new TimeoutException());
                         break;
                     }
+
 
                     case BleMsg.MSG_CHA_NOTIFY_RESULT: {
                         notifyMsgInit();
@@ -255,6 +256,7 @@ public class BleConnector {
         }
     }
 
+
     /**
      * stop notify
      */
@@ -263,7 +265,8 @@ public class BleConnector {
                 && (mCharacteristic.getProperties() | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
             return setCharacteristicNotification(mBluetoothGatt, mCharacteristic,
                     useCharacteristicDescriptor, false, null);
-        } else {
+        }
+        else {
             return false;
         }
     }

@@ -959,7 +959,6 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
                         setUpViewPager(gixxer250images, 0);
                         viewPager.setVisibility(View.VISIBLE);
                         viewPagerAdapter.notifyDataSetChanged();
-
                         mLinearLayoutViewPager_layout.setVisibility(View.VISIBLE);
                     }
                     break;
@@ -1025,7 +1024,6 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
             // for Activity#requestPermissions for more details.
             return;
         }
-
         Location location = locationManager.getLastKnownLocation(provider);
 
         if (location != null) {

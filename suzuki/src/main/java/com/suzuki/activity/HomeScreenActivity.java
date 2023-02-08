@@ -925,7 +925,10 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
          * else if the ratings are 3 or less and comment is found then open mail and set flag for ratings submitted
          * else open playstore to submit ratings and set flag for the same
          */
-        if(i<=3 && s.equals("")) showDialog(i,true);
+        if(i<=3 && s.equals("")) {
+            Toast.makeText(HOME_SCREEN_OBJ, "Please write your comment.", Toast.LENGTH_SHORT).show();
+            showDialog(i,true);
+        }
         else if(i<=3 && !s.equals("")){
             Toast.makeText(HOME_SCREEN_OBJ, "Thanks For Your Feedback!", Toast.LENGTH_SHORT).show();
 

@@ -15,19 +15,16 @@ public class FavouriteTripRealmModule extends RealmObject implements Comparable<
     boolean favorite;
     private  String rideTime;
     private  String totalDistance;
-
-
-
     private int id;
     private String trip_name;
-
-
     private String current_lat;
     private String current_long;
     private String destination_lat;
     private String destination_long;
     private  int topSpeed;
     private  int rideTimeLt10;
+
+
 
     private RealmList<ViaPointLocationRealmModel> pointLocationRealmModels = new RealmList<>();
 
@@ -38,6 +35,8 @@ public class FavouriteTripRealmModule extends RealmObject implements Comparable<
     public void setPointLocationRealmModels(ViaPointLocationRealmModel pointLocationRealmModels) {
         this.pointLocationRealmModels.add(pointLocationRealmModels);
     }
+
+
 
     public int getTopSpeed() {
         return topSpeed;

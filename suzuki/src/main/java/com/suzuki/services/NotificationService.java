@@ -348,7 +348,7 @@ public class NotificationService extends NotificationListenerService {
 //                        sendMISSEDCAllDatatoDashboard(datatoSend, "Y");
 //
 //                    }
-                    else if (staticConnectionStatus && (full.contains("missed call") || full.contains("missed voice call"))){
+                    else if (staticConnectionStatus && whatsappCallEnabled && (full.contains("missed call") || full.contains("missed voice call"))){
                         sendMISSEDCAllDatatoDashboard(datatoSend, "Y");
                     }
                 }
@@ -882,30 +882,31 @@ public class NotificationService extends NotificationListenerService {
                             full = full.toLowerCase();
                         } else return;
 
-                        if (Build.VERSION.SDK_INT == 33 && !full.contains("whatsapp") && full.contains("missed") || full.contains("voice")){
-                            w_call++;
+//                        if (Build.VERSION.SDK_INT == 33 && !full.contains("whatsapp") && full.contains("missed") || full.contains("voice")){
+//                            w_call++;
+//
+//                        }else  if (!full.contains("whatsapp")  && full.contains("missed") || full.contains("voice")) w_call++ ;
+//
+//                        if (Build.VERSION.SDK_INT == 33 && !full.contains("whatsapp")  && full.contains("msg") || full.contains("messag") || full.contains("mms")){
+//                            w_msg++;
+//                        }else if(!full.contains("whatsapp")  && full.contains("msg") || full.contains("messag") || full.contains("mms")){
+//                            w_msg++;
+//                        }
+//
+//                        if ((Build.VERSION.SDK_INT == 33 && full.contains("msg") || full.contains("messag") || full.contains("mms"))&& !full.contains("missed")) {
+//                            sms++;
+//                        }
+//                        else if ((full.contains("msg") || full.contains("messag") || full.contains("mms"))&& !full.contains("missed")) {
+//                            sms++;
+//                        }
+//
+                        if ( !full.contains("whatsapp")) {
 
-                        }else  if (!full.contains("whatsapp")  && full.contains("missed") || full.contains("voice")) w_call++ ;
+                            if (full.contains("missed") || full.contains("voice")) w_call++;
+                            else if (full.contains("msg") || full.contains("messag") || full.contains("mms")) w_msg++;
 
-                        if (Build.VERSION.SDK_INT == 33 && !full.contains("whatsapp")  && full.contains("msg") || full.contains("messag") || full.contains("mms")){
-                            w_msg++;
-                        }else if(!full.contains("whatsapp")  && full.contains("msg") || full.contains("messag") || full.contains("mms")){
-                            w_msg++;
                         }
-
-                        if ((Build.VERSION.SDK_INT == 33 && full.contains("msg") || full.contains("messag") || full.contains("mms"))&& !full.contains("missed")) {
-                            sms++;
-                        }
-                        else if ((full.contains("msg") || full.contains("messag") || full.contains("mms"))&& !full.contains("missed")) {
-                            sms++;
-                        }
-                        if (Build.VERSION.SDK_INT==33 && full.contains("whatsapp")) {
-
-                            if (Build.VERSION.SDK_INT==33 &&  full.contains("missed") || full.contains("voice")) w_call++;
-                            else if (Build.VERSION.SDK_INT==33 &&  full.contains("msg") || full.contains("messag") || full.contains("mms")) w_msg++;
-
-                        }
-                        else if ((full.contains("msg") || full.contains("messag") || full.contains("mms"))&& !full.contains("missed")) sms++;
+                       // else if ((full.contains("msg") || full.contains("messag") || full.contains("mms"))&& !full.contains("missed")) sms++;
                     }
                 }
 

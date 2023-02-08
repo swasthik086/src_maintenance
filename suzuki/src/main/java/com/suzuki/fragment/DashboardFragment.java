@@ -189,13 +189,10 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         BleManager.getInstance().init(getActivity().getApplication());
         dashboardFragment = DashboardFragment.this;
         Typeface typefaceRobotoRegular = Typeface.createFromAsset(getContext().getAssets(), "fonts/Roboto-Regular.ttf");
-
         if (bluetoothadapter != null) BLUETOOTH_STATE = true;
         else BLUETOOTH_STATE = false;
-
         app = getMyApplication();
 //        layoutTop = (RelativeLayout) view.findViewById(R.id.layoutTop);
-
         rlButtonConnect = view.findViewById(R.id.rlButtonConnect);
         rlButtonWhiePair = view.findViewById(R.id.rlButtonWhiePair);
 //        layoutTop = (RelativeLayout) view.findViewById(R.id.layoutTop);
@@ -243,7 +240,6 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         simpleDateFormat = new SimpleDateFormat("hhmmss");
 
         for (SettingsPojo settingsPojo : settingsPojos) {
-
             speedAlert = settingsPojo.getSpeedAlert();
             synccc = settingsPojo.isSpeedSet();
         }
@@ -406,6 +402,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
             Log.e(EXCEPTION,ClassName+" update_dashboard: "+e);
         }
     }*/
+
 
     /*private static boolean get_vehicle_type() {
 
@@ -1997,7 +1994,11 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
             rlButtonWhiePair.setVisibility(View.VISIBLE);
             rlButtonConnect.setVisibility(View.GONE);
         } else{
-            tvBleName.setText(BikeBleName.getValue());
+
+            model = sharedPreferences.getString("vehicle_name","");
+
+            tvBleName.setText(model);
+      //      tvBleName.setText(BikeBleName.getValue());
             rlButtonWhiePair.setVisibility(View.GONE);
             rlButtonConnect.setVisibility(View.VISIBLE);
         }

@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -100,6 +101,9 @@ import static com.suzuki.utils.Common.BikeBleName;
 
 public class TripDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    static TripDetailsActivity INSTANCE;
+    String data="FirstActivity";
+
     private static final String TAG = TripDetailsActivity.class.getSimpleName();
     private ArrayList<LatLng> listOfLatlang = new ArrayList<>();
     private MapView mapView;
@@ -115,6 +119,7 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
     LinearLayout llviewToShare;
     String tripName;
     List<FavouriteTripRealmModule> list;
+    RealmList<ViaPointLocationRealmModel> viaPointRealmList=new RealmList<>();
 
     File imagePath;
     RealmResults<FavouriteTripRealmModule> favTrip;
@@ -162,6 +167,7 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        INSTANCE=this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.trip_details_activity);
         FirebaseApp.initializeApp(this);
@@ -214,6 +220,8 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
         tripName = intent.getStringExtra("tripName");
         topspeed = intent.getStringExtra("topspeed");
         ridetimeLt10 = intent.getStringExtra("timelt10");
+
+
         viaPointList = intent.getParcelableArrayListExtra("viaPointList");
         tvTripName.setText(tripName);
         Log.d("kskksksksks", "---" + topspeed + ridetimeLt10);
@@ -283,7 +291,6 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
             @Override
             public void onClick(View v) {
 
-
                 if (forFavAdd) {
                     forFavAdd = false;
 //                    if(viaPointRealmList!=null){
@@ -295,7 +302,7 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
 //                        }
 //                    }
 
-                    addFavouriteTripDataToRealm(date, dateparse, id, time, startLoc, endLoc,rideTime,totalDist, forFavAdd, cuurent_lat, current_long, destiny_lat, destiny_long, tripName, topspeed, ridetimeLt10);
+                    addFavouriteTripDataToRealm(date, dateparse, id, time, startLoc, endLoc,rideTime,totalDist, forFavAdd, cuurent_lat, current_long, destiny_lat, destiny_long, tripName, topspeed, ridetimeLt10, viaPointRealmList);
                     updateRecentData(realm, id, forFavAdd);
 
                     ivFav.setImageResource(R.drawable.fav);
@@ -313,7 +320,7 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
 //                        }
 //                    }
 
-                    addFavouriteTripDataToRealm(date, dateparse, id, time, startLoc, endLoc,rideTime,totalDist, forFavAdd, cuurent_lat, current_long, destiny_lat, destiny_long, tripName, topspeed, ridetimeLt10);
+                    addFavouriteTripDataToRealm(date, dateparse, id, time, startLoc, endLoc,rideTime,totalDist, forFavAdd, cuurent_lat, current_long, destiny_lat, destiny_long, tripName, topspeed, ridetimeLt10,viaPointRealmList);
 
                     updateRecentData(realm, id, forFavAdd);
                     ivFav.setImageResource(R.drawable.favor);
@@ -417,6 +424,18 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
 
         mapView.getMapAsync(this);
     }
+
+
+    public static TripDetailsActivity getActivityInstance()
+    {
+        return INSTANCE;
+    }
+
+    public String getData()
+    {
+        return this.data;
+    }
+
 
     private void checkViaPoints() {
     }
@@ -908,11 +927,7 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
         MapplsDirectionManager.newInstance(directions.build()).call(new OnResponseCallback<DirectionsResponse>() {
             @Override
             public void onSuccess(DirectionsResponse response) {
-
-
                 try {
-
-
                         // You can get generic HTTP info about the response
                         Log.d("Response code: %d", "" + response.code());
 
@@ -1353,7 +1368,7 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
 //        }
 //    }
 
-    private void addFavouriteTripDataToRealm(String date, Date dateTime, int id, String time, String startLoc, String endLoc, String rideTime, String totalDist, boolean clicked, String current_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String topspeed, String ridetimelt10) {
+    private void addFavouriteTripDataToRealm(String date, Date dateTime, int id, String time, String startLoc, String endLoc, String rideTime, String totalDist, boolean clicked, String current_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String topspeed, String ridetimelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList) {
         Realm realm = Realm.getDefaultInstance();
         try {
             realm.executeTransaction(new Realm.Transaction() {
@@ -1373,9 +1388,9 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
 
                             if (favtripUpdateModel == null) {
 
-//                                for (ViaPointLocationRealmModel model : viaPointRealmList){
-//                                    favouriteTripRealmModule.setPointLocationRealmModels(model);
-//                                }
+                                 for (ViaPointLocationRealmModel model : viaPointRealmList){
+                                    favouriteTripRealmModule.setPointLocationRealmModels(model);
+                                }
 
                                 favouriteTripRealmModule.setDate(date);
                                 favouriteTripRealmModule.setId(id);
@@ -1405,9 +1420,134 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
                             }
                             else if (favtripUpdateModel != null) {
 
-//                                for (ViaPointLocationRealmModel model : viaPointRealmList){
-//                                    favouriteTripRealmModule.setPointLocationRealmModels(model);
-//                                }
+                                for (ViaPointLocationRealmModel model : viaPointRealmList){
+                                    favouriteTripRealmModule.setPointLocationRealmModels(model);
+                                }
+
+                                favtripUpdateModel.setDate(date);
+                                favtripUpdateModel.setId(id);
+                                favtripUpdateModel.setTime(time);
+                                favtripUpdateModel.setStartlocation(startLoc);
+                                favtripUpdateModel.setEndlocation(endLoc);
+                                favtripUpdateModel.setFavorite(clicked);
+                                favtripUpdateModel.setDateTime(dateTime);
+                                favtripUpdateModel.setCurrent_lat(current_lat);
+                                favtripUpdateModel.setCurrent_long(current_long);
+                                favouriteTripRealmModule.setRideTime(rideTime);
+                                favouriteTripRealmModule.setTotalDistance(totalDist);
+                                favtripUpdateModel.setDestination_lat(destiny_lat);
+                                favtripUpdateModel.setDestination_long(destiny_long);
+                                favtripUpdateModel.setDestination_long(tripName);
+                                favouriteTripRealmModule.setTopSpeed(Integer.parseInt(topspeed));
+                                favouriteTripRealmModule.setRideTimeLt10(Integer.parseInt(ridetimelt10));
+                                realm.insertOrUpdate(favtripUpdateModel);
+
+                                RealmResults<FavouriteTripRealmModule> resultsafte = realm.where(FavouriteTripRealmModule.class).findAll();
+
+                                for (int i = 0; i < resultsafte.size(); i++) {
+                                    Log.d("hjjghj", "ss--ssdd" + resultsafte.get(i).getEndlocation() + resultsafte.get(i).getId());
+
+                                }
+
+                            }
+                        } else {
+                            common.showToast("Favourite list is full, Please delete some of your favourites.", TOAST_DURATION);
+                        }
+
+                    } else {
+                      //  FavouriteTripRealmModule receFavDataResult = realm.where(FavouriteTripRealmModule.class).equalTo("id", id).findFirst();
+
+                        Log.d("jdjdjdj", "s=" + favtripUpdateModel.getId() + id);
+
+                        if (favtripUpdateModel != null) {
+//
+                            Log.d("jdjdjdj", "s=" + favtripUpdateModel.getId() + id);
+                            FavouriteTripRealmModule favtripUpdateModel1 = realm.where(FavouriteTripRealmModule.class).equalTo("id", id).findFirst();
+
+                            favtripUpdateModel1.deleteFromRealm();
+
+
+                        }
+//                        if (favouriteTripRealmModule != null) {
+//                            favouriteTripRealmModule.deleteFromRealm();
+//
+//                            RealmResults<FavouriteTripRealmModule> resultsafte = realm.where(FavouriteTripRealmModule.class).findAll();
+//
+//                            Log.d("hjjghj","--"+resultsafte.size());
+//                        }
+
+
+                    }
+
+                    RealmResults<FavouriteTripRealmModule> result = realm.where(FavouriteTripRealmModule.class).equalTo("id", 0).findAll();
+                    result.deleteAllFromRealm();
+
+                }
+            });
+
+        } catch (Exception e) {
+            Log.d("realmex", "--" + e.getMessage());
+
+        }
+
+
+    }
+
+
+    private void addFavouriteTripDataToRealmNew(String date, Date dateTime, int id, String time, String startLoc, String endLoc, String rideTime, String totalDist, boolean clicked, String current_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String topspeed, String ridetimelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList) {
+        Realm realm = Realm.getDefaultInstance();
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    RealmResults<FavouriteTripRealmModule> results = realm.where(FavouriteTripRealmModule.class).findAll();
+                    FavouriteTripRealmModule favouriteTripRealmModule = realm.createObject(FavouriteTripRealmModule.class);
+                    FavouriteTripRealmModule favtripUpdateModel = realm.where(FavouriteTripRealmModule.class).equalTo("id", id).findFirst();
+                    int tripSize = results.size();
+
+                    Log.d("daiaia", "-ss" + tripSize + clicked);
+
+
+                    if (clicked) {
+
+                        if (tripSize < 11) {
+
+                            if (favtripUpdateModel == null) {
+
+                                for (ViaPointLocationRealmModel model : viaPointRealmList){
+                                    favouriteTripRealmModule.setPointLocationRealmModels(model);
+                                }
+                                favouriteTripRealmModule.setDate(date);
+                                favouriteTripRealmModule.setId(id);
+                                favouriteTripRealmModule.setTime(time);
+                                favouriteTripRealmModule.setStartlocation(startLoc);
+                                favouriteTripRealmModule.setEndlocation(endLoc);
+                                favouriteTripRealmModule.setFavorite(clicked);
+                                favouriteTripRealmModule.setDateTime(dateTime);
+                                favouriteTripRealmModule.setCurrent_lat(current_lat);
+                                favouriteTripRealmModule.setCurrent_long(current_long);
+                                favouriteTripRealmModule.setDestination_lat(destiny_lat);
+                                favouriteTripRealmModule.setDestination_long(destiny_long);
+                                favouriteTripRealmModule.setRideTime(rideTime);
+                                favouriteTripRealmModule.setTotalDistance(totalDist);
+                                favouriteTripRealmModule.setTrip_name(tripName);
+                                favouriteTripRealmModule.setTopSpeed(Integer.parseInt(topspeed));
+                                favouriteTripRealmModule.setRideTimeLt10(Integer.parseInt(ridetimelt10));
+                                realm.insert(favouriteTripRealmModule);
+
+                                RealmResults<FavouriteTripRealmModule> resultsafte = realm.where(FavouriteTripRealmModule.class).findAll();
+
+                                for (int i = 0; i < resultsafte.size(); i++) {
+                                    Log.d("hjjghj", "ss-dd-" + resultsafte.get(i).getEndlocation() + resultsafte.get(i).getId());
+
+                                }
+
+                            }
+                            else if (favtripUpdateModel != null) {
+
+                                for (ViaPointLocationRealmModel model : viaPointRealmList){
+                                    favouriteTripRealmModule.setPointLocationRealmModels(model);
+                                }
 
                                 favtripUpdateModel.setDate(date);
                                 favtripUpdateModel.setId(id);

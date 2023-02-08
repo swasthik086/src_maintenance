@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
@@ -77,102 +76,101 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
 
-                android:id="@+id/rlNavigationDetails"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_alignParentBottom="true"
-                android:background="#212121"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:id="@+id/llHeaderNavDetails"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="90dp"
-                    android:orientation="horizontal">
-
-
-                    <TextView
-                        android:id="@+id/tvPlaceAddress"
-                        android:layout_width="130dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_weight="1"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:text="Do you like to start a ride?"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvDistance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:maxLines="1"
-                        android:text="0 km"
-                        android:textColor="@color/app_theme_color"
-                        android:textSize="20sp"
-                        android:visibility="gone" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvDestinationAddress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/llHeaderNavDetails"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="120dp"
-                    android:layout_marginBottom="10dp"
-                    android:ellipsize="end"
-                    android:lineSpacingExtra="3sp"
-                    android:maxLines="3"
-                    android:text="Start naviagtion to reach the bike"
-                    android:textColor="#e3e3e3"
-                    android:textSize="14sp"
-                    android:textStyle="normal"
-                    android:visibility="visible" />
-
-                <LinearLayout
-                    android:id="@+id/llStartNavigation"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerInParent="true"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/route_square"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-
-                    <ImageView
-                        android:id="@+id/ivNav"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/nav" />
-
-                    <TextView
-                        android:id="@+id/tvTimeForTravel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text=""
-                        android:textAllCaps="true"
-                        android:textColor="@color/nav_blue"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-            </RelativeLayout>
         </RelativeLayout>
 
-
     </com.mappls.sdk.maps.MapView>
+    <RelativeLayout
+        android:id="@+id/rlNavigationDetails"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
 
+        android:layout_alignParentBottom="true"
+        android:background="#212121"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/llHeaderNavDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="90dp"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/tvPlaceAddress"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Do you like to start a ride?"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:text="0 km"
+                android:textColor="@color/app_theme_color"
+                android:textSize="20sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvDestinationAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/llHeaderNavDetails"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="120dp"
+            android:layout_marginBottom="10dp"
+            android:ellipsize="end"
+            android:lineSpacingExtra="3sp"
+            android:maxLines="3"
+            android:text="Start naviagtion to reach the bike"
+            android:textColor="#e3e3e3"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/llStartNavigation"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/route_square"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+            <ImageView
+                android:id="@+id/ivNav"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/nav" />
+
+            <TextView
+                android:id="@+id/tvTimeForTravel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text=""
+                android:textAllCaps="true"
+                android:textColor="@color/nav_blue"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </RelativeLayout>
 </RelativeLayout>

@@ -131,7 +131,7 @@
                 android:fontFamily="@font/roboto"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                android:text="User Guide &amp; FAQ"
+                android:text="Quick Start Guide &amp; FAQ"
                 android:textColor="#fff"
                 android:textSize="14sp" />
         </LinearLayout>
