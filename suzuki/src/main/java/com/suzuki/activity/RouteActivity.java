@@ -1680,7 +1680,7 @@ NavLocation location=MapMainFragment.getUserLocation();
             public void onSuccess(LocationEngineResult locationEngineResult) {
                 if (locationEngineResult.getLastLocation() != null) {
                     Location location = locationEngineResult.getLastLocation();
-                    mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16));
+                  //  mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16));
                 }
             }
 

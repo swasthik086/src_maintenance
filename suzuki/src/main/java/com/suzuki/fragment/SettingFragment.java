@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -13,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -115,7 +117,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
 
         common = new Common(getContext());
 
-        sharedPreferences = getApplicationContext().getSharedPreferences("vehicle_data",Context.MODE_PRIVATE);
+        sharedPreferences = getApplicationContext().getSharedPreferences("vehicle_data", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
         realm = Realm.getDefaultInstance();
@@ -127,6 +129,60 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
         cbBusy.setOnCheckedChangeListener(this);
         cbRiding.setOnCheckedChangeListener(this);
         rlCustom.setOnClickListener(this);
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());//this==context
+        if (!prefs.contains("FirstTime")) {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("FirstTime", true);
+            editor.commit();
+            saveTripsDisclaimer("Total 10 trips can be saved for both Recent and Favourites. While 11th trip,oldest will get deleted automatically.");
+
+        }
+
+
+            //Other dialog code
+//                    alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            SharedPreferences.Editor editor = prefs.edit();
+//                            editor.putBoolean("FirstTime",true);
+//                            editor.commit();
+//                            //more code....
+//                        }
+//                    });
+
+
+
+        switchSaveAllTrips.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(getActivity());//this==context
+                if(!prefs.contains("FirstTime")){
+                    if (!switchSaveAllTrips.isChecked()){
+
+                        SharedPreferences.Editor editor = prefs.edit();
+                            editor.putBoolean("FirstTime",true);
+                            editor.commit();
+
+                        dontSaveTripsAlert("Do you want to turn OFF Save All Trips?");
+
+                    }
+
+
+                    //Other dialog code
+//                    alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            SharedPreferences.Editor editor = prefs.edit();
+//                            editor.putBoolean("FirstTime",true);
+//                            editor.commit();
+//                            //more code....
+//                        }
+//                    });
+                }
+            }
+        });
 
 //        if (SpeedSwitch.isChecked()==false){
 //            SpeedValue.clearFocus();
@@ -265,8 +321,17 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
                         llFirstLayout.setVisibility(View.GONE);
                     }
 
-                    if (settingsPojo.isSaveTrips()) switchSaveAllTrips.setChecked(true);
-                    else if (!settingsPojo.isSaveTrips()) switchSaveAllTrips.setChecked(false);
+//                    if (switchSaveAllTrips.isChecked() == true){
+//                        settingsPojo.setSaveTrips(true);
+//                    }
+//                    else {
+//                        settingsPojo.setSaveTrips(false);
+//                    }
+
+                   if (settingsPojo.isSaveTrips()) switchSaveAllTrips.setChecked(true);
+                   else if (!settingsPojo.isSaveTrips()) switchSaveAllTrips.setChecked(false);
+
+
                 }
             });
         } catch (Exception k) {
@@ -634,7 +699,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
 
                 }
 
-            } else {
+            }
+
+            else {
 
                 try {
                     realm.executeTransaction(realm -> {
@@ -755,6 +822,52 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
             }
         });
         return view;
+    }
+
+    public void saveTripsDisclaimer(String message) {
+        Dialog dialog = new Dialog(getContext(), R.style.custom_dialog);
+        dialog.setContentView(R.layout.custom_dialog_for_savetrips);
+
+        TextView tvAlertText = dialog.findViewById(R.id.etTripName);
+        tvAlertText.setText(message);
+        ImageView ivCross = dialog.findViewById(R.id.ivCustomClose);
+        ivCross.setOnClickListener(v -> dialog.cancel());
+
+        LinearLayout llSave = dialog.findViewById(R.id.llSave);
+
+        llSave.setOnClickListener(v -> {
+
+            dialog.cancel();
+        });
+
+
+        dialog.show();
+    }
+
+    public void dontSaveTripsAlert(String message) {
+        Dialog dialog = new Dialog(getContext(), R.style.custom_dialog);
+        dialog.setContentView(R.layout.custom_dialog);
+
+        TextView tvAlertText = dialog.findViewById(R.id.tvAlertText);
+        tvAlertText.setText(message);
+        ImageView ivCross = dialog.findViewById(R.id.ivCross);
+        ivCross.setOnClickListener(v -> dialog.cancel());
+
+        ImageView ivCheck = dialog.findViewById(R.id.ivCheck);
+
+        ivCheck.setOnClickListener(v -> {
+
+            switchSaveAllTrips.setChecked(false);
+            dialog.dismiss();
+        });
+
+        ivCross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -1173,6 +1286,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
         switchWhatsappMSG = view.findViewById(R.id.switchWhatsappMSG);
         switchSaveAllTrips = view.findViewById(R.id.switchSaveAllTrips);
         llRedAlertBle = view.findViewById(R.id.llRedAlertBle);
+
     }
 
     public void showExitAlert(String message, int PERMISSION_CODE) {

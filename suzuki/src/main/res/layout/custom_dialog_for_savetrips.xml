@@ -19,11 +19,13 @@
         android:layout_marginTop="15dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="15dp"
+        android:visibility="gone"
         android:background="@color/transaparent"
         android:src="@drawable/close" />
 
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -41,7 +43,7 @@
             android:layout_marginBottom="15dp"
             android:background="@color/transaparent"
             android:src="@drawable/warning"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <TextView
             android:layout_width="200dp"
@@ -60,19 +62,19 @@ delete the trips ?"
 
         <TextView
             android:id="@+id/etTripName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="2dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="15dp"
             android:background="@color/transaparent"
             android:gravity="center"
             android:imeOptions="actionDone"
             android:inputType="text"
-            android:lines="1"
-            android:maxLines="1"
+            android:lines="3"
+            android:maxLines="3"
             android:text="Do you like to save the trip?"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
@@ -98,7 +100,7 @@ delete the trips ?"
                 android:layout_height="28dp"
                 android:background="@color/white"
                 android:gravity="center"
-                android:text="Save"
+                android:text="OK"
                 android:textColor="@color/blue"
                 android:textSize="15sp" />
 
