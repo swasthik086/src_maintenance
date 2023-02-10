@@ -131,11 +131,11 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
         rlCustom.setOnClickListener(this);
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());//this==context
-        if (!prefs.contains("FirstTime")) {
+        if (!prefs.contains("FirstTimeDisclaimer")) {
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean("FirstTime", true);
+            editor.putBoolean("FirstTimeDisclaimer", true);
             editor.commit();
-            saveTripsDisclaimer("Total 10 trips can be saved for both Recent and Favourites. While 11th trip,oldest will get deleted automatically.");
+            saveTripsDisclaimer("Total 10 trips can be saved\n"+ "for both Recent and Favourites.\n"+" While 11th trip, oldest will get deleted automatically.");
 
         }
 

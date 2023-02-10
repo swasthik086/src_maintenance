@@ -65,22 +65,15 @@ delete the trips ?"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginRight="20dp"
             android:layout_marginBottom="15dp"
             android:background="@color/transaparent"
             android:gravity="center"
-            android:imeOptions="actionDone"
-            android:inputType="text"
-            android:lines="3"
-            android:maxLines="3"
-            android:text="Do you like to save the trip?"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:textCursorDrawable="@drawable/color_cursor"
-            android:textSize="14sp" />
-
+            android:lineSpacingExtra="7sp"
+            android:padding="6dp"
+            android:text="Are you sure you want to delete the trips ?"
+            android:textColor="#eeeeee"
+            android:textSize="14sp"
+            android:textStyle="normal" />
 
         <LinearLayout
             android:id="@+id/llSave"

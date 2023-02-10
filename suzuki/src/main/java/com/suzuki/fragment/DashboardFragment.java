@@ -1,6 +1,7 @@
 package com.suzuki.fragment;
 
 import static android.content.Context.ACTIVITY_SERVICE;
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 import static com.mappls.sdk.maps.Mappls.getApplicationContext;
 import static com.suzuki.R.layout.dashboard_fragment_constraint_layout;
@@ -44,6 +45,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
@@ -70,6 +72,7 @@ import com.cunoraz.gifview.library.GifView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.suzuki.R;
+import com.suzuki.activity.BottomSheetDialog;
 import com.suzuki.activity.ConnectedDataActivity;
 import com.suzuki.activity.DeviceListingScanActivity;
 import com.suzuki.activity.ProfileActivity;
@@ -176,6 +179,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
     private String type, model;
     private int variant;
     private SharedPreferences.Editor editor;
+    Context context;
 //    private static MutableLiveData<Boolean> check;
 
     @Override
@@ -183,6 +187,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
 
         view = inflater.inflate(dashboard_fragment_constraint_layout, container, false);
 
+        context=view.getContext();
         dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss_SSS");
         realm = Realm.getDefaultInstance();
         bluetoothadapter = BluetoothAdapter.getDefaultAdapter();
@@ -244,6 +249,8 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
             synccc = settingsPojo.isSpeedSet();
         }
 
+
+
         settingsPojos.addChangeListener(settingsPojos -> {
 
             for (int i = 0; i < settingsPojos.size(); i++) {
@@ -255,7 +262,13 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         rlButtonWhiePair.setOnClickListener(v -> {
 
             if(!check_permission()) showExitAlert("The application needs location access permission to scan for nearby Suzuki 2 Wheelers.\n" + "Please allow location access permission to discover and connect with your Suzuki 2 Wheeler.");
-            else if(checkGPSIsOpen()) startActivity(new Intent(getActivity(), DeviceListingScanActivity.class));
+            else if(checkGPSIsOpen()){
+
+//                BottomSheetDialog bottomSheet = new BottomSheetDialog();
+//                bottomSheet.show(getFragmentManager(),
+//                        "ModalBottomSheet");
+                startActivity(new Intent(getActivity(), DeviceListingScanActivity.class));
+            }
             else showExitAlert("Please enable location settings on the next screen to discover and connect with your Suzuki 2 Wheeler.");
         });
 
@@ -403,7 +416,14 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         }
     }*/
 
+    public void putArguments(Bundle args) {
+        if(args!=null){
+            test=args.getString("access");
+            changeColorAlert("Do you want to change the vehicle color?");
+            //change_color_popup();
+        }
 
+    }
     /*private static boolean get_vehicle_type() {
 
         if(staticConnectionStatus){
@@ -419,15 +439,49 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
     }*/
 
     public void change_color_popup(){
-        long current=Calendar.getInstance().getTimeInMillis();
-        if(current>prev+5000){
-            prev=current;
-            flag=true;
-            ALREADY_DISPLAYED=true;
+     //  changeColorAlert("Do you want to change the vehicle color?");
 
-            new Common(getContext()).show_alert(view, R.string.change_colour, 5000, "CHANGE");
-        }
+//        long current=Calendar.getInstance().getTimeInMillis();
+//        if(current>prev+5000){
+//            prev=current;
+//            flag=true;
+//            ALREADY_DISPLAYED=true;
+//            showExitAlert("do you want to change color?");
+//           //changeColorAlert("Do you want to change the vehicle color?");
+//           // new Common(getContext()).show_alert(view, R.string.change_colour, 5000, "CHANGE");
+//        }
     }
+
+    public void changeColorAlert(String message) {
+
+            Dialog dialog = new Dialog(getActivity(), R.style.custom_dialog);
+            dialog.setContentView(R.layout.custom_dialog);
+
+            TextView tvAlertText = dialog.findViewById(R.id.tvAlertText);
+            tvAlertText.setText(message);
+            ImageView ivCross = dialog.findViewById(R.id.ivCross);
+            ivCross.setOnClickListener(v -> dialog.cancel());
+
+            ImageView ivCheck = dialog.findViewById(R.id.ivCheck);
+
+            ivCheck.setOnClickListener(v -> {
+                Intent i = new Intent(getActivity(), ProfileActivity.class);
+                startActivity(i);
+
+                dialog.dismiss();
+            });
+
+            ivCross.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.cancel();
+                }
+            });
+            dialog.show();
+        }
+
+
+
 
     private final BroadcastReceiver check_ble_conn = new BroadcastReceiver() {
         @Override
@@ -516,7 +570,6 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
             Log.e(EXCEPTION,ClassName+" reset_DB: "+e);
         }
     }
-
     public void showExitAlert(String message) {
         Dialog dialog = new Dialog(getContext(), R.style.custom_dialog);
         dialog.setContentView(R.layout.custom_dialog);
@@ -1911,6 +1964,8 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
                     }
                     break;
             }
+
+
         }
 
         else if (type.equals("Motorcycle")){
@@ -2002,6 +2057,10 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
             rlButtonWhiePair.setVisibility(View.GONE);
             rlButtonConnect.setVisibility(View.VISIBLE);
         }
+
+       // if(!ALREADY_DISPLAYED && dashboardFragment.isVisible()) change_color_popup();
+
+
     }
 
     private void update_vehicle_data() {

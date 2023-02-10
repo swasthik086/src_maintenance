@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -21,6 +20,7 @@ import com.suzuki.preferences.Preferences;
 public class BaseFragment extends Fragment {
     protected Preferences preferences;
     static ProgressDialog mProgressDialog;
+    public static String test;
 
 
     @Override
@@ -54,6 +54,8 @@ public class BaseFragment extends Fragment {
         });
         alert.show();
     }
+
+
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -500,11 +501,7 @@ public class DeviceListingScanActivity extends AppCompatActivity implements View
 
                     update_vehicle_data();
 
-                    Bundle bundle = new Bundle();
-                    bundle.putString("edttext", "From Activity");
-                    // set Fragmentclass Arguments
-                    DashboardFragment dashboardFragment = new DashboardFragment();
-                    dashboardFragment.setArguments(bundle);
+
 
                     prev_cluster_name = BikeBleName.getValue();
                     prev_cluster_macAddr = bleDevice.getMac();
@@ -521,6 +518,7 @@ public class DeviceListingScanActivity extends AppCompatActivity implements View
                     editor.putString("prev_cluster_name", BikeBleName.getValue());
                     editor.putString("prev_cluster", BikeBleName.getValue()); //for feedback purpose
                     editor.apply();
+
                     finish();
                 }
 
@@ -634,6 +632,10 @@ public class DeviceListingScanActivity extends AppCompatActivity implements View
                     type = "Scooter";
                     Model = "Access 125";
                     PRICOL_CONNECTED = true;
+                    Bundle args= new Bundle();
+                    args.putString("access","access");
+                    DashboardFragment dashboardFragment=new DashboardFragment();
+                    dashboardFragment.putArguments(args);
 
                 }
 
@@ -641,6 +643,10 @@ public class DeviceListingScanActivity extends AppCompatActivity implements View
                     type = "Scooter";
                     Model = "Burgman Street";
                     PRICOL_CONNECTED = true;
+                    Bundle args= new Bundle();
+                    args.putString("access","access");
+                    DashboardFragment dashboardFragment=new DashboardFragment();
+                    dashboardFragment.putArguments(args);
                 }
 
                else if (BikeBleName.getValue().charAt(3) == '0' && BikeBleName.getValue().charAt(4) == '2') {
@@ -648,12 +654,20 @@ public class DeviceListingScanActivity extends AppCompatActivity implements View
                     Model = "Access 125";
                     PRICOL_CONNECTED = true;
 
+                   Bundle args= new Bundle();
+                   args.putString("access","access");
+                   DashboardFragment dashboardFragment=new DashboardFragment();
+  dashboardFragment.putArguments(args);
                 }
 
                 else if (BikeBleName.getValue().charAt(3) == '1' && BikeBleName.getValue().charAt(4) == '2') {
                     type = "Scooter";
                     Model = "Burgman Street";
                     PRICOL_CONNECTED = true;
+                    Bundle args= new Bundle();
+                    args.putString("access","access");
+                    DashboardFragment dashboardFragment=new DashboardFragment();
+                    dashboardFragment.putArguments(args);
                 }
             }
             else {
@@ -673,10 +687,18 @@ public class DeviceListingScanActivity extends AppCompatActivity implements View
                 if (BikeBleName.getValue().charAt(3) == '2' && BikeBleName.getValue().charAt(4) == '1') {
                     type = "Scooter";
                     Model = "Avenis";
+                    Bundle args= new Bundle();
+                    args.putString("access","access");
+                    DashboardFragment dashboardFragment=new DashboardFragment();
+                    dashboardFragment.putArguments(args);
 
                 } else if (BikeBleName.getValue().charAt(3) == '3' && BikeBleName.getValue().charAt(4) == '1') {
                     type = "Scooter";
                     Model = "Burgman Street EX";
+                    Bundle args= new Bundle();
+                    args.putString("access","access");
+                    DashboardFragment dashboardFragment=new DashboardFragment();
+                    dashboardFragment.putArguments(args);
                 }
             }
 
@@ -684,14 +706,27 @@ public class DeviceListingScanActivity extends AppCompatActivity implements View
                 if (BikeBleName.getValue().charAt(3) == '0' && BikeBleName.getValue().charAt(4) == '1') {
                     type = "Motorcycle";
                     Model = "V-STROM SX";
+                    Bundle args= new Bundle();
+                    args.putString("access","access");
+                    DashboardFragment dashboardFragment=new DashboardFragment();
+                    dashboardFragment.putArguments(args);
                 }
 
                 else if (BikeBleName.getValue().charAt(3) == '1' && BikeBleName.getValue().charAt(4) == '1') {
                     type = "Motorcycle";
                     Model = "GIXXER / GIXXER SF";
-                } else if (BikeBleName.getValue().charAt(3) == '2' && BikeBleName.getValue().charAt(4) == '1') {
+                    Bundle args= new Bundle();
+                    args.putString("access","access");
+                    DashboardFragment dashboardFragment=new DashboardFragment();
+                    dashboardFragment.putArguments(args);
+                }
+                else if (BikeBleName.getValue().charAt(3) == '2' && BikeBleName.getValue().charAt(4) == '1') {
                     type = "Motorcycle";
                     Model = "GIXXER 250 / GIXXER SF 250";
+                    Bundle args= new Bundle();
+                    args.putString("access","access");
+                    DashboardFragment dashboardFragment=new DashboardFragment();
+                    dashboardFragment.putArguments(args);
                 }
             }
         }

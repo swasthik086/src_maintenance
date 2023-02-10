@@ -114,6 +114,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation "com.karumi:dexter:5.0.0"
     implementation 'com.github.yalantis:ucrop:2.2.2'
+    implementation 'com.google.android.material:material:1.2.0-alpha02'
 
 
 // mmi gradle
