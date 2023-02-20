@@ -289,7 +289,7 @@
                         android:gravity="center"
                         android:letterSpacing="0.09"
                         android:lineSpacingExtra="0sp"
-                        android:text="Ride time"
+                        android:text="Total Ride time"
                         android:textColor="#999999"
                         android:textSize="15sp"
                         android:textStyle="normal" />
@@ -310,7 +310,77 @@
 
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp">
 
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:gravity="center"
+                        android:letterSpacing="0.09"
+                        android:lineSpacingExtra="0sp"
+                        android:text="Ride start time"
+                        android:textColor="#999999"
+                        android:textSize="15sp"
+                        android:textStyle="normal" />
+
+
+                    <TextView
+                        android:id="@+id/ridestarttime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
+                        android:letterSpacing="0.09"
+                        android:lineSpacingExtra="0sp"
+                        android:text="- - - - "
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="19sp"
+                        android:textStyle="normal" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:gravity="center"
+                        android:letterSpacing="0.09"
+                        android:lineSpacingExtra="0sp"
+                        android:text="Ride end time"
+                        android:textColor="#999999"
+                        android:textSize="15sp"
+                        android:textStyle="normal" />
+
+
+                    <TextView
+                        android:id="@+id/rideendtime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
+                        android:letterSpacing="0.09"
+                        android:lineSpacingExtra="0sp"
+                        android:text="- - - - "
+                        android:textColor="@color/app_theme_color"
+                        android:textSize="19sp"
+                        android:textStyle="normal" />
+
+                </RelativeLayout>
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -389,6 +459,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
@@ -423,6 +494,8 @@
                         android:textStyle="normal" />
 
                 </RelativeLayout>
+
+
             </LinearLayout>
 
         </LinearLayout>

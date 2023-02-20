@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -83,6 +84,7 @@
 
         <EditText
             android:id="@+id/etUserName"
+
             app:layout_constraintTop_toBottomOf="@+id/rNameTv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -211,13 +213,14 @@
                 android:id="@+id/divSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.9"
                 android:layout_below="@id/classSpinner"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="60dp"
                 android:layout_toLeftOf="@id/classSpinner"
+                android:layout_weight="0.9"
                 android:background="@drawable/spinner_drop"
                 android:backgroundTint="@color/light"
+                android:clickable="false"
                 android:saveEnabled="false"
                 android:visibility="visible" />
 

@@ -26,6 +26,7 @@ import com.vdurmont.emoji.EmojiParser;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -284,7 +285,7 @@ public class NotificationService extends NotificationListenerService {
             StatusBarNotification[] sdbjk = getActiveNotifications();
             for (StatusBarNotification statusBarNotification : sdbjk) {
 
-                if (statusBarNotification.getPackageName().contentEquals("com.whatsapp")) tempNoti.add(statusBarNotification);
+                if (statusBarNotification.getPackageName().contentEquals("com.whatsapp")  || statusBarNotification.getPackageName().contentEquals("com.whatsapp.w4b") && tempNoti.add(statusBarNotification));
             }
             if (tempNoti.size() > 1) {
                 String msgString = "" + tempNoti.get(1).getNotification().extras.getString("android.text");
@@ -299,7 +300,7 @@ public class NotificationService extends NotificationListenerService {
         }
 
         if (packageName != null) {
-            if (sbn.getPackageName().contentEquals("com.whatsapp")) {
+            if (sbn.getPackageName().contentEquals("com.whatsapp") || sbn.getPackageName().contentEquals("com.whatsapp.w4b")) {
 
                 if (packageName.contentEquals("Ongoing voice call")) {
                     // String  datatoSend = numberNameValidationForCall(name);
@@ -340,7 +341,7 @@ public class NotificationService extends NotificationListenerService {
 
                 } else if (title != null) { //missed call
                     if (packageName.contains("group voice call")) return;
-                    if (Build.VERSION.SDK_INT == 33 && staticConnectionStatus && whatsappCallEnabled &&  full.toLowerCase().contains("com.whatsapp") ){
+                    if (Build.VERSION.SDK_INT == 33 && staticConnectionStatus && whatsappCallEnabled &&  full.toLowerCase().contains("com.whatsapp") || full.toLowerCase().contains("com.whatsapp.w4b")){
                         sendMISSEDCAllDatatoDashboard(datatoSend, "Y");
 
                     }
@@ -465,7 +466,7 @@ public class NotificationService extends NotificationListenerService {
                 String info = "" + bundle.getString("android.text");
 
                 if (sbn.getId() == 1) {
-                    if (sbn.getPackageName().equalsIgnoreCase("com.whatsapp")) {
+                    if (sbn.getPackageName().equalsIgnoreCase("com.whatsapp") || sbn.getPackageName().equalsIgnoreCase("com.whatsapp.w4b")  ) {
                         String notificationInfo = "" + bundle.getString("android.text");
                         if (notificationInfo != null) {
 
@@ -931,7 +932,7 @@ public class NotificationService extends NotificationListenerService {
                 Log.e(EXCEPTION, getClass().getName() + " onNotificationRemoved" + String.valueOf(e));
             }
 
-            if (Build.VERSION.SDK_INT==33 && sbn.getPackageName() != null && sbn.getPackageName().equalsIgnoreCase("com.whatsapp")) {
+            if (Build.VERSION.SDK_INT==33 && sbn.getPackageName() != null && sbn.getPackageName().equalsIgnoreCase("com.whatsapp")||sbn.getPackageName() != null && sbn.getPackageName().equalsIgnoreCase("com.whatsapp.w4b")) {
                 Notification notification = sbn.getNotification();
                 if (Build.VERSION.SDK_INT==33 && notification != null) {
                     whatsAppNotificationRemoved(notification);
@@ -963,7 +964,7 @@ public class NotificationService extends NotificationListenerService {
         if (notification.category != null && notification.category.equalsIgnoreCase("call")) {
             foundAnyMsg = false;
             for (StatusBarNotification sbn2 : getActiveNotifications()) {
-                if (sbn2.getPackageName() != null && sbn2.getPackageName().equalsIgnoreCase("com.whatsapp")) {
+                if (sbn2.getPackageName() != null && sbn2.getPackageName().equalsIgnoreCase("com.whatsapp") || sbn2.getPackageName() != null && sbn2.getPackageName().equalsIgnoreCase("com.whatsapp.w4b")) {
                     Notification notification2 = sbn2.getNotification();
                     if (notification2 != null) {
                         if (notification2.category != null && notification2.category.equalsIgnoreCase("call")) {

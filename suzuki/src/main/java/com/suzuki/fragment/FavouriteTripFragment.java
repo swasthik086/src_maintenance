@@ -153,12 +153,12 @@ public class FavouriteTripFragment extends Fragment implements IOnclickFromAdapt
 
 
     @Override
-    public void adapterItemIsClicked(int clickedPositon, String actionToPerform, boolean clicked, String date, Date dateTime, String time, String startLoc, String endLoc, String cuurent_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String rideTime, String totalDistance, String topspeed, String timelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList) {
+    public void adapterItemIsClicked(int clickedPositon, String actionToPerform, boolean clicked, String date, Date dateTime, String time, String startLoc, String endLoc, String cuurent_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String rideTime, String totalDistance, String topspeed, String timelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList, String startTime,String endTime) {
 
         if (actionToPerform.contentEquals("fav")) {
 
 
-            addFavouriteTripDataToRealm(date, dateTime, clickedPositon, time, startLoc, endLoc, clicked, cuurent_lat, current_long, destiny_lat, destiny_long, tripName, rideTime, totalDistance, topspeed, timelt10,viaPointRealmList);
+            addFavouriteTripDataToRealm(date, dateTime, clickedPositon, time, startLoc, endLoc, clicked, cuurent_lat, current_long, destiny_lat, destiny_long, tripName, rideTime, totalDistance, topspeed, timelt10,viaPointRealmList,startTime,endTime);
 
             updateRecentData(realm, clickedPositon, clicked);
 
@@ -185,11 +185,15 @@ public class FavouriteTripFragment extends Fragment implements IOnclickFromAdapt
             in.putExtra("destiny_lat", destiny_lat);
             in.putExtra("destiny_long", destiny_long);
             in.putExtra("clicked", clicked);
+            in.putExtra("rideStartTime",startTime);
+            in.putExtra("rideEndTime",endTime);
             in.putExtra("tripName", tripName);
             in.putExtra("rideTime", rideTime);
             in.putExtra("totalDistance", totalDistance);
             in.putExtra("topspeed", topspeed);
             in.putExtra("timelt10", timelt10);
+            in.putExtra("rideStartTime",startTime);
+            in.putExtra("rideEndTime",endTime);
             in.putExtra("viaPointList",viaPointList);
             startActivity(in);
         }
@@ -235,7 +239,7 @@ public class FavouriteTripFragment extends Fragment implements IOnclickFromAdapt
 
     }
 
-    private void addFavouriteTripDataToRealm(String date, Date dateTime, int id, String time, String startLoc, String endLoc, boolean clicked, String current_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String rideTime, String totalDistance, String topspeed, String timelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList) {
+    private void addFavouriteTripDataToRealm(String date, Date dateTime, int id, String time, String startLoc, String endLoc, boolean clicked, String current_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String rideTime, String totalDistance, String topspeed, String timelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList,String startTime, String endTime) {
         Realm realm = Realm.getDefaultInstance();
         try {
 
@@ -271,6 +275,8 @@ public class FavouriteTripFragment extends Fragment implements IOnclickFromAdapt
                                 favouriteTripRealmModule.setDestination_long(destiny_long);
                                 favouriteTripRealmModule.setDestination_long(tripName);
                                 favouriteTripRealmModule.setRideTime(rideTime);
+                                favouriteTripRealmModule.setStartTime(startTime);
+                                favouriteTripRealmModule.setETA(endTime);
                                 favouriteTripRealmModule.setTotalDistance(totalDistance);
                                 favouriteTripRealmModule.setTopSpeed(Integer.parseInt(topspeed));
                                 favouriteTripRealmModule.setRideTimeLt10(Integer.parseInt(timelt10));
@@ -297,6 +303,8 @@ public class FavouriteTripFragment extends Fragment implements IOnclickFromAdapt
                                 favtripUpdateModel.setDestination_long(destiny_long);
                                 favtripUpdateModel.setDestination_long(tripName);
                                 favtripUpdateModel.setRideTime(rideTime);
+                                favtripUpdateModel.setStartTime(startTime);
+                                favtripUpdateModel.setETA(endTime);
                                 favtripUpdateModel.setTotalDistance(totalDistance);
                                 favouriteTripRealmModule.setTopSpeed(Integer.parseInt(topspeed));
                                 favouriteTripRealmModule.setRideTimeLt10(Integer.parseInt(timelt10));

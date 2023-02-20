@@ -32,8 +32,8 @@ import java.util.UUID;
 public class BleConnector {
 //0000D505-0000-1000-8002-0002C7000000
 
-  private static final String UUID_CLIENT_CHARACTERISTIC_CONFIG_DESCRIPTOR = "00002902-0000-1000-8000-00805f9b34fb";
-//private static final String UUID_CLIENT_CHARACTERISTIC_CONFIG_DESCRIPTOR="0000D105-0000-1000-8002-0002C7000000";
+ private static final String UUID_CLIENT_CHARACTERISTIC_CONFIG_DESCRIPTOR = "00002902-0000-1000-8000-00805f9b34fb";
+   // private static final String UUID_CLIENT_CHARACTERISTIC_CONFIG_DESCRIPTOR="0000D105-0000-1000-8002-0002C7000000";
     private BluetoothGatt mBluetoothGatt;
     private BluetoothGattService mGattService;
     private BluetoothGattCharacteristic mCharacteristic;

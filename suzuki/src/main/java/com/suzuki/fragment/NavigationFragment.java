@@ -34,6 +34,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
@@ -101,6 +102,7 @@ import com.suzuki.activity.RouteActivity;
 import com.suzuki.activity.RouteNearByActivity;
 import com.suzuki.adapter.NavigationPagerAdapter;
 import com.suzuki.application.SuzukiApplication;
+import com.suzuki.base.BaseFragment;
 import com.suzuki.broadcaster.BleConnection;
 import com.suzuki.broadcaster.BluetoothCheck;
 import com.suzuki.broadcaster.MapShortDistBroadcast;
@@ -115,8 +117,11 @@ import com.suzuki.maps.plugins.MapEventsPlugin;
 import com.suzuki.maps.plugins.RouteArrowPlugin;
 import com.suzuki.model.Stop;
 import com.suzuki.pojo.BleDataPojo;
+import com.suzuki.pojo.ClusterStatusPktPojo;
 import com.suzuki.pojo.EvenConnectionPojo;
+import com.suzuki.pojo.RecentTripRealmModule;
 import com.suzuki.pojo.RiderProfileModule;
+import com.suzuki.pojo.ViaPointLocationRealmModel;
 import com.suzuki.utils.NavigationLocationEngine;
 import com.suzuki.utils.Utils;
 import com.suzuki.views.LockableBottomSheetBehavior;
@@ -138,6 +143,9 @@ import java.util.Objects;
 import java.util.Timer;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
+import okhttp3.Route;
 import timber.log.Timber;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -147,16 +155,18 @@ import static com.mappls.sdk.maps.style.layers.PropertyFactory.visibility;
 import static com.suzuki.activity.HomeScreenActivity.HOME_SCREEN_OBJ;
 import static com.suzuki.activity.HomeScreenActivity.mBoundService;
 import static com.suzuki.activity.RouteNearByActivity.startClicked;
+import static com.suzuki.activity.RouteNearByActivity.tripID;
 import static com.suzuki.application.SuzukiApplication.calculateCheckSum;
 import static com.suzuki.broadcaster.BluetoothCheck.BLUETOOTH_STATE;
 
 import static com.suzuki.fragment.DashboardFragment.NoSignal;
-import static com.suzuki.fragment.DashboardFragment.staticConnectionStatus;
 import static com.suzuki.utils.Common.BikeBleName;
 import static com.suzuki.utils.Common.EXCEPTION;
 
 
-public class NavigationFragment extends Fragment implements
+
+
+public class NavigationFragment extends DashboardFragment implements
         View.OnClickListener,
         MapplsMap.OnMoveListener,
         LocationChangedListener,
@@ -174,7 +184,7 @@ public class NavigationFragment extends Fragment implements
     private MapplsMap mapmyIndiaMap;
     private static SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-
+private String ETA;
     //map related
     private BroadcastReceiver mBroadcastReceiver;
     private LocationComponent locationPlugin;
@@ -215,7 +225,7 @@ public class NavigationFragment extends Fragment implements
     FrameLayout llRedAlertBle;
     String lastImageSetFor = null;
     private ImageView junctionViewImageView;
-
+public int saved_speed, top_speeds;
     ImageView ivCustomClose;
     TextView tvCustomTextBtn ;
 
@@ -253,6 +263,14 @@ public class NavigationFragment extends Fragment implements
         }
     };
     private int temp=0;
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onClusterDataRecev(ClusterStatusPktPojo event) {
+        if (event.getClusterData().length() == 30) {
+            ClusterDataPacket(event.getClusterByteData());
+        }
+    }
 
     public NavigationFragment() {
         // Required empty public constructor
@@ -306,6 +324,53 @@ public class NavigationFragment extends Fragment implements
         StrictMode.setThreadPolicy(policy);
 
     }
+
+
+
+    public void ClusterDataPacket(byte[] u1_buffer) {
+        if ((u1_buffer[0] == -91) && (u1_buffer[1] == 55) && (u1_buffer[29] == 127)) {
+
+            byte Crc = calculateCheckSum(u1_buffer);
+
+            if (u1_buffer[28] == Crc) {
+                String Cluster_data = new String(u1_buffer);
+
+                Odometer = Cluster_data.substring(5, 11);
+
+                /*sharedPreferences = getApplicationContext().getSharedPreferences("vehicle_data",MODE_PRIVATE);
+                editor = sharedPreferences.edit();`
+                editor.putString("odometer",Odometer);
+                editor.apply();*/
+
+
+                // Toast.makeText(app, ""+speed, Toast.LENGTH_SHORT).show();
+
+                top_speeds= Integer.parseInt(Cluster_data.substring(2,5));
+
+                getActivity().runOnUiThread(() -> {
+                     top_speeds= Integer.parseInt(Cluster_data.substring(2,5));
+                    SharedPreferences.Editor editors = getApplicationContext().getSharedPreferences("top_speed", Context.MODE_MULTI_PROCESS).edit();
+                    editors.putInt("top_speed", top_speeds);
+                    editors.apply();
+
+                    SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
+                    saved_speed = prefs.getInt("top_speed", 0);//"No name defined" is the default value.
+
+                    if (navigationStarted==true){
+                        if (top_speeds>=saved_speed){
+                            SharedPreferences.Editor edit = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE).edit();
+                            edit.putInt("new_top_speed", top_speeds);
+                            edit.apply();
+                        }
+
+                    }
+
+                });
+            }
+        }
+    }
+
+
 
 //    private void setBluetoothStatus() {
 //
@@ -419,7 +484,6 @@ public class NavigationFragment extends Fragment implements
                 llRedAlertBle.setVisibility(View.VISIBLE);
                 soundFab.setVisibility(GONE);
                 mFollowMeButton.setVisibility(GONE);
-
                 top_strip_layout.setVisibility(GONE);
                 options_recycler_view_container.setVisibility(GONE);
                 //   main_layout.getForeground().setAlpha( 220); // dim
@@ -432,10 +496,26 @@ public class NavigationFragment extends Fragment implements
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_navigation, container, false);
+            View view= inflater.inflate(R.layout.fragment_navigation, container, false);
 
+//
+//        final Handler handler = new Handler();
+//        final int delay = 1000; // 1000 milliseconds == 1 second
+//
+//        handler.postDelayed(new Runnable() {
+//            public void run() {
+//                SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
+//                int saved_speed = prefs.getInt("new_top_speed", 0);
+//                Toast.makeText(getActivity(), ""+saved_speed, Toast.LENGTH_SHORT).show();
+//                handler.postDelayed(this, delay);
+//            }
+//        }, delay);
+
+        return view ;
 
     }
+
+
     private void  setBluetoothStatus() {
 
         if (BLUETOOTH_STATE) {
@@ -658,8 +738,6 @@ public class NavigationFragment extends Fragment implements
                     editor.putString("ride_count", ride_count);
                     editor.apply();
 
-
-
                     //FuelLevel = riderProfile.getFuelBars();
                 }
 
@@ -839,6 +917,7 @@ public class NavigationFragment extends Fragment implements
     public void onMapReady(MapplsMap map) {
         map.getUiSettings().enableLogoClick(false);
 
+
         try {
             Timber.e("onMapReady");
             if (getActivity() == null)
@@ -858,8 +937,11 @@ public class NavigationFragment extends Fragment implements
                     mapEventsPlugin = ((NavigationActivity) getActivity()).getMapEventPlugin();
                     List<NavigationStep> adviseArrayList = app.getRouteDirections();
 
+
                     AdviseInfo adviseInfo = MapplsNavigationHelper.getInstance().getAdviseInfo();
 if (adviseInfo!=null){
+
+    ETA= adviseInfo.getEta();
     int position = adviseInfo.getPosition() == 0 ? adviseInfo.getPosition() : adviseInfo.getPosition() - 1;
     NavigationStep currentRouteDirectionInfo = adviseArrayList.get(position);
     LegStep routeLeg = (LegStep) currentRouteDirectionInfo.getExtraInfo();
@@ -1544,12 +1626,56 @@ if (adviseInfo!=null){
     @Override
     public void onNavigationFinished() {
 
+
+        addTripDataToRealm();
         DestinationReached = true;
 
         showExitNavigationAlert(getActivity(), this);
 
     }
 
+    private void addTripDataToRealm() {
+        //  Date startTime = Calendar.getInstance().getTime();
+
+
+        Realm realm = Realm.getDefaultInstance();
+        try {
+            realm.executeTransaction(realm1 -> {
+
+                RealmResults<RecentTripRealmModule> results = realm1.where(RecentTripRealmModule.class).findAll();
+                RecentTripRealmModule recentTripRealmModule = realm1.createObject(RecentTripRealmModule.class);
+                SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
+                int saved_speed = prefs.getInt("new_top_speed", 0);
+
+                int tripSize = results.size();
+                Date date = new Date();
+                tripID = (int) new Date().getTime();
+                Date d=new Date();
+                SimpleDateFormat sdf=new SimpleDateFormat("hh:mm a");
+                String startTime = sdf.format(d);
+
+                recentTripRealmModule.setETA(dataEta);
+
+                realm1.insert(recentTripRealmModule);
+
+
+                if (tripSize > 10) {
+                    RealmResults<RecentTripRealmModule> recentTrip = realm1.where(RecentTripRealmModule.class)
+                            .sort("dateTime", Sort.ASCENDING)
+                            .findAll();
+
+                    recentTrip.get(0).deleteFromRealm();
+                }
+
+            });
+
+        }
+
+        catch (Exception e) {
+            Log.d("realmex", "--" + e.getMessage());
+
+        }
+    }
 
     public void showExitNavigationAlert(Context context, INavigationListener iNavigationListener) {
         Dialog dialog = new Dialog(context, R.style.custom_dialog);
@@ -1585,6 +1711,33 @@ if (adviseInfo!=null){
                 } else if (RouteNearByActivity.routeNearByActivity != null) {
                     RouteNearByActivity.routeNearByActivity.finish();
                 }
+
+
+                Intent i=new Intent(getActivity(), RouteActivity.class);
+                i.putExtra("top_speed",top_speeds);
+                i.putExtra("new_top_speed",saved_speed);
+                startActivity(i);
+
+//                Realm realm = Realm.getDefaultInstance();
+//                try {
+//                    realm.executeTransaction(realm1 -> {
+//
+//                        RealmResults<RecentTripRealmModule> results = realm1.where(RecentTripRealmModule.class).findAll();
+//                        RecentTripRealmModule recentTripRealmModule = realm1.createObject(RecentTripRealmModule.class);
+//                       // recentTripRealmModule.setTopSpeed(saved_speed);
+//                        realm1.insert(recentTripRealmModule);
+//
+////                    tvDistance.setText(String.format("%s", NavigationFormatter.getFormattedDistance(mStateModel.trip.distance().floatValue(), getMyApplication())));
+////                    tvTimeForTravel.setText(String.format("%s ", NavigationFormatter.getFormattedDuration(mStateModel.trip.duration().intValue(), getMyApplication())));
+//
+//                    });
+//
+//                }
+//
+//                catch (Exception e) {
+//                    Log.d("realmex", "--" + e.getMessage());
+//
+//                }
 
                 getActivity().onBackPressed();
             }
@@ -2113,7 +2266,6 @@ if (adviseInfo!=null){
 //            classesDetailDialogFragment.show(fragmentManager, ClassesDetailDialogFragment.class.getSimpleName());
 //        }
 //    }
-
 
     private void setAdapter() {
         if (getActivity() == null)

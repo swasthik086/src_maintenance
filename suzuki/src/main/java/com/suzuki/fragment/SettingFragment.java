@@ -864,6 +864,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
         ivCross.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                switchSaveAllTrips.setChecked(true);
                 dialog.cancel();
             }
         });
@@ -887,9 +888,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
         SpeedSeekbar.setMin(min_speed);
         SpeedSeekbar.setMax(max_speed);
         SpeedSeekbar.setProgress(speed_value);
-
         SpeedLayout.setVisibility(View.VISIBLE);
-
         SpeedValue.setText(String.valueOf(speed_value));
     }
 

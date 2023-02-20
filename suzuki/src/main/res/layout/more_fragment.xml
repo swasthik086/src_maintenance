@@ -7,13 +7,14 @@
 
 
     <RelativeLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:background="@color/actionBar"
         android:gravity="center"
-
         android:orientation="horizontal">
+
 
 
         <TextView
@@ -28,6 +29,29 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/faq_disclaimer"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:background="@color/feedbackMail"
+        android:gravity="center"
+        android:layout_below="@+id/header"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="For more information, Please visit the FAQs section."
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="wrap_content"

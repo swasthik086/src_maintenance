@@ -7,7 +7,8 @@ import io.realm.RealmObject;
 
 public class FavouriteTripRealmModule extends RealmObject implements Comparable<FavouriteTripRealmModule> {
 
-
+    private String startTime;
+    private String endTime;
     private String date;
     private String time;
     private String startlocation;
@@ -125,6 +126,22 @@ public class FavouriteTripRealmModule extends RealmObject implements Comparable<
         return getDateTime().compareTo(o.getDateTime());
     }
 
+    public void setStartTime(String startTime) {
+        this.startTime=startTime;
+    }
+
+    public String getstartTime() {
+        return startTime;
+    }
+
+
+    public void setETA(String endTime) {
+        this.endTime=endTime;
+    }
+
+    public String getETA() {
+        return endTime;
+    }
 
     public int getId() {
         return id;

@@ -81,8 +81,13 @@ public class IntroscreenActivity extends AppCompatActivity {
                     tvNext.setText("Next");
                 }
 
+
+
+
                 if (viewpager.getCurrentItem() == 8) {
+
                     tvNext.setOnClickListener(v -> {
+
 
                         if (help.contentEquals("help")) {
 

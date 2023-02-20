@@ -1,7 +1,6 @@
 package com.suzuki.fragment;
 
 import static android.content.Context.ACTIVITY_SERVICE;
-import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 import static com.mappls.sdk.maps.Mappls.getApplicationContext;
 import static com.suzuki.R.layout.dashboard_fragment_constraint_layout;
@@ -25,7 +24,6 @@ import static com.suzuki.utils.Common.STATUS_PACKET_DELAY;
 import android.Manifest;
 import android.app.ActivityManager;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -45,7 +43,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
@@ -63,8 +60,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 
 import com.clj.fastble.BleManager;
@@ -72,7 +69,6 @@ import com.cunoraz.gifview.library.GifView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.suzuki.R;
-import com.suzuki.activity.BottomSheetDialog;
 import com.suzuki.activity.ConnectedDataActivity;
 import com.suzuki.activity.DeviceListingScanActivity;
 import com.suzuki.activity.ProfileActivity;
@@ -111,7 +107,7 @@ import java.util.TimerTask;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class DashboardFragment extends BaseFragment implements View.OnClickListener {
+public class DashboardFragment extends BaseFragment implements View.OnClickListener{
 
     String Fuel;
 
@@ -120,6 +116,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
     static TextView tvBleName, ProfileName;
     TextView tvOdometer, rideCount, tvTripB, tvTripA;
     public static ConstraintLayout rlButtonConnect, rlButtonWhiePair;
+    public  static  boolean navigationStarted= false;
 
     TelephonyManager Tel;
 
@@ -147,7 +144,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
     String currentBatteryStatus = "1N", signal = "1";
     SimpleDateFormat simpleDateFormat;
     public int FuelLevel = 5;
-    String finaltime, speedAlertForDashboard, Odometer, TripA, TripB;
+    String finaltime, speedAlertForDashboard, Odometer, TripA, TripB, top_speed;
     static Realm realm;
     RealmResults<SettingsPojo> settingsPojos;
     RealmResults<BleDataPojo> bleDataPojoRealmResults;
@@ -180,6 +177,8 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
     private int variant;
     private SharedPreferences.Editor editor;
     Context context;
+
+    Bundle args=new Bundle();
 //    private static MutableLiveData<Boolean> check;
 
     @Override
@@ -243,7 +242,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         bleDataPojoRealmResults = realm.where(BleDataPojo.class).findAll();
 
         simpleDateFormat = new SimpleDateFormat("hhmmss");
-
+       // putArguments(args,view);
         for (SettingsPojo settingsPojo : settingsPojos) {
             speedAlert = settingsPojo.getSpeedAlert();
             synccc = settingsPojo.isSpeedSet();
@@ -259,6 +258,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
             }
         });
 
+
         rlButtonWhiePair.setOnClickListener(v -> {
 
             if(!check_permission()) showExitAlert("The application needs location access permission to scan for nearby Suzuki 2 Wheelers.\n" + "Please allow location access permission to discover and connect with your Suzuki 2 Wheeler.");
@@ -271,6 +271,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
             }
             else showExitAlert("Please enable location settings on the next screen to discover and connect with your Suzuki 2 Wheeler.");
         });
+
 
         rlButtonConnect.setOnClickListener(v -> {
 
@@ -386,6 +387,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         viewRecord();
 //        showExitAlert(getString(R.string.request));
 
+
         return view;
     }
 
@@ -415,15 +417,21 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
             Log.e(EXCEPTION,ClassName+" update_dashboard: "+e);
         }
     }*/
-
-    public void putArguments(Bundle args) {
-        if(args!=null){
-            test=args.getString("access");
-            changeColorAlert("Do you want to change the vehicle color?");
-            //change_color_popup();
-        }
-
-    }
+//    public void putArguments(Bundle args) {
+//
+//        if(args!=null){
+//            test=args.getString("access");
+//            Toast.makeText(app, "bhbhbhbh", Toast.LENGTH_SHORT).show();
+//            //changeColorAlert("Do you want to change the vehicle color?");
+//          //new Common(getContext()).show_alert(view, R.string.change_colour, 5000, "CHANGE");
+//          //  changeColorAlert("Do you want to change the vehicle color?");
+//            // change_color_popup();
+//        }
+//        else {
+//            Toast.makeText(app, "nknk", Toast.LENGTH_SHORT).show();
+//        }
+//
+//    }
     /*private static boolean get_vehicle_type() {
 
         if(staticConnectionStatus){
@@ -437,7 +445,6 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
 
         return Scooter;
     }*/
-
     public void change_color_popup(){
      //  changeColorAlert("Do you want to change the vehicle color?");
 
@@ -453,8 +460,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
     }
 
     public void changeColorAlert(String message) {
-
-            Dialog dialog = new Dialog(getActivity(), R.style.custom_dialog);
+            Dialog dialog = new Dialog(getView().getContext(), R.style.custom_dialog);
             dialog.setContentView(R.layout.custom_dialog);
 
             TextView tvAlertText = dialog.findViewById(R.id.tvAlertText);
@@ -1337,7 +1343,6 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
                 .setConnectOverTime(60000)
                 .setOperateTimeout(5000);
         isMyServiceRunning();
-
         try {
             readClusterFile();
         } catch (Exception ignored) {
@@ -1644,16 +1649,33 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
                 String Cluster_data = new String(u1_buffer);
 
                 Odometer = Cluster_data.substring(5, 11);
+                int top_speeds= Integer.parseInt(Cluster_data.substring(2,5));
 
                 /*sharedPreferences = getApplicationContext().getSharedPreferences("vehicle_data",MODE_PRIVATE);
-                editor = sharedPreferences.edit();
+                editor = sharedPreferences.edit();`
                 editor.putString("odometer",Odometer);
                 editor.apply();*/
 
+               // int top_speeds= Integer.parseInt(Cluster_data.substring(2,5));
+//                SharedPreferences.Editor editors = getApplicationContext().getSharedPreferences("top_speed", Context.MODE_MULTI_PROCESS).edit();
+//                editors.putInt("top_speed", top_speeds);
+//                editors.apply();
+//
+//                SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
+//                int saved_speed = prefs.getInt("top_speed", 0);//"No name defined" is the default value.
+//
+//                if (navigationStarted==true){
+//                    if (top_speeds>=saved_speed){
+//                        SharedPreferences.Editor edit = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE).edit();
+//                        edit.putInt("new_top_speed", top_speeds);
+//                        edit.commit();
+//                }
+//
+//                            }
+               // Toast.makeText(app, ""+speed, Toast.LENGTH_SHORT).show();
                 TripA = Cluster_data.substring(11, 17);
                 TripB = Cluster_data.substring(17, 23);
                 Fuel = Cluster_data.substring(24, 25);
-
                 //Log.e("Fuel",String.valueOf(Fuel));
                 byte FuelValue = u1_buffer[24];
 
@@ -1673,7 +1695,21 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
                 else FuelLevel = 0;
 
                 getActivity().runOnUiThread(() -> {
+                    SharedPreferences.Editor editors = getApplicationContext().getSharedPreferences("top_speed", Context.MODE_MULTI_PROCESS).edit();
+                    editors.putInt("top_speed", top_speeds);
+                    editors.apply();
 
+                    SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
+                    int saved_speed = prefs.getInt("top_speed", 0);//"No name defined" is the default value.
+
+                    if (navigationStarted==true){
+                        if (top_speeds>=saved_speed){
+                            SharedPreferences.Editor edit = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE).edit();
+                            edit.putInt("new_top_speed", top_speeds);
+                            edit.commit();
+                        }
+
+                    }
                     String odometer_reading = Integer.parseInt(Odometer) + " " + "km";
                     tvOdometer.setText(odometer_reading);
 

@@ -1,13 +1,19 @@
  package com.suzuki.base;
 
+import static android.content.Context.MODE_PRIVATE;
+import static com.mappls.sdk.maps.Mappls.getApplicationContext;
+import static com.suzuki.application.SuzukiApplication.calculateCheckSum;
+
 import android.app.AlertDialog;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -21,6 +27,7 @@ public class BaseFragment extends Fragment {
     protected Preferences preferences;
     static ProgressDialog mProgressDialog;
     public static String test;
+
 
 
     @Override
@@ -55,6 +62,39 @@ public class BaseFragment extends Fragment {
         alert.show();
     }
 
+
+    public void ClusterDataPacket(byte[] u1_buffer) {
+        if ((u1_buffer[0] == -91) && (u1_buffer[1] == 55) && (u1_buffer[29] == 127)) {
+
+            byte Crc = calculateCheckSum(u1_buffer);
+
+            if (u1_buffer[28] == Crc) {
+                String Cluster_data = new String(u1_buffer);
+
+                /*sharedPreferences = getApplicationContext().getSharedPreferences("vehicle_data",MODE_PRIVATE);
+                editor = sharedPreferences.edit();`
+                editor.putString("odometer",Odometer);
+                editor.apply();*/
+
+                int top_speeds= Integer.parseInt(Cluster_data.substring(2,5));
+                SharedPreferences.Editor editors = getApplicationContext().getSharedPreferences("top_speed", Context.MODE_MULTI_PROCESS).edit();
+                editors.putInt("top_speed", top_speeds);
+                editors.apply();
+
+                SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
+                int saved_speed = prefs.getInt("top_speed", 0);//"No name defined" is the default value.
+
+
+                if (top_speeds>=saved_speed){
+                    SharedPreferences.Editor edit = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE).edit();
+                    edit.putInt("new_top_speed", top_speeds);
+                    edit.apply();
+                }
+                // Toast.makeText(app, ""+speed, Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    }
 
 
     public interface OnFragmentInteractionListener {

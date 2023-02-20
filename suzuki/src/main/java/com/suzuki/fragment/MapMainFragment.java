@@ -95,7 +95,6 @@ import com.mappls.sdk.services.api.reversegeocode.MapplsReverseGeoCode;
 import com.mappls.sdk.services.api.reversegeocode.MapplsReverseGeoCodeManager;
 import com.suzuki.R;
 import com.suzuki.activity.DeviceListingScanActivity;
-import com.suzuki.activity.HomeScreenActivity;
 import com.suzuki.activity.RouteActivity;
 import com.suzuki.activity.TripActivity;
 import com.suzuki.adapter.AutoCompleteTextWatcher;
@@ -112,7 +111,6 @@ import com.suzuki.interfaces.MapDragListInterface;
 import com.suzuki.interfaces.StartDragListener;
 import com.suzuki.maps.plugins.BearingIconPlugin;
 import com.suzuki.maps.plugins.DirectionPolylinePlugin;
-import com.suzuki.maps.traffic.TrafficPlugin;
 import com.suzuki.pojo.EvenConnectionPojo;
 import com.suzuki.pojo.MapListCustomClass;
 import com.suzuki.pojo.MapListRealmModule;
@@ -1953,7 +1951,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
     }
 
     @Override
-    public void adapterItemIsClicked(int clickedPositon, String actionToPerform, boolean clicked, String date, Date dateTime, String time, String startLoc, String endLoc, String cuurent_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String rideTime, String totalDistance, String topspeed, String timelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList) {
+    public void adapterItemIsClicked(int clickedPositon, String actionToPerform, boolean clicked, String date, Date dateTime, String time, String startLoc, String endLoc, String cuurent_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String rideTime, String totalDistance, String topspeed, String timelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList, String startTime,String endTime) {
 
     }
 

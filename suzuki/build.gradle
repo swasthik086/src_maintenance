@@ -30,12 +30,12 @@ allprojects {
 
 android {
 
-    compileSdkVersion 31
+    compileSdkVersion 33
     defaultConfig {
         applicationId "suzuki.com.suzuki"
         minSdkVersion 23
-        targetSdkVersion 31
-        versionCode 59
+        targetSdkVersion 33
+        versionCode 60
         versionName "2.15.08.02"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

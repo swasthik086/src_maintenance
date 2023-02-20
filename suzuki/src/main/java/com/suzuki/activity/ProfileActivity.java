@@ -2,6 +2,7 @@ package com.suzuki.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
@@ -77,6 +78,8 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
     public static String[]accessSE125color;
     public static String[]gixxerSfcolor;
     public static String[]gixxer250color;
+
+    String id="text";
 //    private SharedPreferences.Editor editor;
 
 
@@ -85,6 +88,9 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.profile_activity_scroll_test);
+
+
+
         vehicleTypeSpinner = (Spinner) findViewById(R.id.classSpinner);
         etUserName = (EditText) findViewById(R.id.etUserName);
         etLocation = (EditText) findViewById(R.id.etLocation);
@@ -104,6 +110,19 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
         gixxer250color=new String[]{"Matte Black","Matte Stellar Blue","Matte Black","Sonic Silver/Triton Blue","Matte Stellar Blue"};
         gixxerSfcolor=new String[]{"Glass Sparkle Black","Triton Blue","Pearl Blaze Orange","Glass Sparkle Black","Pearl Blaze Orange","Triton Blue"};
 
+
+        Intent intent = getIntent();
+        id= intent.getStringExtra("SwitchCluster");
+
+        if (id!=null){
+           etUserName.setEnabled(false);
+           etLocation.setEnabled(false);
+            vehicleTypeSpinner.setClickable(false);
+            vehicleTypeSpinner.setEnabled(false);
+            modelTypeSpinner.setClickable(false);
+            modelTypeSpinner.setEnabled(false);
+
+        }
         etUserName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

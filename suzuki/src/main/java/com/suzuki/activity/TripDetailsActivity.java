@@ -109,7 +109,16 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
     private MapView mapView;
     ImageView ivBack, ivFav, ivEditFav, ivShare;
     private String profile = DirectionsCriteria.PROFILE_DRIVING;
-    TextView tvDestinationLoction, tvCurrentlocation, tvDateTime, tvTripName, tvTotalDistance, tvRideTime, tvtimeLt10, tvTopSpeed;
+    TextView tvDestinationLoction;
+    TextView tvCurrentlocation;
+    TextView tvDateTime;
+    TextView tvTripName;
+    TextView tvTotalDistance;
+    TextView tvRideTime;
+    TextView tvtimeLt10;
+    TextView tvTopSpeed;
+    TextView ridestarttime;
+    TextView rideendtime;
     EditText etTripName;
     String textFromUser, topspeed, ridetimeLt10;
     Realm realm;
@@ -162,7 +171,7 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
 
     private NavLocation startNavigationLocation;
     private SuzukiApplication app;
-    String cuurent_lat, current_long, destiny_lat, destiny_long, rideTime, totalDist;
+    String cuurent_lat, current_long, destiny_lat, destiny_long, rideTime, totalDist, StartTime, EndTime;
 
 
     @Override
@@ -192,6 +201,8 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
         tvTotalDistance = (TextView) findViewById(R.id.tvTotalDistance);
         tvRideTime = (TextView) findViewById(R.id.tvRideTime);
         tvTopSpeed = (TextView) findViewById(R.id.tvTopSpeed);
+        rideendtime=(TextView)findViewById(R.id.rideendtime);
+        ridestarttime=(TextView)findViewById(R.id.ridestarttime);
         tvtimeLt10 = (TextView) findViewById(R.id.tvtimeLt10);
         Intent intent = getIntent();
 
@@ -215,13 +226,13 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
         destiny_lat = intent.getStringExtra("destiny_lat");
         destiny_long = intent.getStringExtra("destiny_long");
         rideTime = intent.getStringExtra("rideTime");
+        StartTime=intent.getStringExtra("rideStartTime");
+        EndTime=intent.getStringExtra("rideEndTime");
         totalDist = intent.getStringExtra("totalDistance");
         Boolean clicked = getIntent().getExtras().getBoolean("clicked");
         tripName = intent.getStringExtra("tripName");
         topspeed = intent.getStringExtra("topspeed");
         ridetimeLt10 = intent.getStringExtra("timelt10");
-
-
         viaPointList = intent.getParcelableArrayListExtra("viaPointList");
         tvTripName.setText(tripName);
         Log.d("kskksksksks", "---" + topspeed + ridetimeLt10);
@@ -230,6 +241,8 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
         eLocation.latitude = Double.valueOf(String.valueOf(destiny_lat));
         eLocation.longitude = Double.valueOf(String.valueOf(destiny_long));
         tvRideTime.setText(rideTime);
+        ridestarttime.setText(StartTime);
+        rideendtime.setText(EndTime);
         tvTotalDistance.setText(totalDist);
         tvTopSpeed.setText(topspeed + " km/h");
       //  Toast.makeText(TripDetailsActivity.this, ""+topspeed, Toast.LENGTH_SHORT).show();
@@ -260,7 +273,6 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
 
             ivFav.setImageResource(R.drawable.fav);
             ivEditFav.setVisibility(View.GONE);
-
 
         }
 
@@ -302,7 +314,7 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
 //                        }
 //                    }
 
-                    addFavouriteTripDataToRealm(date, dateparse, id, time, startLoc, endLoc,rideTime,totalDist, forFavAdd, cuurent_lat, current_long, destiny_lat, destiny_long, tripName, topspeed, ridetimeLt10, viaPointRealmList);
+                    addFavouriteTripDataToRealm(date, dateparse, id, time, startLoc, endLoc,rideTime,totalDist, forFavAdd, cuurent_lat, current_long, destiny_lat, destiny_long, tripName, topspeed, ridetimeLt10, viaPointRealmList,StartTime,EndTime);
                     updateRecentData(realm, id, forFavAdd);
 
                     ivFav.setImageResource(R.drawable.fav);
@@ -320,7 +332,7 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
 //                        }
 //                    }
 
-                    addFavouriteTripDataToRealm(date, dateparse, id, time, startLoc, endLoc,rideTime,totalDist, forFavAdd, cuurent_lat, current_long, destiny_lat, destiny_long, tripName, topspeed, ridetimeLt10,viaPointRealmList);
+                    addFavouriteTripDataToRealm(date, dateparse, id, time, startLoc, endLoc,rideTime,totalDist, forFavAdd, cuurent_lat, current_long, destiny_lat, destiny_long, tripName, topspeed, ridetimeLt10,viaPointRealmList,StartTime,EndTime);
 
                     updateRecentData(realm, id, forFavAdd);
                     ivFav.setImageResource(R.drawable.favor);
@@ -1368,7 +1380,7 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
 //        }
 //    }
 
-    private void addFavouriteTripDataToRealm(String date, Date dateTime, int id, String time, String startLoc, String endLoc, String rideTime, String totalDist, boolean clicked, String current_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String topspeed, String ridetimelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList) {
+    private void addFavouriteTripDataToRealm(String date, Date dateTime, int id, String time, String startLoc, String endLoc, String rideTime, String totalDist, boolean clicked, String current_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String topspeed, String ridetimelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList,String startTime,String endTime) {
         Realm realm = Realm.getDefaultInstance();
         try {
             realm.executeTransaction(new Realm.Transaction() {
@@ -1404,6 +1416,8 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
                                 favouriteTripRealmModule.setDestination_lat(destiny_lat);
                                 favouriteTripRealmModule.setDestination_long(destiny_long);
                                 favouriteTripRealmModule.setRideTime(rideTime);
+                                favouriteTripRealmModule.setStartTime(startTime);
+                                favouriteTripRealmModule.setETA(endTime);
                                 favouriteTripRealmModule.setTotalDistance(totalDist);
                                 favouriteTripRealmModule.setTrip_name(tripName);
                                 favouriteTripRealmModule.setTopSpeed(Integer.parseInt(topspeed));
@@ -1421,7 +1435,7 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
                             else if (favtripUpdateModel != null) {
 
                                 for (ViaPointLocationRealmModel model : viaPointRealmList){
-                                    favouriteTripRealmModule.setPointLocationRealmModels(model);
+                                    favtripUpdateModel.setPointLocationRealmModels(model);
                                 }
 
                                 favtripUpdateModel.setDate(date);
@@ -1433,13 +1447,15 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
                                 favtripUpdateModel.setDateTime(dateTime);
                                 favtripUpdateModel.setCurrent_lat(current_lat);
                                 favtripUpdateModel.setCurrent_long(current_long);
-                                favouriteTripRealmModule.setRideTime(rideTime);
-                                favouriteTripRealmModule.setTotalDistance(totalDist);
+                                favtripUpdateModel.setRideTime(rideTime);
+                                favtripUpdateModel.setTotalDistance(totalDist);
+                                favtripUpdateModel.setStartTime(startTime);
+                                favtripUpdateModel.setETA(endTime);
                                 favtripUpdateModel.setDestination_lat(destiny_lat);
                                 favtripUpdateModel.setDestination_long(destiny_long);
                                 favtripUpdateModel.setDestination_long(tripName);
-                                favouriteTripRealmModule.setTopSpeed(Integer.parseInt(topspeed));
-                                favouriteTripRealmModule.setRideTimeLt10(Integer.parseInt(ridetimelt10));
+                                favtripUpdateModel.setTopSpeed(Integer.parseInt(topspeed));
+                                favtripUpdateModel.setRideTimeLt10(Integer.parseInt(ridetimelt10));
                                 realm.insertOrUpdate(favtripUpdateModel);
 
                                 RealmResults<FavouriteTripRealmModule> resultsafte = realm.where(FavouriteTripRealmModule.class).findAll();

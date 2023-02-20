@@ -15,6 +15,7 @@ public class RecentTripRealmModule extends RealmObject implements Comparable<Rec
     private String endlocation;
     boolean favorite;
     private int id;
+private  String setETA;
     private String trip_name;
     private String rideTime;
     private String totalDistance;
@@ -23,6 +24,7 @@ public class RecentTripRealmModule extends RealmObject implements Comparable<Rec
     private String destination_lat;
     private String destination_long;
     private Date dateTime;
+    private String startTime;
     private int topSpeed;
     private int ridetimeLt10;
 
@@ -172,5 +174,20 @@ public class RecentTripRealmModule extends RealmObject implements Comparable<Rec
         this.favorite = favorite;
     }
 
+    public void setStartTime(String startTime) {
+        this.startTime=startTime;
+    }
 
+    public String getstartTime() {
+        return startTime;
+    }
+
+
+    public void setETA(String dataEta) {
+        this.setETA=dataEta;
+    }
+
+    public String getETA() {
+        return setETA;
+    }
 }

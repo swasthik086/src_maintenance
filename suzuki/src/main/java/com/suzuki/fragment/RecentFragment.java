@@ -3,7 +3,6 @@ package com.suzuki.fragment;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -243,7 +242,7 @@ public class RecentFragment extends Fragment implements IOnclickFromAdapterToAct
         readTripRecords();
     }
 
-    private void addFavouriteTripDataToRealm(String date, Date dateTime, int id, String time, String startLoc, String endLoc, boolean clicked, String current_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String rideTime, String totalDistance, String topspeed, String timelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList) {
+    private void addFavouriteTripDataToRealm(String date, Date dateTime, int id, String time, String startLoc, String endLoc, boolean clicked, String current_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String rideTime, String totalDistance, String topspeed, String timelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList,String startTime, String endTime) {
 
         Realm realm = Realm.getDefaultInstance();
         try {
@@ -283,6 +282,9 @@ public class RecentFragment extends Fragment implements IOnclickFromAdapterToAct
                                 favouriteTripRealmModule.setDestination_long(destiny_long);
                                 favouriteTripRealmModule.setTrip_name(tripName);
                                 favouriteTripRealmModule.setRideTime(rideTime);
+                                favouriteTripRealmModule.setStartTime(startTime);
+                                favouriteTripRealmModule.setETA(endTime);
+
                                 favouriteTripRealmModule.setTotalDistance(totalDistance);
                                 favouriteTripRealmModule.setTopSpeed(Integer.parseInt(topspeed));
                                 favouriteTripRealmModule.setRideTimeLt10(Integer.parseInt(timelt10));
@@ -316,6 +318,8 @@ public class RecentFragment extends Fragment implements IOnclickFromAdapterToAct
                                 favtripUpdateModel.setDestination_long(destiny_long);
                                 favtripUpdateModel.setTrip_name(tripName);
                                 favtripUpdateModel.setRideTime(rideTime);
+                                favtripUpdateModel.setStartTime(startTime);
+                                favtripUpdateModel.setETA(endTime);
                                 favtripUpdateModel.setTotalDistance(totalDistance);
                                 favouriteTripRealmModule.setTopSpeed(Integer.parseInt(topspeed));
                                 favouriteTripRealmModule.setRideTimeLt10(Integer.parseInt(timelt10));
@@ -378,7 +382,7 @@ public class RecentFragment extends Fragment implements IOnclickFromAdapterToAct
 
     @Override
     public void adapterItemIsClicked(int clickedPositon, String actionToPerform, boolean clicked, String date, Date dateTime, String time, String startLoc, String endLoc, String cuurent_lat, String current_long, String destiny_lat,
-                                     String destiny_long, String tripName, String rideTime, String totalDistance, String topspeed, String timelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList) {
+                                     String destiny_long, String tripName, String rideTime, String totalDistance, String topspeed, String timelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList, String startTime,String endTime) {
 
         if (actionToPerform.contentEquals("delete")) {
 
@@ -389,7 +393,7 @@ public class RecentFragment extends Fragment implements IOnclickFromAdapterToAct
 
             Log.d("RecentFragment", "adapterItemIsClicked() called with: clickedPositon = [" + clickedPositon + "], actionToPerform = [" + actionToPerform + "], clicked = [" + clicked + "], date = [" + date + "], dateTime = [" + dateTime + "], time = [" + time + "], startLoc = [" + startLoc + "], endLoc = [" + endLoc + "], cuurent_lat = [" + cuurent_lat + "], current_long = [" + current_long + "], destiny_lat = [" + destiny_lat + "], destiny_long = [" + destiny_long + "], tripName = [" + tripName + "], rideTime = [" + rideTime + "], totalDistance = [" + totalDistance + "], topspeed = [" + topspeed + "], timelt10 = [" + timelt10 + "], viaPointRealmList = [" + viaPointRealmList + "]");
 
-            addFavouriteTripDataToRealm(date, dateTime, clickedPositon, time, startLoc, endLoc, clicked, cuurent_lat, current_long, destiny_lat, destiny_long, tripName, rideTime, totalDistance, topspeed, timelt10, viaPointRealmList);
+            addFavouriteTripDataToRealm(date, dateTime, clickedPositon, time, startLoc, endLoc, clicked, cuurent_lat, current_long, destiny_lat, destiny_long, tripName, rideTime, totalDistance, topspeed, timelt10, viaPointRealmList,startTime,endTime);
 
             updateRecentData(realm, clickedPositon, clicked);
 
@@ -411,6 +415,8 @@ public class RecentFragment extends Fragment implements IOnclickFromAdapterToAct
             in.putExtra("date", date);
             in.putExtra("dateTime", dateTime.toString());
             in.putExtra("time", time);
+            in.putExtra("rideStartTime",startTime);
+            in.putExtra("rideEndTime",endTime);
             in.putExtra("startLoc", startLoc);
             in.putExtra("endLoc", endLoc);
             in.putExtra("cuurent_lat", cuurent_lat);
@@ -425,7 +431,6 @@ public class RecentFragment extends Fragment implements IOnclickFromAdapterToAct
             in.putExtra("timelt10", timelt10);
             in.putExtra("viaPointList",viaPointList);
        //  in.putExtra("viaPointRealmList", String.valueOf(viaPointRealmList));
-
             startActivity(in);
         }
     }

@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -14,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.Spannable;
@@ -21,6 +23,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.format.Time;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -96,12 +99,15 @@ import com.suzuki.adapter.ViaPointAdapter;
 import com.suzuki.application.SuzukiApplication;
 import com.suzuki.base.BaseActivity;
 import com.suzuki.broadcaster.BleConnection;
+import com.suzuki.fragment.DashboardFragment;
 import com.suzuki.fragment.MapMainFragment;
 import com.suzuki.interfaces.ItemTouchHelperAdapter;
 import com.suzuki.interfaces.StartDragListener;
 import com.suzuki.maps.plugins.BearingIconPlugin;
 import com.suzuki.maps.plugins.DirectionPolylinePlugin;
 import com.suzuki.maps.traffic.TrafficPlugin;
+import com.suzuki.pojo.ClusterStatusPktPojo;
+import com.suzuki.pojo.FavouriteTripRealmModule;
 import com.suzuki.pojo.RecentTripRealmModule;
 import com.suzuki.pojo.RiderProfileModule;
 import com.suzuki.pojo.SettingsPojo;
@@ -109,9 +115,12 @@ import com.suzuki.pojo.ViaPointLocationRealmModel;
 import com.suzuki.pojo.ViaPointPojo;
 import com.suzuki.utils.Common;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -126,8 +135,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
+import static com.mappls.sdk.maps.Mappls.getApplicationContext;
 import static com.suzuki.activity.HomeScreenActivity.TOAST_DURATION;
 import static com.suzuki.activity.RouteNearByActivity.tripID;
+import static com.suzuki.application.SuzukiApplication.calculateCheckSum;
 import static com.suzuki.fragment.DashboardFragment.staticConnectionStatus;
 import static com.suzuki.fragment.MapMainFragment.currentlocation;
 import static com.suzuki.utils.Common.BikeBleName;
@@ -168,6 +179,8 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
     BearingIconPlugin _bearingIconPlugin;
     Marker marker, sourceMarker;
     boolean moveToNavigation;
+    private String top_speed;
+
     private BleConnection mReceiver;
     LocationEngineRequest request;
     LatLng latLng;
@@ -177,7 +190,7 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
     private String fromLocation, fromAddress, placeName, placeAddress;
     String destinationLat, destinationLong;
     public static boolean startClicked = true;
-    String currentPlaceName, destionationPlaceName, destinationAddress, currentLat, currentLong, destinyLat, destinyLong;
+    String endTime,currentPlaceName, destionationPlaceName, destinationAddress, currentLat, currentLong, destinyLat, destinyLong;
     ImageView ivBookMark;
     RelativeLayout rlLocDetails, rlSwapLoc, rlBookMark, rlNavigationDetails;
     LinearLayout llBack, llStartNavigation;
@@ -308,6 +321,7 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
 
             Intent intent = getIntent();
             fromLocation = intent.getStringExtra("fromLocation");
+            endTime=intent.getStringExtra("endTime");
 
             placeName = intent.getStringExtra("placeName");
             placeAddress = intent.getStringExtra("placeAddress");
@@ -541,9 +555,10 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
         llStartNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DashboardFragment.navigationStarted=true;
 //                startNavigation();
 //                addTripDataToRealm();
-NavLocation location=MapMainFragment.getUserLocation();
+                NavLocation location=MapMainFragment.getUserLocation();
                 if (moveToNavigation) {
                     if (bookmarkClicked) {
 
@@ -886,7 +901,6 @@ NavLocation location=MapMainFragment.getUserLocation();
         Dialog dialog = new Dialog(RouteActivity.this, R.style.custom_dialog);
         dialog.setContentView(R.layout.custom_dialog_for_savetrips);
 
-
         TextView tvCustomTextBtn = dialog.findViewById(R.id.tvCustomTextBtn);
         LinearLayout llSave = dialog.findViewById(R.id.llSave);
         tvCustomTextBtn.setText("Save");
@@ -894,7 +908,7 @@ NavLocation location=MapMainFragment.getUserLocation();
         ivCustomClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-NavLocation location=MapMainFragment.getUserLocation();
+                NavLocation location=MapMainFragment.getUserLocation();
                 LatLng currentLatlng= new LatLng(location.getLatitude(),location.getLongitude());
                 LatLng destinationLatlng= new LatLng(eLocation.latitude,eLocation.longitude);
                 if(currentLatlng.distanceTo(destinationLatlng) < 30 ){
@@ -1036,7 +1050,12 @@ NavLocation location=MapMainFragment.getUserLocation();
         dialog.show();
     }
 
+
+
+
     private void addTripDataToRealm() {
+        //  Date startTime = Calendar.getInstance().getTime();
+
 
         Realm realm = Realm.getDefaultInstance();
         try {
@@ -1048,11 +1067,23 @@ NavLocation location=MapMainFragment.getUserLocation();
 
                 RecentTripRealmModule recentTripRealmModule = realm1.createObject(RecentTripRealmModule.class);
 
+                SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
+                int saved_speed = prefs.getInt("new_top_speed", 0);
+
+                //getting end time from navigation
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                String endTime = preferences.getString("endTime", "");
+                if(!endTime.equalsIgnoreCase(""))
+                {
+                    endTime = endTime + "";  /* Edit the value here*/
+                }
 
                 int tripSize = results.size();
                 Date date = new Date();
                 tripID = (int) new Date().getTime();
-
+                Date d=new Date();
+                SimpleDateFormat sdf=new SimpleDateFormat("hh:mm a");
+                String startTime = sdf.format(d);
 
                 recentTripRealmModule.setDate(getDate());
                 recentTripRealmModule.setId(tripID);
@@ -1066,15 +1097,20 @@ NavLocation location=MapMainFragment.getUserLocation();
                 recentTripRealmModule.setTotalDistance(String.format("%s", NavigationFormatter.getFormattedDistance(mStateModel.trip.routes().get(mStateModel.selectedIndex).distance().floatValue(), getMyApplication())));
                 recentTripRealmModule.setRideTime(String.format("%s ", NavigationFormatter.getFormattedDuration(mStateModel.trip.routes().get(mStateModel.selectedIndex).duration().intValue(), getMyApplication())));
                 recentTripRealmModule.setStartlocation(currentPlaceName);
+                recentTripRealmModule.setTopSpeed(saved_speed);
+
                 recentTripRealmModule.setEndlocation(destionationPlaceName);
                 recentTripRealmModule.setFavorite(false);
                 recentTripRealmModule.setCurrent_lat(currentLat);
                 recentTripRealmModule.setCurrent_long(currentLong);
+                recentTripRealmModule.setStartTime(startTime);
+                recentTripRealmModule.setETA(endTime);
 
                 recentTripRealmModule.setDestination_lat(destinyLat);
                 recentTripRealmModule.setDestination_long(destinyLong);
                 recentTripRealmModule.setDateTime(date);
                 realm1.insert(recentTripRealmModule);
+
 
 //                    tvDistance.setText(String.format("%s", NavigationFormatter.getFormattedDistance(mStateModel.trip.distance().floatValue(), getMyApplication())));
 //                    tvTimeForTravel.setText(String.format("%s ", NavigationFormatter.getFormattedDuration(mStateModel.trip.duration().intValue(), getMyApplication())));
@@ -1782,8 +1818,6 @@ NavLocation location=MapMainFragment.getUserLocation();
 ////            //ignore
 ////        }
 //    }
-
-
 
     @Override
     public void onMapError(int i, String s) {

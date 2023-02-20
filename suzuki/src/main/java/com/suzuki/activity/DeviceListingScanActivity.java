@@ -23,7 +23,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -95,7 +94,7 @@ public class DeviceListingScanActivity extends AppCompatActivity implements View
     public static RelativeLayout rlButtonConnect, rlButtonRefresh, rlClose;
     Realm realm;
     //ProgressDialog mProgressDialog;
-
+View view;
     public static String userName;
 
     public static BleDevice bleDevice;
@@ -519,7 +518,23 @@ public class DeviceListingScanActivity extends AppCompatActivity implements View
                     editor.putString("prev_cluster", BikeBleName.getValue()); //for feedback purpose
                     editor.apply();
 
-                    finish();
+
+                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(DeviceListingScanActivity.this);//this==context
+                    if (!prefs.contains("FirstTimeConnection")) {
+                        SharedPreferences.Editor editors = prefs.edit();
+                        editors.putBoolean("FirstTimeConnection", false);
+                        editors.commit();
+                      finish();
+                    }
+                    else {
+                        Intent intent=new Intent(DeviceListingScanActivity.this, ProfileActivity.class);
+                        intent.putExtra("SwitchCluster","SwitchCluster");
+                        startActivity(intent);
+                        finish();
+
+                    }
+
+
                 }
 
                 if(mBoundService!=null) new Handler().postDelayed(() -> mBoundService.getServicesList(bleDevice), 500);
@@ -527,7 +542,7 @@ public class DeviceListingScanActivity extends AppCompatActivity implements View
                 new Handler().postDelayed(() -> {
                     try {
 
-                        BluetoothGattService service = gatt.getServices().get(3);
+                        BluetoothGattService service = gatt.getServices().get(3); 
 
                         realm.executeTransaction(realm -> {
 
@@ -632,10 +647,11 @@ public class DeviceListingScanActivity extends AppCompatActivity implements View
                     type = "Scooter";
                     Model = "Access 125";
                     PRICOL_CONNECTED = true;
+
                     Bundle args= new Bundle();
                     args.putString("access","access");
-                    DashboardFragment dashboardFragment=new DashboardFragment();
-                    dashboardFragment.putArguments(args);
+                  //  DashboardFragment dashboardFragment=new DashboardFragment();
+                  //  dashboardFragment.putArguments(args);
 
                 }
 
@@ -645,19 +661,18 @@ public class DeviceListingScanActivity extends AppCompatActivity implements View
                     PRICOL_CONNECTED = true;
                     Bundle args= new Bundle();
                     args.putString("access","access");
-                    DashboardFragment dashboardFragment=new DashboardFragment();
-                    dashboardFragment.putArguments(args);
+                   // DashboardFragment dashboardFragment=new DashboardFragment();
+                  // dashboardFragment.putArguments(args);
                 }
 
                else if (BikeBleName.getValue().charAt(3) == '0' && BikeBleName.getValue().charAt(4) == '2') {
                     type = "Scooter";
                     Model = "Access 125";
                     PRICOL_CONNECTED = true;
-
                    Bundle args= new Bundle();
                    args.putString("access","access");
-                   DashboardFragment dashboardFragment=new DashboardFragment();
-  dashboardFragment.putArguments(args);
+                   //DashboardFragment dashboardFragment=new DashboardFragment();
+  //dashboardFragment.putArguments(args);
                 }
 
                 else if (BikeBleName.getValue().charAt(3) == '1' && BikeBleName.getValue().charAt(4) == '2') {
@@ -666,8 +681,8 @@ public class DeviceListingScanActivity extends AppCompatActivity implements View
                     PRICOL_CONNECTED = true;
                     Bundle args= new Bundle();
                     args.putString("access","access");
-                    DashboardFragment dashboardFragment=new DashboardFragment();
-                    dashboardFragment.putArguments(args);
+                  //  DashboardFragment dashboardFragment=new DashboardFragment();
+                   // dashboardFragment.putArguments(args);
                 }
             }
             else {
@@ -689,16 +704,16 @@ public class DeviceListingScanActivity extends AppCompatActivity implements View
                     Model = "Avenis";
                     Bundle args= new Bundle();
                     args.putString("access","access");
-                    DashboardFragment dashboardFragment=new DashboardFragment();
-                    dashboardFragment.putArguments(args);
+                    //DashboardFragment dashboardFragment=new DashboardFragment();
+                    //dashboardFragment.putArguments(args);
 
                 } else if (BikeBleName.getValue().charAt(3) == '3' && BikeBleName.getValue().charAt(4) == '1') {
                     type = "Scooter";
                     Model = "Burgman Street EX";
                     Bundle args= new Bundle();
                     args.putString("access","access");
-                    DashboardFragment dashboardFragment=new DashboardFragment();
-                    dashboardFragment.putArguments(args);
+                  //  DashboardFragment dashboardFragment=new DashboardFragment();
+                 //   dashboardFragment.putArguments(args);
                 }
             }
 
@@ -706,10 +721,14 @@ public class DeviceListingScanActivity extends AppCompatActivity implements View
                 if (BikeBleName.getValue().charAt(3) == '0' && BikeBleName.getValue().charAt(4) == '1') {
                     type = "Motorcycle";
                     Model = "V-STROM SX";
+
+
                     Bundle args= new Bundle();
                     args.putString("access","access");
-                    DashboardFragment dashboardFragment=new DashboardFragment();
-                    dashboardFragment.putArguments(args);
+                   // DashboardFragment dashboardFragment=new DashboardFragment();
+                   // dashboardFragment.putArguments(args);
+
+
                 }
 
                 else if (BikeBleName.getValue().charAt(3) == '1' && BikeBleName.getValue().charAt(4) == '1') {
@@ -717,16 +736,16 @@ public class DeviceListingScanActivity extends AppCompatActivity implements View
                     Model = "GIXXER / GIXXER SF";
                     Bundle args= new Bundle();
                     args.putString("access","access");
-                    DashboardFragment dashboardFragment=new DashboardFragment();
-                    dashboardFragment.putArguments(args);
+                   // DashboardFragment dashboardFragment=new DashboardFragment();
+                  //  dashboardFragment.putArguments(args);
                 }
                 else if (BikeBleName.getValue().charAt(3) == '2' && BikeBleName.getValue().charAt(4) == '1') {
                     type = "Motorcycle";
                     Model = "GIXXER 250 / GIXXER SF 250";
                     Bundle args= new Bundle();
                     args.putString("access","access");
-                    DashboardFragment dashboardFragment=new DashboardFragment();
-                    dashboardFragment.putArguments(args);
+                   // DashboardFragment dashboardFragment=new DashboardFragment();
+                  //  dashboardFragment.putArguments(args);
                 }
             }
         }

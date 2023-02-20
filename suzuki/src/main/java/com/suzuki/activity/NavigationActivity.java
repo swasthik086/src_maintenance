@@ -1,12 +1,17 @@
 package com.suzuki.activity;
 
+import static com.suzuki.activity.RouteNearByActivity.tripID;
 import static com.suzuki.fragment.NavigationFragment.navigationModeEnabled;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,6 +40,7 @@ import com.mappls.sdk.maps.location.modes.RenderMode;
 import com.mappls.sdk.maps.location.permissions.PermissionsListener;
 import com.mappls.sdk.maps.location.permissions.PermissionsManager;
 import com.mappls.sdk.navigation.NavLocation;
+import com.mappls.sdk.navigation.NavigationFormatter;
 import com.mappls.sdk.services.api.OnResponseCallback;
 import com.mappls.sdk.services.api.Place;
 import com.mappls.sdk.services.api.PlaceResponse;
@@ -51,10 +57,18 @@ import com.suzuki.maps.plugins.BearingIconPlugin;
 import com.suzuki.maps.plugins.DirectionPolylinePlugin;
 import com.suzuki.maps.plugins.MapEventsPlugin;
 import com.suzuki.maps.plugins.RouteArrowPlugin;
+import com.suzuki.pojo.RecentTripRealmModule;
+import com.suzuki.pojo.ViaPointLocationRealmModel;
 import com.suzuki.utils.NavigationCompassEngine;
 import com.suzuki.utils.NavigationLocationEngine;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import timber.log.Timber;
 
 
@@ -67,6 +81,7 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
     public static int DEFAULT_BOTTOM_PADDING;
     public MapplsMap mapplsMap;
     boolean isVisible = false;
+    String endTime;
     Handler backStackHandler = new Handler();
     //    bearing plugin
     BearingIconPlugin _bearingIconPlugin;
@@ -259,7 +274,6 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
     private void onBackStackChangedWithDelay() {
         currentFragment = getFragmentOnTopOfBackStack();
 
-
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             finish();
         }
@@ -289,6 +303,7 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
 
                     ELocation eLocation = new ELocation();
                     eLocation.entryLongitude = latLng.getLongitude();
+
                     eLocation.longitude = latLng.getLongitude();
                     eLocation.entryLatitude = latLng.getLatitude();
                     eLocation.latitude = latLng.getLatitude();
@@ -388,7 +403,16 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
         ivCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Date d=new Date();
+                SimpleDateFormat sdf=new SimpleDateFormat("hh:mm a");
+                 endTime = sdf.format(d);
+                //addTripDataToRealm();
                 navigationModeEnabled = "0";
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(NavigationActivity.this);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("endTime",endTime);
+                editor.apply();
+          //      Toast.makeText(app, ""+endTime, Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
 
             }
@@ -474,4 +498,52 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
         return (int) (dp * getResources().getDisplayMetrics().density);
     }
 
+    private void addTripDataToRealm() {
+        //  Date startTime = Calendar.getInstance().getTime();
+
+
+        Realm realm = Realm.getDefaultInstance();
+        try {
+            realm.executeTransaction(realm1 -> {
+
+
+                RealmResults<RecentTripRealmModule> results = realm1.where(RecentTripRealmModule.class).findAll();
+
+
+                RecentTripRealmModule recentTripRealmModule = realm1.createObject(RecentTripRealmModule.class);
+                SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
+                int saved_speed = prefs.getInt("new_top_speed", 0);
+
+                int tripSize = results.size();
+                Date date = new Date();
+                tripID = (int) new Date().getTime();
+
+
+
+
+                recentTripRealmModule.setETA(endTime);
+
+                realm1.insert(recentTripRealmModule);
+
+//                    tvDistance.setText(String.format("%s", NavigationFormatter.getFormattedDistance(mStateModel.trip.distance().floatValue(), getMyApplication())));
+//                    tvTimeForTravel.setText(String.format("%s ", NavigationFormatter.getFormattedDuration(mStateModel.trip.duration().intValue(), getMyApplication())));
+
+
+                if (tripSize > 10) {
+                    RealmResults<RecentTripRealmModule> recentTrip = realm1.where(RecentTripRealmModule.class)
+                            .sort("dateTime", Sort.ASCENDING)
+                            .findAll();
+
+                    recentTrip.get(0).deleteFromRealm();
+                }
+
+            });
+
+        }
+
+        catch (Exception e) {
+            Log.d("realmex", "--" + e.getMessage());
+
+        }
+    }
 }
