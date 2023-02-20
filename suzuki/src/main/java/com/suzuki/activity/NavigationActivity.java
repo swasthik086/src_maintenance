@@ -77,6 +77,7 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
         FragmentManager.OnBackStackChangedListener,
         OnCameraTrackingChangedListener,
         PermissionsListener {
+
     public static int DEFAULT_PADDING;
     public static int DEFAULT_BOTTOM_PADDING;
     public MapplsMap mapplsMap;

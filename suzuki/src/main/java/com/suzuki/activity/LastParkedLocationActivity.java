@@ -184,15 +184,17 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
 
         llStartNavigation.setOnClickListener(v -> {
 
-            LatLng currentLatlng= new LatLng(lastPark_Lat,lastPark_Lng);
-            LatLng destinationLatlng= new LatLng(eLocation.latitude,eLocation.longitude);
-            if(currentLatlng.distanceTo(destinationLatlng) < 30 ){
-                showExitNavigationAlert();
+           startNavigation();
 
-
-            }else {
-                startNavigation();
-            }
+//            LatLng currentLatlng= new LatLng(locationRealmModule.getLat(),locationRealmModule.getLng());
+//            LatLng destinationLatlng= new LatLng(eLocation.latitude,eLocation.longitude);
+//            if(currentLatlng.distanceTo(destinationLatlng) < 30 ){
+//                showExitNavigationAlert();
+//
+//
+//            }else {
+//                startNavigation();
+//            }
            // startNavigation();
         });
 
