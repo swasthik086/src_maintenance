@@ -165,7 +165,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@null"
-                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.,!@#$%^*-+_=()&amp;?/\;':[]{}"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.,!@#$%^*-+_=()&amp;?/\;':[]{} "
                 android:gravity="top"
                 android:hint="Please type your feedback here"
                 android:minHeight="80dp"

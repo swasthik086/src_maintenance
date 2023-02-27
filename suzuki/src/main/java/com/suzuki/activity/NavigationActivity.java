@@ -276,6 +276,7 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
         currentFragment = getFragmentOnTopOfBackStack();
 
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+
             finish();
         }
     }
@@ -409,10 +410,10 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
                  endTime = sdf.format(d);
                 //addTripDataToRealm();
                 navigationModeEnabled = "0";
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(NavigationActivity.this);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("endTime",endTime);
-                editor.apply();
+//                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(NavigationActivity.this);
+//                SharedPreferences.Editor editor = preferences.edit();
+//                editor.putString("endTime",endTime);
+//                editor.apply();
           //      Toast.makeText(app, ""+endTime, Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
 

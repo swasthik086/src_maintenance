@@ -252,7 +252,7 @@ public class HelpActivity extends AppCompatActivity implements OnClickListener {
 
                     Log.d("et--s", "--" + etFeedback.getText().toString());
 
-                   if (etFeedback.getText().toString().contentEquals("")) {
+                   if (etFeedback.getText().toString().isEmpty() || etFeedback.getText().toString().contentEquals(" ")) {
                        etFeedback.setError("Please enter feedback");
                        etFeedback.requestFocus();
                        // Toast.makeText(myDialog.getContext(), "Please enter feedback", Toast.LENGTH_SHORT).show();

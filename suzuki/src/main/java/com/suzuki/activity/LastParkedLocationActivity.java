@@ -481,7 +481,7 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
                 .origin(origin)
                 .steps(true)
                 .resource(DirectionsCriteria.RESOURCE_ROUTE_ETA)
-                .profile(DirectionsCriteria.PROFILE_DRIVING)
+                .profile(DirectionsCriteria.PROFILE_BIKING)
                 .overview(DirectionsCriteria.OVERVIEW_FULL)
                 .destination(destination)
                 .build();
@@ -590,7 +590,7 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
                 .origin(origin)
                 .steps(true)
                 .resource(DirectionsCriteria.RESOURCE_ROUTE_ETA)
-                .profile(DirectionsCriteria.PROFILE_DRIVING)
+                .profile(DirectionsCriteria.PROFILE_BIKING)
                 .overview(DirectionsCriteria.OVERVIEW_FULL)
                 .destination(destination);
         MapplsDirectionManager.newInstance(directions.build()).call(new OnResponseCallback<DirectionsResponse>() {

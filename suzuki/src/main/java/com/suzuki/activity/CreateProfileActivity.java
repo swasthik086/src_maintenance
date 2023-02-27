@@ -114,7 +114,7 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
 
 
 
-    public static Integer[] BurgmanStreet = {R.drawable.burgman_fibroin_grey, R.drawable.burgman_matteblack, R.drawable.burgman_matte_blue, R.drawable.burgman_matte_red, R.drawable.burgman_mirage_white};
+    public static Integer[] BurgmanStreet = {R.drawable.burgman_fibroin_grey,R.drawable.burgman_green, R.drawable.burgman_matteblack, R.drawable.burgman_matte_blue, R.drawable.burgman_matte_red, R.drawable.burgman_mirage_white};
   //  public static Integer[] BurgmanStreet_color= {R.string.burgman_fibroingrey,R.string.burgman_matteblack,R.string.burgman_matteblue,R.string.burgman_mattered,R.string.burgman_miragewhite};
 
     public static Integer[] Burgman_Street_EX = {R.drawable.burgman_ex_black, R.drawable.burgman_ex_silver, R.drawable.burgman_ex_bronze};
@@ -188,12 +188,13 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
         privacyCheckBox = findViewById(R.id.privacyCheckBox);
 
         V_STROM_SX_COLOR=new String[]{"Pearl Blaze Orange","Champion Yellow","Glass Sparkle Black"};
-        BurgmanStreet_color= new String[]{"Glossy Grey","Black","Blue","Bordeaux Red","Pearl Mirage White"};
-        avenis_color=new String[]{"Triton Blue","Lush Green","Black","Pearl Blaze Orange","Pearl Mirage White" };
+        BurgmanStreet_color= new String[]{"Glossy Grey","Matte Shadow Green","Matte Black","Matte Blue","Matte Bordeaux Red","Pearl Mirage White"};
+        avenis_color=new String[]{"Sonic Silver + Triton Blue","Lush Green + Fibroin Grey","Matte Black + Glass Sparkle Black","Pearl Blaze Orange + Glass Sparkle Black","Pearl Mirage White + Fibroin Grey" };
         BurgmanStreetEX_color= new String[]{"Black","Platinum Silver","Royal Bronze"};
-        accessSE125color=new String[]{"Black","Dual Tone - Solid Ice Green + Pearl Mirage White","Blue","Royal Bronze","Pearl Mirage White","Glossy Grey"};
+        accessSE125color=new String[]{"Matte Black","Solid Ice Green + Pearl Mirage White","Matte Blue","Royal Bronze","Pearl Mirage White","Glossy Grey"};
         gixxer250color=new String[]{"Matte Black","Matte Stellar Blue","Matte Black","Sonic Silver/Triton Blue","Matte Stellar Blue"};
         gixxerSfcolor=new String[]{"Glass Sparkle Black","Triton Blue","Pearl Blaze Orange","Glass Sparkle Black","Pearl Blaze Orange","Triton Blue"};
+
 
         etUserName.setOnClickListener(new View.OnClickListener() {
             @Override

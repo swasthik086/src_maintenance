@@ -242,7 +242,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         bleDataPojoRealmResults = realm.where(BleDataPojo.class).findAll();
 
         simpleDateFormat = new SimpleDateFormat("hhmmss");
-       // putArguments(args,view);
+        // putArguments(args,view);
         for (SettingsPojo settingsPojo : settingsPojos) {
             speedAlert = settingsPojo.getSpeedAlert();
             synccc = settingsPojo.isSpeedSet();
@@ -446,7 +446,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         return Scooter;
     }*/
     public void change_color_popup(){
-     //  changeColorAlert("Do you want to change the vehicle color?");
+        //  changeColorAlert("Do you want to change the vehicle color?");
 
 //        long current=Calendar.getInstance().getTimeInMillis();
 //        if(current>prev+5000){
@@ -460,31 +460,31 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
     }
 
     public void changeColorAlert(String message) {
-            Dialog dialog = new Dialog(getView().getContext(), R.style.custom_dialog);
-            dialog.setContentView(R.layout.custom_dialog);
+        Dialog dialog = new Dialog(getView().getContext(), R.style.custom_dialog);
+        dialog.setContentView(R.layout.custom_dialog);
 
-            TextView tvAlertText = dialog.findViewById(R.id.tvAlertText);
-            tvAlertText.setText(message);
-            ImageView ivCross = dialog.findViewById(R.id.ivCross);
-            ivCross.setOnClickListener(v -> dialog.cancel());
+        TextView tvAlertText = dialog.findViewById(R.id.tvAlertText);
+        tvAlertText.setText(message);
+        ImageView ivCross = dialog.findViewById(R.id.ivCross);
+        ivCross.setOnClickListener(v -> dialog.cancel());
 
-            ImageView ivCheck = dialog.findViewById(R.id.ivCheck);
+        ImageView ivCheck = dialog.findViewById(R.id.ivCheck);
 
-            ivCheck.setOnClickListener(v -> {
-                Intent i = new Intent(getActivity(), ProfileActivity.class);
-                startActivity(i);
+        ivCheck.setOnClickListener(v -> {
+            Intent i = new Intent(getActivity(), ProfileActivity.class);
+            startActivity(i);
 
-                dialog.dismiss();
-            });
+            dialog.dismiss();
+        });
 
-            ivCross.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.cancel();
-                }
-            });
-            dialog.show();
-        }
+        ivCross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+    }
 
 
 
@@ -723,7 +723,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
 //                    BikeBleName = bleDataPojo.getDeviceName(); Log.e("bikeble","added dash 692: "+String.valueOf(BikeBleName));
 
                     serviceID = bleDataPojo.getServiceID();
-                  //  Toast.makeText(app, ""+serviceID, Toast.LENGTH_SHORT).show();
+                    //  Toast.makeText(app, ""+serviceID, Toast.LENGTH_SHORT).show();
                     writeCharacterID = bleDataPojo.getWriteCharacteristic();
                     readCharacterID = bleDataPojo.getReadCharacteristic();
                 }
@@ -1006,7 +1006,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         super.onResume();
 
         try{
-            if (!flag) snackbar.dismiss();
+           if (!flag) snackbar.dismiss();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -1656,7 +1656,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
                 editor.putString("odometer",Odometer);
                 editor.apply();*/
 
-               // int top_speeds= Integer.parseInt(Cluster_data.substring(2,5));
+                // int top_speeds= Integer.parseInt(Cluster_data.substring(2,5));
 //                SharedPreferences.Editor editors = getApplicationContext().getSharedPreferences("top_speed", Context.MODE_MULTI_PROCESS).edit();
 //                editors.putInt("top_speed", top_speeds);
 //                editors.apply();
@@ -1672,7 +1672,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
 //                }
 //
 //                            }
-               // Toast.makeText(app, ""+speed, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(app, ""+speed, Toast.LENGTH_SHORT).show();
                 TripA = Cluster_data.substring(11, 17);
                 TripB = Cluster_data.substring(17, 23);
                 Fuel = Cluster_data.substring(24, 25);
@@ -1965,18 +1965,22 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
                             break;
 
                         case 1:
-                            ivUserBike.setImageResource(R.drawable.burgman_matteblack);
+                            ivUserBike.setImageResource(R.drawable.burgman_green);
                             break;
 
                         case 2:
-                            ivUserBike.setImageResource(R.drawable.burgman_matte_blue);
+                            ivUserBike.setImageResource(R.drawable.burgman_matteblack);
                             break;
 
                         case 3:
-                            ivUserBike.setImageResource(R.drawable.burgman_matte_red);
+                            ivUserBike.setImageResource(R.drawable.burgman_matte_blue);
                             break;
 
                         case 4:
+                            ivUserBike.setImageResource(R.drawable.burgman_matte_red);
+                            break;
+
+                        case 5:
                             ivUserBike.setImageResource(R.drawable.burgman_mirage_white);
                             break;
                     }
@@ -2038,7 +2042,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
                         case 2:
                             ivUserBike.setImageResource(R.drawable.gixxer150orange);
                             break;
-                            
+
                         case 3:
                             ivUserBike.setImageResource(R.drawable.gixxer150sfblack);
                             break;
@@ -2089,82 +2093,82 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
             model = sharedPreferences.getString("vehicle_name","");
 
             tvBleName.setText(model);
-      //      tvBleName.setText(BikeBleName.getValue());
+            //      tvBleName.setText(BikeBleName.getValue());
             rlButtonWhiePair.setVisibility(View.GONE);
             rlButtonConnect.setVisibility(View.VISIBLE);
         }
 
-       // if(!ALREADY_DISPLAYED && dashboardFragment.isVisible()) change_color_popup();
+        // if(!ALREADY_DISPLAYED && dashboardFragment.isVisible()) change_color_popup();
 
 
     }
 
     private void update_vehicle_data() {
 
-           // sharedPreferences = getSharedPreferences("vehicle_data",MODE_PRIVATE);
-            String prev_type = sharedPreferences.getString("vehicle_type","");
-            int prev_model=sharedPreferences.getInt("vehicle_model",0);
+        // sharedPreferences = getSharedPreferences("vehicle_data",MODE_PRIVATE);
+        String prev_type = sharedPreferences.getString("vehicle_type","");
+        int prev_model=sharedPreferences.getInt("vehicle_model",0);
 
-            if (Objects.requireNonNull(BikeBleName.getValue()).charAt(1) == 'A'){
+        if (Objects.requireNonNull(BikeBleName.getValue()).charAt(1) == 'A'){
 
-                //access, burgman
-                if (BikeBleName.getValue().charAt(2) == 'S') {
+            //access, burgman
+            if (BikeBleName.getValue().charAt(2) == 'S') {
 
-                    //Scooter of Pricol
-                    if (BikeBleName.getValue().charAt(3) == '0' && BikeBleName.getValue().charAt(4) == '1') {
-                        type = "Scooter";
+                //Scooter of Pricol
+                if (BikeBleName.getValue().charAt(3) == '0' && BikeBleName.getValue().charAt(4) == '1') {
+                    type = "Scooter";
 
-                    }
-
-                    else if (BikeBleName.getValue().charAt(3) == '1' && BikeBleName.getValue().charAt(4) == '1') {
-                        type = "Scooter";
-
-                    }
-
-                    else if (BikeBleName.getValue().charAt(3) == '0' && BikeBleName.getValue().charAt(4) == '2') {
-                        type = "Scooter";
-
-
-                    }
-
-                    else if (BikeBleName.getValue().charAt(3) == '1' && BikeBleName.getValue().charAt(4) == '2') {
-                        type = "Scooter";
-
-                    }
                 }
-                else {
-                    //Bike of pricol
+
+                else if (BikeBleName.getValue().charAt(3) == '1' && BikeBleName.getValue().charAt(4) == '1') {
+                    type = "Scooter";
+
                 }
+
+                else if (BikeBleName.getValue().charAt(3) == '0' && BikeBleName.getValue().charAt(4) == '2') {
+                    type = "Scooter";
+
+
+                }
+
+                else if (BikeBleName.getValue().charAt(3) == '1' && BikeBleName.getValue().charAt(4) == '2') {
+                    type = "Scooter";
+
+                }
+            }
+            else {
+                //Bike of pricol
+            }
 
 //            type = "Scooter";
 //            Model = "Burgman Street";
 //            PRICOL_CONNECTED = true;
 
-            }
+        }
 
-            else if (BikeBleName.getValue().charAt(1) == 'B'){
-                //Avenis, Burgman EX, V strom, Gixxer , Gixxer SF
-                PRICOL_CONNECTED=false;
-                if (BikeBleName.getValue().charAt(2) == 'S'){
-                    if (BikeBleName.getValue().charAt(3) == '2' && BikeBleName.getValue().charAt(4) == '1') {
-                        type = "Scooter";
+        else if (BikeBleName.getValue().charAt(1) == 'B'){
+            //Avenis, Burgman EX, V strom, Gixxer , Gixxer SF
+            PRICOL_CONNECTED=false;
+            if (BikeBleName.getValue().charAt(2) == 'S'){
+                if (BikeBleName.getValue().charAt(3) == '2' && BikeBleName.getValue().charAt(4) == '1') {
+                    type = "Scooter";
 
-                    } else if (BikeBleName.getValue().charAt(3) == '3' && BikeBleName.getValue().charAt(4) == '1') {
-                        type = "Scooter";
+                } else if (BikeBleName.getValue().charAt(3) == '3' && BikeBleName.getValue().charAt(4) == '1') {
+                    type = "Scooter";
 
-                    }
-                }
-
-                else if (BikeBleName.getValue().charAt(2) == 'M'){
-                    if (BikeBleName.getValue().charAt(3) == '0' && BikeBleName.getValue().charAt(4) == '1') {
-                        type = "Motorcycle";
-                    } else if (BikeBleName.getValue().charAt(3) == '1' && BikeBleName.getValue().charAt(4) == '1') {
-                        type = "Motorcycle";
-                    } else if (BikeBleName.getValue().charAt(3) == '2' && BikeBleName.getValue().charAt(4) == '1') {
-                        type = "Motorcycle";
-                    }
                 }
             }
+
+            else if (BikeBleName.getValue().charAt(2) == 'M'){
+                if (BikeBleName.getValue().charAt(3) == '0' && BikeBleName.getValue().charAt(4) == '1') {
+                    type = "Motorcycle";
+                } else if (BikeBleName.getValue().charAt(3) == '1' && BikeBleName.getValue().charAt(4) == '1') {
+                    type = "Motorcycle";
+                } else if (BikeBleName.getValue().charAt(3) == '2' && BikeBleName.getValue().charAt(4) == '1') {
+                    type = "Motorcycle";
+                }
+            }
+        }
 
 //            if (!prev_type.equals(type)){
 //                new Common(DeviceListingScanActivity.this).update_vehicle_data(type,Model,0);
@@ -2175,5 +2179,5 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
 //                new Common(DeviceListingScanActivity.this).update_vehicle_data(type,Model,0);
 //                Log.e("vehicle_data","updated at devicelistscan 600");
 //            }
-            }
+    }
 }

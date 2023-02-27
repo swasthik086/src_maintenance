@@ -315,7 +315,7 @@ public class RouteFragment extends Fragment implements View.OnClickListener, OnM
                 .origin(origin)
                 .steps(true)
                 .resource(DirectionsCriteria.RESOURCE_ROUTE_ETA)
-                .profile(DirectionsCriteria.PROFILE_DRIVING)
+                .profile(DirectionsCriteria.PROFILE_BIKING)
                 .overview(DirectionsCriteria.OVERVIEW_FULL)
                 .destination(destination)
                 .build();

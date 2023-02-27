@@ -2,14 +2,10 @@ package com.suzuki.fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -34,24 +30,20 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.viewpager.widget.ViewPager;
 
@@ -98,6 +90,7 @@ import com.mappls.sdk.services.utils.Constants;
 import com.suzuki.R;
 import com.suzuki.activity.DeviceListingScanActivity;
 import com.suzuki.activity.NavigationActivity;
+import com.suzuki.activity.NavigationDeviceListingActivity;
 import com.suzuki.activity.RouteActivity;
 import com.suzuki.activity.RouteNearByActivity;
 import com.suzuki.adapter.NavigationPagerAdapter;
@@ -158,6 +151,7 @@ import static com.suzuki.activity.RouteNearByActivity.startClicked;
 import static com.suzuki.activity.RouteNearByActivity.tripID;
 import static com.suzuki.application.SuzukiApplication.calculateCheckSum;
 import static com.suzuki.broadcaster.BluetoothCheck.BLUETOOTH_STATE;
+import static com.suzuki.fragment.DashboardFragment.staticConnectionStatus;
 
 import static com.suzuki.fragment.DashboardFragment.NoSignal;
 import static com.suzuki.utils.Common.BikeBleName;
@@ -166,7 +160,7 @@ import static com.suzuki.utils.Common.EXCEPTION;
 
 
 
-public class NavigationFragment extends DashboardFragment implements
+public class NavigationFragment extends Fragment implements
         View.OnClickListener,
         MapplsMap.OnMoveListener,
         LocationChangedListener,
@@ -265,12 +259,12 @@ public int saved_speed, top_speeds;
     private int temp=0;
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onClusterDataRecev(ClusterStatusPktPojo event) {
-        if (event.getClusterData().length() == 30) {
-            ClusterDataPacket(event.getClusterByteData());
-        }
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onClusterDataRecev(ClusterStatusPktPojo event) {
+//        if (event.getClusterData().length() == 30) {
+//            ClusterDataPacket(event.getClusterByteData());
+//        }
+//    }
 
     public NavigationFragment() {
         // Required empty public constructor
@@ -327,48 +321,48 @@ public int saved_speed, top_speeds;
 
 
 
-    public void ClusterDataPacket(byte[] u1_buffer) {
-        if ((u1_buffer[0] == -91) && (u1_buffer[1] == 55) && (u1_buffer[29] == 127)) {
-
-            byte Crc = calculateCheckSum(u1_buffer);
-
-            if (u1_buffer[28] == Crc) {
-                String Cluster_data = new String(u1_buffer);
-
-                Odometer = Cluster_data.substring(5, 11);
-
-                /*sharedPreferences = getApplicationContext().getSharedPreferences("vehicle_data",MODE_PRIVATE);
-                editor = sharedPreferences.edit();`
-                editor.putString("odometer",Odometer);
-                editor.apply();*/
-
-
-                // Toast.makeText(app, ""+speed, Toast.LENGTH_SHORT).show();
-
-                top_speeds= Integer.parseInt(Cluster_data.substring(2,5));
-
-                getActivity().runOnUiThread(() -> {
-                     top_speeds= Integer.parseInt(Cluster_data.substring(2,5));
-                    SharedPreferences.Editor editors = getApplicationContext().getSharedPreferences("top_speed", Context.MODE_MULTI_PROCESS).edit();
-                    editors.putInt("top_speed", top_speeds);
-                    editors.apply();
-
-                    SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
-                    saved_speed = prefs.getInt("top_speed", 0);//"No name defined" is the default value.
-
-                    if (navigationStarted==true){
-                        if (top_speeds>=saved_speed){
-                            SharedPreferences.Editor edit = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE).edit();
-                            edit.putInt("new_top_speed", top_speeds);
-                            edit.apply();
-                        }
-
-                    }
-
-                });
-            }
-        }
-    }
+//    public void ClusterDataPacket(byte[] u1_buffer) {
+//        if ((u1_buffer[0] == -91) && (u1_buffer[1] == 55) && (u1_buffer[29] == 127)) {
+//
+//            byte Crc = calculateCheckSum(u1_buffer);
+//
+//            if (u1_buffer[28] == Crc) {
+//                String Cluster_data = new String(u1_buffer);
+//
+//                Odometer = Cluster_data.substring(5, 11);
+//
+//                /*sharedPreferences = getApplicationContext().getSharedPreferences("vehicle_data",MODE_PRIVATE);
+//                editor = sharedPreferences.edit();`
+//                editor.putString("odometer",Odometer);
+//                editor.apply();*/
+//
+//
+//                // Toast.makeText(app, ""+speed, Toast.LENGTH_SHORT).show();
+//
+//                top_speeds= Integer.parseInt(Cluster_data.substring(2,5));
+//
+//                getActivity().runOnUiThread(() -> {
+//                     top_speeds= Integer.parseInt(Cluster_data.substring(2,5));
+//                    SharedPreferences.Editor editors = getApplicationContext().getSharedPreferences("top_speed", Context.MODE_MULTI_PROCESS).edit();
+//                    editors.putInt("top_speed", top_speeds);
+//                    editors.apply();
+//
+//                    SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
+//                    saved_speed = prefs.getInt("top_speed", 0);//"No name defined" is the default value.
+//
+//                    if (navigationStarted==true){
+//                        if (top_speeds>=saved_speed){
+//                            SharedPreferences.Editor edit = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE).edit();
+//                            edit.putInt("new_top_speed", top_speeds);
+//                            edit.apply();
+//                        }
+//
+//                    }
+//
+//                });
+//            }
+//        }
+//    }
 
 
 
@@ -672,7 +666,11 @@ public int saved_speed, top_speeds;
         updateDisplay.run();
 
         tvCustomTextBtn.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), DeviceListingScanActivity.class));
+//            Intent intent=new Intent(getActivity(),DeviceListingScanActivity.class);
+//            intent.putExtra("navigationScreen","navigationScreen");
+//            startActivity(intent);
+           startActivity(new Intent(getActivity(), DeviceListingScanActivity.class));
+
         });
         ivCustomClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1895,6 +1893,14 @@ if (adviseInfo!=null){
                 color
         ));
         text_view_reach_eta.setText("ETA - " + adviseInfo.getEta());
+
+       ;
+
+        SharedPreferences preferences = getApplicationContext().getSharedPreferences("endTimeAppPref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("endTime",adviseInfo.getEta() );//example editor.putString("userPassword", password);
+        editor.apply();
+
         text_view_total_distance_left.setText("DTG - " + NavigationFormatter.getFormattedDistance(adviseInfo.getLeftDistance(), (SuzukiApplication) getApplicationContext()));
 //            text_view_total_time_left.setText(adviseInfo.getLeftTime());
 
@@ -1917,7 +1923,6 @@ if (adviseInfo!=null){
         String remdeist;
         remdeist = sgsgs.replaceAll(" ", "");
         remdeist = remdeist.replaceAll("[a-z]", "");
-
 
         float Rem_dsit = Float.parseFloat(remdeist);
         if (dataRemainingDistanceUnit.equalsIgnoreCase("K"))

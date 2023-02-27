@@ -321,12 +321,12 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
                         llFirstLayout.setVisibility(View.GONE);
                     }
 
-//                    if (switchSaveAllTrips.isChecked() == true){
-//                        settingsPojo.setSaveTrips(true);
-//                    }
-//                    else {
-//                        settingsPojo.setSaveTrips(false);
-//                    }
+                    if (switchSaveAllTrips.isChecked() == true){
+                        settingsPojo.setSaveTrips(true);
+                    }
+                    else {
+                        settingsPojo.setSaveTrips(false);
+                    }
 
                    if (settingsPojo.isSaveTrips()) switchSaveAllTrips.setChecked(true);
                    else if (!settingsPojo.isSaveTrips()) switchSaveAllTrips.setChecked(false);

@@ -86,6 +86,7 @@ public class IntroscreenActivity extends AppCompatActivity {
 
                 if (viewpager.getCurrentItem() == 8) {
 
+                    tvSkip.setVisibility(View.GONE);
                     tvNext.setOnClickListener(v -> {
 
 
@@ -107,14 +108,22 @@ public class IntroscreenActivity extends AppCompatActivity {
                     });
 
                 }
+
+
+
                 else if(tvNext.getText()=="Next"){
+                    tvSkip.setVisibility(View.VISIBLE);
                     tvNext.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
                             viewpager.setCurrentItem(viewpager.getCurrentItem() + 1);
                         }
                     });
                 }
+
+
+
             }
 
             @Override

@@ -221,14 +221,14 @@ public class SuzukiApplication extends NavigationApplication {
 
     //first one is testing and next is production
     private String getAtlasClientId() {
-        return getString(R.string.client_id_test);
-     //   return getString(R.string.client_id_prod);
+       // return getString(R.string.client_id_test);
+        return getString(R.string.client_id_prod);
 
     }
 
     private String getAtlasClientSecret() {
-       return getString(R.string.client_secret_test);
-      // return getString(R.string.client_secret_prod);
+     //  return getString(R.string.client_secret_test);
+      return getString(R.string.client_secret_prod);
 
     }
 
@@ -237,13 +237,13 @@ public class SuzukiApplication extends NavigationApplication {
     }
 
     String getMapSDKKey() {
-        return getString(R.string.map_sdk_test);
-       // return getString(R.string.map_sdk_prod);
+       // return getString(R.string.map_sdk_test);
+        return getString(R.string.map_sdk_prod);
     }
 
     String getRestAPIKey() {
-        return getString(R.string.rest_api_test);
-      //  return getString(R.string.rest_api_prod);
+      //  return getString(R.string.rest_api_test);
+        return getString(R.string.rest_api_prod);
     }
 
     public void setELocation(ELocation eLocation) {

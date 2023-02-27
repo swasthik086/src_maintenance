@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,7 +23,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,7 +38,6 @@ import com.clj.fastble.exception.BleException;
 import com.suzuki.R;
 import com.suzuki.adapter.BleListingDeviceAdapter;
 import com.suzuki.application.SuzukiApplication;
-import com.suzuki.base.BaseActivity;
 import com.suzuki.fragment.DashboardFragment;
 import com.suzuki.pojo.BleDataPojo;
 import com.suzuki.pojo.EvenConnectionPojo;
@@ -78,8 +75,9 @@ import static com.suzuki.utils.Common.FIRST_TIME;
 import static com.suzuki.utils.Common.PRICOL_CONNECTED;
 import static com.suzuki.utils.Common.global_bleDevice;
 
+//import static com.suzuki.activity.HomeScreenActivity.mServiceConnection;
 
-public class DeviceListingScanActivity extends BaseActivity implements View.OnClickListener {
+public class NavigationDeviceListingActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = DeviceListingScanActivity.class.getSimpleName();
 
@@ -96,7 +94,7 @@ public class DeviceListingScanActivity extends BaseActivity implements View.OnCl
     public static RelativeLayout rlButtonConnect, rlButtonRefresh, rlClose;
     Realm realm;
     //ProgressDialog mProgressDialog;
-View view;
+    View view;
     public static String userName;
 
     public static BleDevice bleDevice;
@@ -104,7 +102,7 @@ View view;
     public String readCharacterID, serviceID, writeCharacterID;
     Common common;
     private BleManager bleManager;
-    public static DeviceListingScanActivity DEVICESCAN_OBJ;
+    public static NavigationDeviceListingActivity DEVICESCAN_OBJ;
     private ProgressDialog progress_d;
     private String Model, type;
 
@@ -120,7 +118,7 @@ View view;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.device_listing_scanfastble_activity);
+        setContentView(R.layout.activity_navigation_device_listing);
 
         DEVICESCAN_OBJ=this;
         common = new Common(this);
@@ -145,11 +143,6 @@ View view;
         bluetoothadapter = BluetoothAdapter.getDefaultAdapter();
 
         checkforBluetoothConnection();
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
     }
 
     public void viewRecord() {
@@ -283,7 +276,7 @@ View view;
 
                 } else {
 
-                    new AlertDialog.Builder(DeviceListingScanActivity.this)
+                    new AlertDialog.Builder(NavigationDeviceListingActivity.this)
                             .setTitle("Vehicle " + connectedDevices.get(0).getName() + " is already connected.")
                             .setMessage("Would you like to disconnect already connected vehicle?")
                             .setPositiveButton("Yes", (dialog, which) -> {
@@ -324,7 +317,7 @@ View view;
 
         rlButtonConnect.setOnClickListener(v -> {
 
-            Dialog dialog = new Dialog(DeviceListingScanActivity.this, R.style.custom_dialog);
+            Dialog dialog = new Dialog(NavigationDeviceListingActivity.this, R.style.custom_dialog);
             dialog.setContentView(R.layout.custom_dialog);
 
             TextView tvAlertText = dialog.findViewById(R.id.tvAlertText);
@@ -468,7 +461,7 @@ View view;
             @Override
             public void onStartConnect() {
                 try{
-                    progress_d=new ProgressDialog(DeviceListingScanActivity.this);
+                    progress_d=new ProgressDialog(NavigationDeviceListingActivity.this);
                     progress_d.setMessage("Please Wait...");
                     progress_d.setCancelable(false);
                     progress_d.show();
@@ -508,7 +501,11 @@ View view;
 
                     BikeBleName.setValue(bleDevice.getName());
 
+
+
                     update_vehicle_data();
+
+
 
                     prev_cluster_name = BikeBleName.getValue();
                     prev_cluster_macAddr = bleDevice.getMac();
@@ -517,38 +514,36 @@ View view;
                     editor.putString("prev_cluster_macAddr", bleDevice.getMac());
 
                     if (sharedPreferencesFinal.getString("prev_cluster","").equals(BikeBleName.getValue())){
+
                         FIRST_TIME = false;
                     }
-
                     else FIRST_TIME = true;
+
                     editor.putString("prev_cluster_name", BikeBleName.getValue());
                     editor.putString("prev_cluster", BikeBleName.getValue()); //for feedback purpose
                     editor.apply();
 
-
-                    if (navigationStarted==true){
-                        finish();
-                    }
-                    else{
-                        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(DeviceListingScanActivity.this);//this==context
-                        if (!prefs.contains("FirstTimeConnection")) {
-                            SharedPreferences.Editor editors = prefs.edit();
-                            editors.putBoolean("FirstTimeConnection", false);
-                            editors.commit();
-                            finish();
-                        }
-                        else {
-                            Intent intent=new Intent(DeviceListingScanActivity.this, ProfileActivity.class);
-                            intent.putExtra("SwitchCluster","SwitchCluster");
-                            startActivity(intent);
-                            finish();
-
-                        }
-                    }
-
-
-
-
+finish();
+//                    if (check_navigation==null){
+//                        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(NavigationDeviceListingActivity.this);//this==context
+//                        if (!prefs.contains("FirstTimeConnection")) {
+//                            SharedPreferences.Editor editors = prefs.edit();
+//                            editors.putBoolean("FirstTimeConnection", false);
+//                            editors.commit();
+//                            finish();
+//                        }
+//                        else {
+//                            Intent intent=new Intent(NavigationDeviceListingActivity.this, ProfileActivity.class);
+//                            intent.putExtra("SwitchCluster","SwitchCluster");
+//                            startActivity(intent);
+//                            finish();
+//
+//                        }
+//
+//                    }
+//                    else{
+//                        finish();
+//                    }
 
 
                 }
@@ -558,7 +553,7 @@ View view;
                 new Handler().postDelayed(() -> {
                     try {
 
-                        BluetoothGattService service = gatt.getServices().get(3); 
+                        BluetoothGattService service = gatt.getServices().get(3);
 
                         realm.executeTransaction(realm -> {
 
@@ -674,7 +669,7 @@ View view;
 
                 }
 
-               else if (BikeBleName.getValue().charAt(3) == '0' && BikeBleName.getValue().charAt(4) == '2') {
+                else if (BikeBleName.getValue().charAt(3) == '0' && BikeBleName.getValue().charAt(4) == '2') {
                     type = "Scooter";
                     Model = "Access 125";
                     PRICOL_CONNECTED = true;
@@ -688,8 +683,8 @@ View view;
                     PRICOL_CONNECTED = true;
                     Bundle args= new Bundle();
                     args.putString("access","access");
-                  //  DashboardFragment dashboardFragment=new DashboardFragment();
-                   // dashboardFragment.putArguments(args);
+                    //  DashboardFragment dashboardFragment=new DashboardFragment();
+                    // dashboardFragment.putArguments(args);
                 }
             }
             else {
@@ -719,8 +714,8 @@ View view;
                     Model = "Burgman Street EX";
                     Bundle args= new Bundle();
                     args.putString("access","access");
-                  //  DashboardFragment dashboardFragment=new DashboardFragment();
-                 //   dashboardFragment.putArguments(args);
+                    //  DashboardFragment dashboardFragment=new DashboardFragment();
+                    //   dashboardFragment.putArguments(args);
                 }
             }
 
@@ -748,12 +743,12 @@ View view;
         }
 
         if (!prev_type.equals(type)){
-            new Common(DeviceListingScanActivity.this).update_vehicle_data(type,Model,0);
+            new Common(NavigationDeviceListingActivity.this).update_vehicle_data(type,Model,0);
             Log.e("vehicle_data","updated at devicelistscan 600");
         }
 
         if (!String.valueOf(prev_model).equals(Model)){
-            new Common(DeviceListingScanActivity.this).update_vehicle_data(type,Model,0);
+            new Common(NavigationDeviceListingActivity.this).update_vehicle_data(type,Model,0);
             Log.e("vehicle_data","updated at devicelistscan 600");
         }
     }

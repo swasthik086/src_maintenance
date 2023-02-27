@@ -1002,7 +1002,7 @@ public class RouteNearByActivity extends BaseActivity implements OnMapReadyCallb
                 .origin(origin)
                 .steps(true)
                 .resource(DirectionsCriteria.RESOURCE_ROUTE_ETA)
-                .profile(DirectionsCriteria.PROFILE_DRIVING)
+                .profile(DirectionsCriteria.PROFILE_BIKING)
                 .overview(DirectionsCriteria.OVERVIEW_FULL)
                 .destination(destination)
                 .build();

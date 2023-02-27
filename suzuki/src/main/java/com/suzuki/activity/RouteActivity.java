@@ -23,6 +23,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
@@ -120,6 +121,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -178,7 +180,8 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
     private PermissionsManager permissionsManager;
     BearingIconPlugin _bearingIconPlugin;
     Marker marker, sourceMarker;
-    boolean moveToNavigation;
+     boolean moveToNavigation;
+     boolean startNav;
     private String top_speed;
 
     private BleConnection mReceiver;
@@ -224,6 +227,8 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
     public void onAddressChanged(int position) {
         this.viaPointEditPos = position;
     }
+
+
 
     @Override
     public void deleteViaPointPressed(int position) {
@@ -321,7 +326,6 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
 
             Intent intent = getIntent();
             fromLocation = intent.getStringExtra("fromLocation");
-            endTime=intent.getStringExtra("endTime");
 
             placeName = intent.getStringExtra("placeName");
             placeAddress = intent.getStringExtra("placeAddress");
@@ -555,7 +559,7 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
         llStartNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DashboardFragment.navigationStarted=true;
+
 //                startNavigation();
 //                addTripDataToRealm();
                 NavLocation location=MapMainFragment.getUserLocation();
@@ -576,7 +580,10 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
                             addRideCount();
                         }
                     } else {
+
+
                         showSaveTripsAlert();
+
                     }
 
                 } else {
@@ -839,60 +846,6 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
             }
         });
 
-//        MapmyIndiaReverseGeoCode.builder()
-//                .setLocation(lat, lng)
-//                .build().enqueueCall(new Callback<PlaceResponse>() {
-//                    @Override
-//                    public void onResponse(@NotNull Call<PlaceResponse> call, @NotNull Response<PlaceResponse> response) {
-//                        Timber.d(new Gson().toJson(response.body()));
-//                        Timber.d("lat : " + lat + " lng : " + lng);
-//                        if (response.body() == null || response.body().getPlaces().size() < 1) {
-//                            common.showToast("Issue in fetching details", TOAST_DURATION);
-//                            return;
-//                        }
-//
-//                        String address = response.body().getPlaces().get(0).getFormattedAddress();
-//                        String place = response.body().getPlaces().get(0).getLocality();
-//                        String poi = response.body().getPlaces().get(0).getPoi();
-//                        if (place.length() < 2) {
-//                            if (poi.length() < 2) {
-//                                if (address.length() < 2) {
-//                                    common.showToast("Couldn't find map data at selected point", TOAST_DURATION);
-//                                    return;
-//                                } else {
-//                                    place = address;
-//                                }
-//                            } else {
-//                                place = poi;
-//                            }
-//                        }
-//                        ELocation eLocation1 = new ELocation();
-//
-//                        eLocation1.latitude = lat + "";
-//                        eLocation1.longitude = lng + "";
-//                        eLocation1.placeAddress = address;
-//                        eLocation1.placeName = place;
-//
-//                        if (currentLocChanging) {
-//                            // update current loc
-//                            updateCurrentLoc(eLocation1, lat, lng);
-//
-//                        } else if (destionationChanging) {
-//                            // update the destination part
-//                            updateDestination(eLocation1, lat, lng);
-//
-//                        } else if (viaPointChanging) {
-//                            // update/add via points
-//                            updateOrAddViaPoint(eLocation1, lat, lng);
-//                        }
-//                        Log.d("TAG", "onResponse: " + address + " place " + place + currentLocChanging + destionationChanging + viaPointChanging);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NotNull Call<PlaceResponse> call, @NotNull Throwable t) {
-//                        t.printStackTrace();
-//                    }
-//                });
         return false;
     }
 
@@ -1061,29 +1014,40 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
         try {
             realm.executeTransaction(realm1 -> {
 
-
                 RealmResults<RecentTripRealmModule> results = realm1.where(RecentTripRealmModule.class).findAll();
-
-
                 RecentTripRealmModule recentTripRealmModule = realm1.createObject(RecentTripRealmModule.class);
+
+                Date d=new Date();
+                SimpleDateFormat sdf=new SimpleDateFormat("hh:mm a");
+                String startTime = sdf.format(d);
+
+                Calendar currentTimeNow = Calendar.getInstance();
+                System.out.println("Current time now : " + currentTimeNow.getTime());
+              //  Toast.makeText(app, "Current time now : " + currentTimeNow.getTime(), Toast.LENGTH_SHORT).show();
+                currentTimeNow.add(Calendar.MINUTE, mStateModel.trip.routes().get(mStateModel.selectedIndex).duration().intValue());
+                Date getETA = currentTimeNow.getTime();
+                System.out.println("After adding 10 mins with Caleder add() method : " + getETA);
+
 
                 SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
                 int saved_speed = prefs.getInt("new_top_speed", 0);
 
                 //getting end time from navigation
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-                String endTime = preferences.getString("endTime", "");
-                if(!endTime.equalsIgnoreCase(""))
-                {
-                    endTime = endTime + "";  /* Edit the value here*/
-                }
+
+//                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//                String endTime = preferences.getString("endTime", "endtime");
+//                if(!endTime.equalsIgnoreCase(""))
+//                {
+//                    endTime = endTime + "";  /* Edit the value here*/
+//                }
+
+                SharedPreferences conn = getSharedPreferences("endTimeAppPref", MODE_PRIVATE);
+                endTime = conn.getString("endTime","");
 
                 int tripSize = results.size();
                 Date date = new Date();
                 tripID = (int) new Date().getTime();
-                Date d=new Date();
-                SimpleDateFormat sdf=new SimpleDateFormat("hh:mm a");
-                String startTime = sdf.format(d);
+
 
                 recentTripRealmModule.setDate(getDate());
                 recentTripRealmModule.setId(tripID);
@@ -1097,7 +1061,8 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
                 recentTripRealmModule.setTotalDistance(String.format("%s", NavigationFormatter.getFormattedDistance(mStateModel.trip.routes().get(mStateModel.selectedIndex).distance().floatValue(), getMyApplication())));
                 recentTripRealmModule.setRideTime(String.format("%s ", NavigationFormatter.getFormattedDuration(mStateModel.trip.routes().get(mStateModel.selectedIndex).duration().intValue(), getMyApplication())));
                 recentTripRealmModule.setStartlocation(currentPlaceName);
-                recentTripRealmModule.setTopSpeed(saved_speed);
+              //  recentTripRealmModule.setTopSpeed(saved_speed);
+                recentTripRealmModule.setTopSpeed(0);
 
                 recentTripRealmModule.setEndlocation(destionationPlaceName);
                 recentTripRealmModule.setFavorite(false);
@@ -1105,7 +1070,6 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
                 recentTripRealmModule.setCurrent_long(currentLong);
                 recentTripRealmModule.setStartTime(startTime);
                 recentTripRealmModule.setETA(endTime);
-
                 recentTripRealmModule.setDestination_lat(destinyLat);
                 recentTripRealmModule.setDestination_long(destinyLong);
                 recentTripRealmModule.setDateTime(date);
@@ -1160,12 +1124,24 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
 
     public void startNavigation() {
 
+        navigationStarted=true;
         NavLocation location = MapMainFragment.getUserLocation();
         if (location == null)
             return;
         showProgress(this);
         LongOperation operation = new LongOperation();
         operation.execute();
+    }
+
+
+    public static boolean startNav() {
+
+
+        if (startNav()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -1252,8 +1228,9 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
                             .show();*/
                 }
                 else {
-                    Toast.makeText(RouteActivity.this, ""+result.getError().errorMessage, Toast.LENGTH_SHORT).show();
-                    Log.d("tag", "onPostExecute: " + result.getError().toString());
+                    Toast.makeText(RouteActivity.this, "Your vehicle BT ID is not whitelisted. Kindly contact the Suzuki customer support team for further assistance", Toast.LENGTH_SHORT).show();
+
+                    //   Toast.makeText(RouteActivity.this, ""+result.getError().errorMessage, Toast.LENGTH_SHORT).show();
                 }
 
                 return;
@@ -1422,7 +1399,7 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
                 .routeRefresh(true)
                 .deviceId(Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID))
                 .resource(DirectionsCriteria.RESOURCE_ROUTE_ETA)
-                .profile(DirectionsCriteria.PROFILE_DRIVING)
+                .profile(DirectionsCriteria.PROFILE_BIKING)
                 .overview(DirectionsCriteria.OVERVIEW_FULL)
                 .destination(destination);
 
@@ -1867,6 +1844,10 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
     public void onResume() {
         super.onResume();
         mapView.onResume();
+
+        SharedPreferences conn = getSharedPreferences("endTimeAppPref", MODE_PRIVATE);
+        endTime = conn.getString("endTime","");
+
         if (locationEngine != null) {
             locationEngine.removeLocationUpdates(locationEngineCallback);
          //   locationEngine.addLocationEngineListener(this);

@@ -27,6 +27,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     static ProgressDialog mProgressDialog;
+    public  static  boolean navigationStarted= false;
 
     protected Preferences preferences;
     FragmentManager manager;

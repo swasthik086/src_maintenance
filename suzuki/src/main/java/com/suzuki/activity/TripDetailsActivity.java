@@ -501,8 +501,7 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
                 app.setStartNavigationLocation(navLocation);
                 if (currentLocation == null)
                     return new NavigationResponse(ErrorType.UNKNOWN_ERROR, null);
-
-
+                
                 Log.d("tag", "onSuggestionListItemClicked: eLoc async " + eLocation + "   " + viaPointList);
 
                 app.setViaPoints(viaPointList);
@@ -817,15 +816,15 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
         }
 
         if (viaPoint.length() > 1) {
-            url = "https://maps.mapmyindia.com/navigation?places=" + cuurent_lat + "," + current_long + ",Starting;"
+            url = "https://maps.mappls.com/navigation?places=" + cuurent_lat + "," + current_long + ",Starting;"
                     + viaPoint + destiny_lat + "," + destiny_long + ",Destination";
         } else {
-            url = "https://maps.mapmyindia.com/navigation?places=" + cuurent_lat + "," + current_long + ",Starting;"
+            url = "https://maps.mappls.com/navigation?places=" + cuurent_lat + "," + current_long + ",Starting;"
                     + destiny_lat + "," + destiny_long + ",Destination";
         }
 
 
-        String url1 = "https://maps.mapmyindia.com/@" + destiny_lat + "," + destiny_long;
+        String url1 = "https://maps.mappls.com/@" + destiny_lat + "," + destiny_long;
         if (destiny_lat != null) {
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
@@ -928,7 +927,7 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
                 .origin(origin)
                 .steps(true)
                 .resource(DirectionsCriteria.RESOURCE_ROUTE_ETA)
-                .profile(DirectionsCriteria.PROFILE_DRIVING)
+                .profile(DirectionsCriteria.PROFILE_BIKING)
                 .overview(DirectionsCriteria.OVERVIEW_FULL)
                 .destination(destination);
 

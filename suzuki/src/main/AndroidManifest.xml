@@ -83,6 +83,13 @@
         android:theme="@style/AppFullScreenTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".activity.NavigationDeviceListingActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".activity.ColorChangeActivity"
             android:exported="false">
             <meta-data

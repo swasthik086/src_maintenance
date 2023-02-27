@@ -19,7 +19,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="15dp"
-        android:visibility="gone"
+        android:visibility="visible"
         android:background="@color/transaparent"
         android:src="@drawable/close" />
 
@@ -70,7 +70,7 @@ delete the trips ?"
             android:gravity="center"
             android:lineSpacingExtra="7sp"
             android:padding="6dp"
-            android:text="Are you sure you want to save this trip ?"
+            android:text="Do you like to save the trip ?"
             android:textColor="#eeeeee"
             android:textSize="14sp"
             android:textStyle="normal" />
@@ -87,7 +87,6 @@ delete the trips ?"
 
 
             <TextView
-
                 android:id="@+id/tvCustomTextBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="28dp"

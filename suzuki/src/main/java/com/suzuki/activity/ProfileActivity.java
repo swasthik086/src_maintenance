@@ -101,15 +101,14 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
         modelTypeSpinner = (Spinner) findViewById(R.id.divSpinner);
         mLinearLayout_profile_viewpager = findViewById(R.id.profile_viewpager);
         currentLocIV = findViewById(R.id.currentLocIv);
+
         V_STROM_SX_COLOR=new String[]{"Pearl Blaze Orange","Champion Yellow","Glass Sparkle Black"};
-        BurgmanStreet_color= new String[]{"Glossy Grey","Black","Blue","Bordeaux Red","Pearl Mirage White"};
-        avenis_color=new String[]{"Triton Blue","Lush Green","Black","Pearl Blaze Orange","Pearl Mirage White" };
+        BurgmanStreet_color= new String[]{"Glossy Grey","Matte Shadow Green","Matte Black","Matte Blue","Matte Bordeaux Red","Pearl Mirage White"};
+        avenis_color=new String[]{"Sonic Silver + Triton Blue","Lush Green + Fibroin Grey","Matte Black + Glass Sparkle Black","Pearl Blaze Orange + Glass Sparkle Black","Pearl Mirage White + Fibroin Grey" };
         BurgmanStreetEX_color= new String[]{"Black","Platinum Silver","Royal Bronze"};
-        accessSE125color=new String[]{"Black","Dual Tone - Solid Ice Green + Pearl Mirage White","Blue","Royal Bronze","Pearl Mirage White","Glossy Grey"};
-       // etUserName.setFocusable(true);
+        accessSE125color=new String[]{"Matte Black","Solid Ice Green + Pearl Mirage White","Matte Blue","Royal Bronze","Pearl Mirage White","Glossy Grey"};
         gixxer250color=new String[]{"Matte Black","Matte Stellar Blue","Matte Black","Sonic Silver/Triton Blue","Matte Stellar Blue"};
         gixxerSfcolor=new String[]{"Glass Sparkle Black","Triton Blue","Pearl Blaze Orange","Glass Sparkle Black","Pearl Blaze Orange","Triton Blue"};
-
 
         Intent intent = getIntent();
         id= intent.getStringExtra("SwitchCluster");
