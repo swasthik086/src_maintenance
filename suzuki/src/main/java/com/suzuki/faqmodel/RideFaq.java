@@ -41,9 +41,9 @@ public class RideFaq {
         mainList.put(questionList.get(que),answerList);
         que++;
 
-        questionList.add("What is Ride Count?");
+        questionList.add("What is Total Trips?");
         answerList = new ArrayList<>();
-        answerList.add("Ride Count indicates the total number of Saved Rides while Navigation is Active.");
+        answerList.add("Total Trips indicates the total number of Saved Rides while Navigation is Active.");
         mainList.put(questionList.get(que),answerList);
         que++;
 

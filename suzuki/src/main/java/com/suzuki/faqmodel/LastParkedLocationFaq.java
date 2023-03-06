@@ -33,6 +33,11 @@ public class LastParkedLocationFaq {
         mainList.put(questionList.get(que),answerList);
         que++;
 
+        answerList = new ArrayList<>();
+        questionList.add("Can I share the last parked location to others?");
+        answerList.add("Yes, you can share your last parked location with others via social networking services.");
+        mainList.put(questionList.get(que),answerList);
+        que++;
 
         return new QuestionAndAnswer(questionList, mainList);
     }

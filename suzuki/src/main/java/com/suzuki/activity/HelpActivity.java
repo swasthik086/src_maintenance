@@ -64,20 +64,14 @@ public class HelpActivity extends AppCompatActivity implements OnClickListener {
     Button submitBtn;
     ImageView ivHelpDrop1, ivGen, ivCont, ivLeg;
     Activity context;
-
     LinearLayout llFirstLayout, linearGeneral, llRedAlertBle, llAboutUs, llMail, llCall;
-
     Dialog myDialog;
     Realm realm;
-
     TextView riderNameFeed, riderLocationFeed, tvAppVersion;
-
     private BleConnection mReceiver;
-
     String riderName, riderLoc;
     SharedPreferences myPrefrence;
     public static final String key = "USER_IMAGE", MyPREFERENCES = "MyPreferences";
-
     boolean isValid;
     private String cluster_id = "NEWBT_1003_4";
 
@@ -89,7 +83,6 @@ public class HelpActivity extends AppCompatActivity implements OnClickListener {
 
         setContentView(R.layout.help_activity);
         linearGeneral = (LinearLayout) findViewById(R.id.lblGenHeader);
-
         imArrowHelp = (ImageView) findViewById(R.id.imArrowHelp);
         ivGen = (ImageView) findViewById(R.id.ivGen);
         ivCont = (ImageView) findViewById(R.id.ivContact);

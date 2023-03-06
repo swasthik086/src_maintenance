@@ -43,6 +43,13 @@ public class BluetoothFaq {
         mainList.put(questionList.get(que),answerList);
         que++;
 
+
+        answerList = new ArrayList<>();
+        questionList.add("Will the mobile application run, if the Bluetooth is OFF?");
+        answerList.add("No. The application will disconnect from the vehicle instrument cluster.");
+        mainList.put(questionList.get(que),answerList);
+        que++;
+
         return new QuestionAndAnswer(questionList, mainList);
     }
 

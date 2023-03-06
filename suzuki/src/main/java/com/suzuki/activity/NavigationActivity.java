@@ -63,6 +63,7 @@ import com.suzuki.utils.NavigationCompassEngine;
 import com.suzuki.utils.NavigationLocationEngine;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -133,7 +134,6 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
         } catch (Exception e) {
             //ignore
         }
-
         this.navigateTo(new NavigationFragment(), true);
 
 
@@ -281,6 +281,65 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
         }
     }
 
+    private void addTripDataToRealm() {
+        //  Date startTime = Calendar.getInstance().getTime();
+
+
+        Realm realm = Realm.getDefaultInstance();
+        try {
+            realm.executeTransaction(realm1 -> {
+
+                RealmResults<RecentTripRealmModule> results = realm1.where(RecentTripRealmModule.class).findAll();
+                RecentTripRealmModule recentTripRealmModule = realm1.createObject(RecentTripRealmModule.class);
+
+                Date d=new Date();
+                SimpleDateFormat sdf=new SimpleDateFormat("hh:mm a");
+                String startTime = sdf.format(d);
+
+                Calendar currentTimeNow = Calendar.getInstance();
+                System.out.println("Current time now : " + currentTimeNow.getTime());
+                //  Toast.makeText(app, "Current time now : " + currentTimeNow.getTime(), Toast.LENGTH_SHORT).show();
+                Date getETA = currentTimeNow.getTime();
+                System.out.println("After adding 10 mins with Caleder add() method : " + getETA);
+
+                //   int eta= Math.toIntExact(System.currentTimeMillis() + (mStateModel.trip.routes().get(mStateModel.selectedIndex).duration().intValue() * 1000));
+                SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
+                int saved_speed = prefs.getInt("new_top_speed", 0);
+
+                //getting end time from navigation
+
+
+
+                SharedPreferences conn = getSharedPreferences("endTimeAppPref", MODE_PRIVATE);
+                endTime = conn.getString("endTime","");
+
+                int tripSize = results.size();
+                Date date = new Date();
+                tripID = (int) new Date().getTime();
+
+                recentTripRealmModule.setETA(String.valueOf(endTime));
+                recentTripRealmModule.setDateTime(date);
+                realm1.insert(recentTripRealmModule);
+//                    tvDistance.setText(String.format("%s", NavigationFormatter.getFormattedDistance(mStateModel.trip.distance().floatValue(), getMyApplication())));
+//                    tvTimeForTravel.setText(String.format("%s ", NavigationFormatter.getFormattedDuration(mStateModel.trip.duration().intValue(), getMyApplication())));
+
+                if (tripSize > 10) {
+                    RealmResults<RecentTripRealmModule> recentTrip = realm1.where(RecentTripRealmModule.class)
+                            .sort("dateTime", Sort.ASCENDING)
+                            .findAll();
+
+                    recentTrip.get(0).deleteFromRealm();
+                }
+
+            });
+
+        }
+
+        catch (Exception e) {
+            Log.d("realmex", "--" + e.getMessage());
+
+        }
+    }
 
     @Override
     public void onBackStackChanged() {
@@ -500,52 +559,4 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
         return (int) (dp * getResources().getDisplayMetrics().density);
     }
 
-    private void addTripDataToRealm() {
-        //  Date startTime = Calendar.getInstance().getTime();
-
-
-        Realm realm = Realm.getDefaultInstance();
-        try {
-            realm.executeTransaction(realm1 -> {
-
-
-                RealmResults<RecentTripRealmModule> results = realm1.where(RecentTripRealmModule.class).findAll();
-
-
-                RecentTripRealmModule recentTripRealmModule = realm1.createObject(RecentTripRealmModule.class);
-                SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
-                int saved_speed = prefs.getInt("new_top_speed", 0);
-
-                int tripSize = results.size();
-                Date date = new Date();
-                tripID = (int) new Date().getTime();
-
-
-
-
-                recentTripRealmModule.setETA(endTime);
-
-                realm1.insert(recentTripRealmModule);
-
-//                    tvDistance.setText(String.format("%s", NavigationFormatter.getFormattedDistance(mStateModel.trip.distance().floatValue(), getMyApplication())));
-//                    tvTimeForTravel.setText(String.format("%s ", NavigationFormatter.getFormattedDuration(mStateModel.trip.duration().intValue(), getMyApplication())));
-
-
-                if (tripSize > 10) {
-                    RealmResults<RecentTripRealmModule> recentTrip = realm1.where(RecentTripRealmModule.class)
-                            .sort("dateTime", Sort.ASCENDING)
-                            .findAll();
-
-                    recentTrip.get(0).deleteFromRealm();
-                }
-
-            });
-
-        }
-
-        catch (Exception e) {
-            Log.d("realmex", "--" + e.getMessage());
-
-        }
-    }
 }

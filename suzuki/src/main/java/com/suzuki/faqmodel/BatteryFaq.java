@@ -26,8 +26,8 @@ public class BatteryFaq {
         que++;
 
         answerList = new ArrayList<>();
-        questionList.add("What is the Mobile Battery Consumption rate?");
-        answerList.add("[will be updated later]");
+        questionList.add("What will happen if the Battery optimization permission is not enabled?");
+        answerList.add("The application will disconnect from  vehicle instrument cluster");
         mainList.put(questionList.get(que),answerList);
         que++;
 

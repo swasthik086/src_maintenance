@@ -529,6 +529,9 @@ View view;
                     if (navigationStarted==true){
                         finish();
                     }
+                   else if(switching_of_vehicle==false){
+                        finish();
+                    }
                     else{
                         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(DeviceListingScanActivity.this);//this==context
                         if (!prefs.contains("FirstTimeConnection")) {
@@ -542,7 +545,7 @@ View view;
                             intent.putExtra("SwitchCluster","SwitchCluster");
                             startActivity(intent);
                             finish();
-
+                            switching_of_vehicle=false;
                         }
                     }
 

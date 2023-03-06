@@ -23,6 +23,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.text.method.LinkMovementMethod;
@@ -473,6 +474,8 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
             tvDestination.addTextChangedListener(textWatcher);
 
             new Handler().postDelayed(() -> stopAutoSuggest = false, 1500);
+
+
 
         });
 
@@ -1023,23 +1026,16 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
 
                 Calendar currentTimeNow = Calendar.getInstance();
                 System.out.println("Current time now : " + currentTimeNow.getTime());
-              //  Toast.makeText(app, "Current time now : " + currentTimeNow.getTime(), Toast.LENGTH_SHORT).show();
                 currentTimeNow.add(Calendar.MINUTE, mStateModel.trip.routes().get(mStateModel.selectedIndex).duration().intValue());
-                Date getETA = currentTimeNow.getTime();
-                System.out.println("After adding 10 mins with Caleder add() method : " + getETA);
-
+                long getETA = System.currentTimeMillis()+(mStateModel.trip.routes().get(mStateModel.selectedIndex).duration().intValue()*1000);
+                String dateString = DateFormat.format("hh:mm a", new Date(getETA)).toString();
 
                 SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
                 int saved_speed = prefs.getInt("new_top_speed", 0);
 
                 //getting end time from navigation
 
-//                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-//                String endTime = preferences.getString("endTime", "endtime");
-//                if(!endTime.equalsIgnoreCase(""))
-//                {
-//                    endTime = endTime + "";  /* Edit the value here*/
-//                }
+
 
                 SharedPreferences conn = getSharedPreferences("endTimeAppPref", MODE_PRIVATE);
                 endTime = conn.getString("endTime","");
@@ -1069,7 +1065,7 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
                 recentTripRealmModule.setCurrent_lat(currentLat);
                 recentTripRealmModule.setCurrent_long(currentLong);
                 recentTripRealmModule.setStartTime(startTime);
-                recentTripRealmModule.setETA(endTime);
+                recentTripRealmModule.setETA(dateString);
                 recentTripRealmModule.setDestination_lat(destinyLat);
                 recentTripRealmModule.setDestination_long(destinyLong);
                 recentTripRealmModule.setDateTime(date);
@@ -1842,11 +1838,11 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
 
     @Override
     public void onResume() {
-        super.onResume();
-        mapView.onResume();
 
         SharedPreferences conn = getSharedPreferences("endTimeAppPref", MODE_PRIVATE);
         endTime = conn.getString("endTime","");
+        super.onResume();
+        mapView.onResume();
 
         if (locationEngine != null) {
             locationEngine.removeLocationUpdates(locationEngineCallback);

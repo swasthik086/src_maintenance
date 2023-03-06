@@ -37,9 +37,11 @@ public class ProfileFaq implements Parcelable {
         int que = 0;
         /*first question*/
         questionList.add("How to Remove/Modify the Rider Profile picture?");
-        answerList.add("• Go to “Last Sync Data” tab of the application and Select “Profile” option.");
-        answerList.add("• Click on the existing Profile picture.");
-        answerList.add("• Options to “Delete” or Replace (from “Gallery” or “Camera”) will appear.");
+        answerList.add("\"Go to \"\"Last Sync Data\"\"tab and select the \"\"Profile\"\" option\n" +
+                "Click on the existing Profile picture\n" +
+                "User will get options to \"\"Remove\"\" or \"\"Replace\"\"(from Gallery/Camera) will appear\"");
+    //    answerList.add("• Click on the existing Profile picture.");
+    //    answerList.add("• Options to “Delete” or Replace (from “Gallery” or “Camera”) will appear.");
         mainList.put(questionList.get(que),answerList);
         que++;
 

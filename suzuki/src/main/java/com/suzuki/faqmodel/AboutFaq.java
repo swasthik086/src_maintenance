@@ -19,18 +19,20 @@ public class AboutFaq {
         HashMap<String, List<String>> mainList = new HashMap<>();
         int que = 0;
         /*first question*/
-        questionList.add("Is it going to affect application behaviour if required permissions are not provided during installation of Application?");
-        answerList.add("If you don’t allow all permissions, this will affect the certain features in application. However, you can always Enable the Permissions, by following steps:");
-        answerList.add("• Go to the Apps & Notifications under Android Settings.");
-        answerList.add("• Select Suzuki Ride Connect Application and click on Permissions.");
-        answerList.add("• Enable all the permissions. [Android settings may vary for OS version to version].");
+        questionList.add("Will the Application behaviour be affected if the required permissions are not provided during installation of Application?");
+        answerList.add("Please check the following permissions.To check- Settings>App Management>Suzuki Ride Connect\n");
+        answerList.add("1.Permissions>Location>Allow All the Time \n");
+        answerList.add("2.Battery Usage>Allow Background Activity \n");
+        answerList.add("3.Unused Apps>Turn OFF (Battery>Optimize Battery Use>Don't Optimize)\n");
+        answerList.add("4. Allow Notification Access in App \n");
+        answerList.add("If unresolved, mail to customer.queries@suzukimotorcycle.in");
         mainList.put(questionList.get(que),answerList);
         que++;
 
         /*2nd question*/
         answerList = new ArrayList<>();
         questionList.add("What happened if I force close the Application?");
-        answerList.add("The application will disconnect from the Vehicle. It may also lead to loss of information of the Current Ride.");
+        answerList.add("The application will disconnect from the vehicle. It may also lead to a loss of information about the Current Trip.");
         mainList.put(questionList.get(que),answerList);
         que++;
 

@@ -29,6 +29,7 @@ import com.mappls.sdk.services.api.reversegeocode.MapplsReverseGeoCode;
 import com.mappls.sdk.services.api.reversegeocode.MapplsReverseGeoCodeManager;
 import com.suzuki.R;
 import com.suzuki.adapter.ProfileVehicleAdapter;
+import com.suzuki.base.BaseActivity;
 import com.suzuki.pojo.RiderProfileModule;
 import com.suzuki.pojo.SettingsPojo;
 import com.suzuki.utils.Common;
@@ -55,7 +56,7 @@ import static com.suzuki.fragment.DashboardFragment.flag;
 import static com.suzuki.fragment.DashboardFragment.staticConnectionStatus;
 import static com.suzuki.utils.Common.EXCEPTION;
 
-public class ProfileActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class ProfileActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
 
     private Spinner vehicleTypeSpinner, modelTypeSpinner;
     private ViewPager viewPager;
@@ -206,7 +207,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                 bikeType = modelTypeSpinner.getSelectedItem().toString();
                 classid = vehicleTypeSpinner.getSelectedItemPosition();
                 divid = modelTypeSpinner.getSelectedItemPosition();
-
+              //  switching_of_vehicle=true;
                 new Common(this).update_vehicle_data(vehicleType, bikeType, viewPager.getCurrentItem());
                 new Common(this).update_user_data(UserName, Location);
 
@@ -254,8 +255,15 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
 
         viewPager.setAdapter(viewPagerAdapter);
 
-        imArrow.setOnClickListener(v -> finish());
+       // imArrow.setOnClickListener(v -> finish());
 
+        imArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              switching_of_vehicle=false;
+              finish();
+            }
+        });
 //        viewRecord();
         update_profile_view();
 
@@ -316,6 +324,11 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
         modelTypeSpinner.setOnItemSelectedListener(this);
 
         if(staticConnectionStatus) vehicleTypeSpinner.setEnabled(false);
+    }
+
+    @Override
+    public void onLocationChanged(android.location.Location location) {
+
     }
 
     private void update_profile_view() {
@@ -388,6 +401,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                 viewPager.setCurrentItem(variant);
                 setUpViewPager(V_STORM_SX, variant);
                 viewPagerAdapter.notifyDataSetChanged();
+
                 break;
 
 
@@ -396,6 +410,7 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                     // bikeModel();
                     modelTypeSpinner.setSelection(2, true);
                     viewPagerAdapter = new ProfileVehicleAdapter(getApplicationContext(), gixxerSFimages, gixxerSfcolor);
+
 
                     viewPager.setAdapter(viewPagerAdapter);
                     viewPager.setCurrentItem(variant);
@@ -410,7 +425,6 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                     // bikeModel();
                     modelTypeSpinner.setSelection(3, true);
                     viewPagerAdapter = new ProfileVehicleAdapter(getApplicationContext(), gixxer250images, gixxer250color);
-
                     viewPager.setAdapter(viewPagerAdapter);
                     viewPager.setCurrentItem(variant);
                     setUpViewPager(gixxer250images, variant);
@@ -687,7 +701,8 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                         viewPager.setCurrentItem(0);
                         setUpViewPager(V_STORM_SX, 0);
                         viewPagerAdapter.notifyDataSetChanged();
-
+                        switching_of_vehicle=true;
+                        Toast.makeText(this, "vstrom", Toast.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -702,6 +717,8 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                         setUpViewPager(gixxerSFimages, 0);
                        // viewPager.setVisibility(View.VISIBLE);
                         viewPagerAdapter.notifyDataSetChanged();
+                        switching_of_vehicle=true;
+                        Toast.makeText(this, "gixxer", Toast.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -715,7 +732,8 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                         setUpViewPager(gixxer250images, 0);
                        // viewPager.setVisibility(View.VISIBLE);
                         viewPagerAdapter.notifyDataSetChanged();
-
+                        switching_of_vehicle=true;
+                        Toast.makeText(this, "gixxer 250", Toast.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -781,25 +799,28 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                 case 1:
                     if (vehicleType.contentEquals("Avenis")) {
                         viewPagerAdapter = new ProfileVehicleAdapter(getApplicationContext(), Avenis, avenis_color);
-
                         mLinearLayout_profile_viewpager.setVisibility(View.VISIBLE);
                         viewPager.setAdapter(viewPagerAdapter);
                         viewPager.setCurrentItem(0);
                         dotscount = Avenis.length;
                         setUpViewPager(Avenis, 0);
+                        switching_of_vehicle=true;
+                        Toast.makeText(this, "avenis", Toast.LENGTH_SHORT).show();
                     }
                     break;
 
                 case 2:
                     if (vehicleType.contentEquals("Access 125")) {
                         viewPagerAdapter = new ProfileVehicleAdapter(getApplicationContext(), accessSE125, accessSE125color);
-
+                        switching_of_vehicle=true;
                         mLinearLayout_profile_viewpager.setVisibility(View.VISIBLE);
                         viewPager.setAdapter(viewPagerAdapter);
                         viewPager.setCurrentItem(0);
                         dotscount = accessSE125.length;
                         Log.e("dotscount",String.valueOf(dotscount));
                         setUpViewPager(accessSE125, 0);
+                        Toast.makeText(this, "access", Toast.LENGTH_SHORT).show();
+
                     }
                     break;
 
@@ -807,11 +828,13 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                     if (vehicleType.contentEquals("Burgman Street")) {
                         viewPagerAdapter = new ProfileVehicleAdapter(getApplicationContext(), BurgmanStreet, BurgmanStreet_color);
                         mLinearLayout_profile_viewpager.setVisibility(View.VISIBLE);
-
+                        switching_of_vehicle=true;
                         viewPager.setAdapter(viewPagerAdapter);
                         viewPager.setCurrentItem(0);
                         dotscount = BurgmanStreet.length;
                         setUpViewPager(BurgmanStreet, 0);
+                        Toast.makeText(this, "burgman", Toast.LENGTH_SHORT).show();
+
                     }
                     break;
 
@@ -819,11 +842,13 @@ public class ProfileActivity extends AppCompatActivity implements AdapterView.On
                     if (vehicleType.contentEquals("Burgman Street EX")) {
                         viewPagerAdapter = new ProfileVehicleAdapter(getApplicationContext(), Burgman_Street_EX, BurgmanStreetEX_color);
                         mLinearLayout_profile_viewpager.setVisibility(View.VISIBLE);
-
+                        switching_of_vehicle=true;
                         viewPager.setAdapter(viewPagerAdapter);
                         viewPager.setCurrentItem(0);
                         dotscount = Burgman_Street_EX.length;
                         setUpViewPager(Burgman_Street_EX, 0);
+                        Toast.makeText(this, "Burgman Street EX", Toast.LENGTH_SHORT).show();
+
                     }
                     break;
             }

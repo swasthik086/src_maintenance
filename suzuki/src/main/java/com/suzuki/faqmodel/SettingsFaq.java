@@ -34,7 +34,7 @@ public class SettingsFaq {
 
         questionList.add("Does the application support notifications for Contacts Saved in Other than English Language?");
         answerList = new ArrayList<>();
-        answerList.add("The application currently supports English language only. The speedometer will display the Caller Number in case of non-supported languages.");
+        answerList.add("The application currently supports English language only. The Instrument cluster will display the caller in case of non-supported languages.");
         mainList.put(questionList.get(que),answerList);
         que++;
 

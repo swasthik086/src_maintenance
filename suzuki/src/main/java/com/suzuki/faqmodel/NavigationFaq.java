@@ -87,7 +87,7 @@ public class NavigationFaq {
         que++;
 
         answerList = new ArrayList<>();
-        questionList.add("Are there any Quick Access options for Home and Office location?");
+        questionList.add("Are there any Quick Access options for Home and Work location?");
         answerList.add("Yes, there are “Home” and “Work” icons available for Quick Access to predefined address location for Navigation.");
         mainList.put(questionList.get(que),answerList);
         que++;
@@ -109,6 +109,12 @@ public class NavigationFaq {
         answerList = new ArrayList<>();
         questionList.add("Can Rider Quickly Search for Nearby Suzuki Service Stations, Hospitals, ATMs…etc?");
         answerList.add("Yes, these are part of POI (Point of Interest) feature. There are different POIs available such nearby Hospitals, Suzuki Service Stations, Suzuki Sales, ATMs, Restaurants…etc.");
+        mainList.put(questionList.get(que),answerList);
+        que++;
+
+        answerList = new ArrayList<>();
+        questionList.add(" On completing my ride, will I get any notification on my phone ?");
+        answerList.add("Yes, you will get pop message stating that \"Destination reached, you want to exit the navigation\" ?");
         mainList.put(questionList.get(que),answerList);
         que++;
 

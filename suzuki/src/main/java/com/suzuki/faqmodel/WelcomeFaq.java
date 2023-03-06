@@ -27,8 +27,8 @@ public class WelcomeFaq {
 
         /*2nd question*/
         answerList = new ArrayList<>();
-        questionList.add("What is the “Odometer” reading?");
-        answerList.add("The Odometer reading is the Total Distance Travelled by the Vehicle.");
+        questionList.add("What is the “ODO meter” reading?");
+        answerList.add("ODO meter reading is the Total Distance Travelled by the vehicle");
         mainList.put(questionList.get(que),answerList);
         que++;
 

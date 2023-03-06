@@ -548,7 +548,7 @@
                             android:layout_gravity="center"
                             android:layout_weight=".5"
                             android:gravity="center"
-                            android:text="km/h"
+                            android:text="km/hr"
                             android:textColor="@color/app_theme_color"
                             android:textSize="13sp" />
                     </LinearLayout>
