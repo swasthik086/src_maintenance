@@ -938,8 +938,6 @@ public int saved_speed, top_speeds;
 
                     AdviseInfo adviseInfo = MapplsNavigationHelper.getInstance().getAdviseInfo();
 if (adviseInfo!=null){
-
-    ETA= adviseInfo.getEta();
     int position = adviseInfo.getPosition() == 0 ? adviseInfo.getPosition() : adviseInfo.getPosition() - 1;
     NavigationStep currentRouteDirectionInfo = adviseArrayList.get(position);
     LegStep routeLeg = (LegStep) currentRouteDirectionInfo.getExtraInfo();
@@ -1624,56 +1622,12 @@ if (adviseInfo!=null){
     @Override
     public void onNavigationFinished() {
 
-
-        addTripDataToRealm();
         DestinationReached = true;
 
         showExitNavigationAlert(getActivity(), this);
 
     }
 
-    private void addTripDataToRealm() {
-        //  Date startTime = Calendar.getInstance().getTime();
-
-
-        Realm realm = Realm.getDefaultInstance();
-        try {
-            realm.executeTransaction(realm1 -> {
-
-                RealmResults<RecentTripRealmModule> results = realm1.where(RecentTripRealmModule.class).findAll();
-                RecentTripRealmModule recentTripRealmModule = realm1.createObject(RecentTripRealmModule.class);
-                SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
-                int saved_speed = prefs.getInt("new_top_speed", 0);
-
-                int tripSize = results.size();
-                Date date = new Date();
-                tripID = (int) new Date().getTime();
-                Date d=new Date();
-                SimpleDateFormat sdf=new SimpleDateFormat("hh:mm a");
-                String startTime = sdf.format(d);
-
-                recentTripRealmModule.setETA(dataEta);
-
-                realm1.insert(recentTripRealmModule);
-
-
-                if (tripSize > 10) {
-                    RealmResults<RecentTripRealmModule> recentTrip = realm1.where(RecentTripRealmModule.class)
-                            .sort("dateTime", Sort.ASCENDING)
-                            .findAll();
-
-                    recentTrip.get(0).deleteFromRealm();
-                }
-
-            });
-
-        }
-
-        catch (Exception e) {
-            Log.d("realmex", "--" + e.getMessage());
-
-        }
-    }
 
     public void showExitNavigationAlert(Context context, INavigationListener iNavigationListener) {
         Dialog dialog = new Dialog(context, R.style.custom_dialog);
@@ -1709,33 +1663,6 @@ if (adviseInfo!=null){
                 } else if (RouteNearByActivity.routeNearByActivity != null) {
                     RouteNearByActivity.routeNearByActivity.finish();
                 }
-
-
-                Intent i=new Intent(getActivity(), RouteActivity.class);
-                i.putExtra("top_speed",top_speeds);
-                i.putExtra("new_top_speed",saved_speed);
-                startActivity(i);
-
-//                Realm realm = Realm.getDefaultInstance();
-//                try {
-//                    realm.executeTransaction(realm1 -> {
-//
-//                        RealmResults<RecentTripRealmModule> results = realm1.where(RecentTripRealmModule.class).findAll();
-//                        RecentTripRealmModule recentTripRealmModule = realm1.createObject(RecentTripRealmModule.class);
-//                       // recentTripRealmModule.setTopSpeed(saved_speed);
-//                        realm1.insert(recentTripRealmModule);
-//
-////                    tvDistance.setText(String.format("%s", NavigationFormatter.getFormattedDistance(mStateModel.trip.distance().floatValue(), getMyApplication())));
-////                    tvTimeForTravel.setText(String.format("%s ", NavigationFormatter.getFormattedDuration(mStateModel.trip.duration().intValue(), getMyApplication())));
-//
-//                    });
-//
-//                }
-//
-//                catch (Exception e) {
-//                    Log.d("realmex", "--" + e.getMessage());
-//
-//                }
 
                 getActivity().onBackPressed();
             }
@@ -1893,14 +1820,6 @@ if (adviseInfo!=null){
                 color
         ));
         text_view_reach_eta.setText("ETA - " + adviseInfo.getEta());
-
-       ;
-
-        SharedPreferences preferences = getApplicationContext().getSharedPreferences("endTimeAppPref", MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("endTime",adviseInfo.getEta() );//example editor.putString("userPassword", password);
-        editor.apply();
-
         text_view_total_distance_left.setText("DTG - " + NavigationFormatter.getFormattedDistance(adviseInfo.getLeftDistance(), (SuzukiApplication) getApplicationContext()));
 //            text_view_total_time_left.setText(adviseInfo.getLeftTime());
 

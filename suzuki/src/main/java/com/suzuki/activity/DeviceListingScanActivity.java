@@ -520,11 +520,25 @@ View view;
                         FIRST_TIME = false;
                     }
 
+
+
                     else FIRST_TIME = true;
                     editor.putString("prev_cluster_name", BikeBleName.getValue());
-                    editor.putString("prev_cluster", BikeBleName.getValue()); //for feedback purpose
+                    editor.putString("prev_cluster", BikeBleName.getValue());//for feedback purpose
+                    editor.putString("old_cluster",BikeBleName.getValue());
                     editor.apply();
 
+
+
+                    if (BikeBleName.getValue().charAt(1) == 'B'){
+                        if (PRICOL_CONNECTED==false)
+                        switching_of_vehicle=true;
+                    }
+
+                    if (BikeBleName.getValue().charAt(1) == 'A'){
+                        if (PRICOL_CONNECTED==true)
+                            switching_of_vehicle=true;
+                    }
 
                     if (navigationStarted==true){
                         finish();
@@ -666,7 +680,6 @@ View view;
                     type = "Scooter";
                     Model = "Access 125";
                     PRICOL_CONNECTED = true;
-                    switchcluter=true;
 
                 }
 
@@ -731,9 +744,6 @@ View view;
                 if (BikeBleName.getValue().charAt(3) == '0' && BikeBleName.getValue().charAt(4) == '1') {
                     type = "Motorcycle";
                     Model = "V-STROM SX";
-
-
-
 
                 }
 

@@ -26,12 +26,14 @@ public class LastParkedLocationFaq {
 
         /*2nd question*/
         answerList = new ArrayList<>();
-        questionList.add("How to locate the Last Parked Vehicle?");
-        answerList.add("• To locate the last parked.");
-        answerList.add("• If the parked Vehicle is within 500m, then the Application gives Pedestrian Route Guidance (Dotted Lines) to the Last Parked Location.");
-        answerList.add("• If your parked Vehicle is more than 500m, then it will show Navigation route to reach to the parked vehicle location.");
+        questionList.add("How to Locate the Last Parked Vehicle?");
+        answerList.add("If the parked vehicle is within 500m, the application gives Pedestrian Route Guidance (Dotted Line)to the last parked location.\n" +
+                "If the parked vehicle is more than 500m away, the application gives the Navigable Route to reach the last parked location.");
+        //answerList.add("• If the parked Vehicle is within 500m, then the Application gives Pedestrian Route Guidance (Dotted Lines) to the Last Parked Location.");
+        //answerList.add("• If your parked Vehicle is more than 500m, then it will show Navigation route to reach to the parked vehicle location.");
         mainList.put(questionList.get(que),answerList);
         que++;
+		
 
         answerList = new ArrayList<>();
         questionList.add("Can I share the last parked location to others?");

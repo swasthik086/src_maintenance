@@ -37,9 +37,9 @@ public class ProfileFaq implements Parcelable {
         int que = 0;
         /*first question*/
         questionList.add("How to Remove/Modify the Rider Profile picture?");
-        answerList.add("\"Go to \"\"Last Sync Data\"\"tab and select the \"\"Profile\"\" option\n" +
+        answerList.add("Go to \"Last Sync Data\" tab and select the \"Profile\" option\n" +
                 "Click on the existing Profile picture\n" +
-                "User will get options to \"\"Remove\"\" or \"\"Replace\"\"(from Gallery/Camera) will appear\"");
+                "User will get options to \"Remove\" or \"Replace\" (from Gallery/Camera) will appear");
     //    answerList.add("• Click on the existing Profile picture.");
     //    answerList.add("• Options to “Delete” or Replace (from “Gallery” or “Camera”) will appear.");
         mainList.put(questionList.get(que),answerList);
@@ -47,15 +47,16 @@ public class ProfileFaq implements Parcelable {
 
         /*2nd question*/
         answerList = new ArrayList<>();
-        questionList.add("What is the Maximum Character Size for Rider’s Name and Location?");
-        answerList.add("The maximum characters limit to input Name and Location is 20 characters. Only English Alphabets are  allowed.");
+        questionList.add("What is the maximum character size for Rider's Name & Location?");
+        answerList.add("Maximum characters limit to input name and location is 20 characters. Only English characters are allowed");
         mainList.put(questionList.get(que),answerList);
         que++;
 
         questionList.add("How to feed the Location information in Profile Page?");
         answerList = new ArrayList<>();
-        answerList.add("• Rider can enter the Location name manually or ");
-        answerList.add("• Click on icon “⌖” to get current location automatically from GPS location information.");
+        answerList.add("Rider can enter the Location name manually or Click on the (location) icon to get current location automatically from GPS location information\n" +
+                "*Ensure Location permission is allowed and set to all the time for smooth application usage");
+       // answerList.add("• Click on icon “⌖” to get current location automatically from GPS location information.");
         mainList.put(questionList.get(que),answerList);
         que++;
 

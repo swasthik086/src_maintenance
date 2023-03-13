@@ -462,9 +462,9 @@
                         android:layout_marginEnd="10dp"
                         android:background="@drawable/gradient_grey"
                         android:text="Save All Trips"
-                         android:checked="true"
                         android:textColor="#ffff"
                         android:textSize="16sp"
+                        android:checked="true"
                         android:theme="@style/SCBSwitch"
                         tools:ignore="UseSwitchCompatOrMaterialXml" />
                 </LinearLayout>

@@ -117,9 +117,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
 
         common = new Common(getContext());
 
+
         sharedPreferences = getApplicationContext().getSharedPreferences("vehicle_data", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-
         realm = Realm.getDefaultInstance();
         initWidgets(view);
         etCustomMsg.setHorizontallyScrolling(false);
@@ -1257,6 +1257,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
     @Override
     public void onStop() {
         super.onStop();
+
         EventBus.getDefault().unregister(this);
     }
 
@@ -1562,8 +1563,10 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
     @Override
     public void onDestroy() {
         super.onDestroy();
+
         requireActivity().unregisterReceiver(mReceiver);
         realm.close();
+
     }
 
     @SuppressLint("SetTextI18n")

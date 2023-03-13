@@ -30,7 +30,7 @@ public class FaqOptionsActivity extends AppCompatActivity {
         findViewById(R.id.option00).setOnClickListener(v -> {
             Intent intent = new Intent(FaqOptionsActivity.this, FaqDescriptionActivity.class);
             QuestionAndAnswer questionAndAnswer = new RideFaq().getQuestionAnswer();
-            intent.putExtra(getString(R.string.title),getString(R.string.rides)+" FAQ's");
+            intent.putExtra(getString(R.string.title),"Trips"+ " FAQ's");
             intent.putExtra(getString(R.string.question_list), questionAndAnswer.getQuestionList());
             intent.putExtra(getString(R.string.main_list), questionAndAnswer.getMainList());
             startActivity(intent);
@@ -80,7 +80,7 @@ public class FaqOptionsActivity extends AppCompatActivity {
         findViewById(R.id.option21).setOnClickListener(v -> {
             Intent intent = new Intent(FaqOptionsActivity.this, FaqDescriptionActivity.class);
             QuestionAndAnswer questionAndAnswer = new ProfileFaq().getQuestionAnswer();
-            intent.putExtra(getString(R.string.title),"Profile FAQ's");
+            intent.putExtra(getString(R.string.title),"Profile"+ " FAQ's");
             intent.putExtra(getString(R.string.question_list), questionAndAnswer.getQuestionList());
             intent.putExtra(getString(R.string.main_list), questionAndAnswer.getMainList());
             startActivity(intent);

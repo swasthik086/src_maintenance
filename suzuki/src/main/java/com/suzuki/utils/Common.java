@@ -39,6 +39,8 @@ public class Common {
     public static boolean CALL_ACTIVE=false;
     public static int DUMMY_VALUE=10101010;
     public static boolean PRICOL_CONNECTED=false;
+    public static boolean MARELLI_CONNECTED=false;
+
     public static int STATUS_PACKET_DELAY=5000;
     public static BleDevice global_bleDevice;
     public static int missedcall_numbers=0;

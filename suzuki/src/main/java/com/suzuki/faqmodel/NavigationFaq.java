@@ -19,35 +19,38 @@ public class NavigationFaq {
         HashMap<String, List<String>> mainList = new HashMap<>();
         int que = 0;
         /*first question*/
-        questionList.add("Can I use Navigation feature without connecting the Application to the Vehicle?");
-        answerList.add("• No, you have to connect application with vehicle’s Instrument Cluster for using Navigation feature.");
+        questionList.add("Can I use the Navigation feature without connecting Application to the vehicle?");
+        answerList.add("No, you have to connect application with vehicle's Instrument Cluster for using Navigation feature.");
         mainList.put(questionList.get(que),answerList);
         que++;
 
         /*2nd question*/
         answerList = new ArrayList<>();
-        questionList.add("How to use Navigation Feature?");
-        answerList.add("• Open Suzuki Ride Connect Application.");
-        answerList.add("• Turn ON the Vehicle and Establish Bluetooth Connection.");
-        answerList.add("• Open the Navigation in smartphone and enter the Destination location or Tap on Map to set the destination.");
-        answerList.add("• Start the Navigation by clicking on Navigate option.");
+        questionList.add("How to use Navigation features?");
+        answerList.add("1) Open Suzuki Ride connect Application\n" +
+                "2) Turn ON the vehicle and Establish Bluetooth Connection.\n" +
+                "3) Open the Navigation in smart phone and enter the Destination location or Tap on Map to set the destination.\n" +
+                "4) Start the navigation by clicking on Navigate option.");
+       // answerList.add("• Turn ON the Vehicle and Establish Bluetooth Connection.");
+     //   answerList.add("• Open the Navigation in smartphone and enter the Destination location or Tap on Map to set the destination.");
+     //   answerList.add("• Start the Navigation by clicking on Navigate option.");
         mainList.put(questionList.get(que),answerList);
         que++;
 
-        questionList.add("Is Location Sharing possible while riding?");
+        questionList.add("Is Location sharing possible while riding?");
         answerList = new ArrayList<>();
-        answerList.add("• No, the location information cannot be shared by this Application.");
+        answerList.add("No, the location information cannot be shared by this Application.");
         mainList.put(questionList.get(que),answerList);
         que++;
 
-        questionList.add("Can Trip information be shared to others?");
+        questionList.add("Can Trip information be shared with others?");
         answerList = new ArrayList<>();
-        answerList.add("• Yes, you can share the trip information with others Trips screen, the icon [•<:] be used to share the Trip information with others.");
+        answerList.add("Yes, you can share the trip information with others Trip screen, the icon     be used to share the Trip information with others.");
         mainList.put(questionList.get(que),answerList);
         que++;
 
         answerList = new ArrayList<>();
-        questionList.add("What does the “+” symbol indicate in the Navigation Screen?");
+        questionList.add("What does the + symbol indicate in the Navigation screen?");
         answerList.add("The “+” Symbol indicates Point of Interests (POI). You can search for nearby point of interest from this list. The pre-defined Point of Interests are:");
         answerList.add("- Suzuki Service");
         answerList.add("- Suzuki Sales");
@@ -88,7 +91,7 @@ public class NavigationFaq {
 
         answerList = new ArrayList<>();
         questionList.add("Are there any Quick Access options for Home and Work location?");
-        answerList.add("Yes, there are “Home” and “Work” icons available for Quick Access to predefined address location for Navigation.");
+        answerList.add("Yes, there are \"Home\" and \"Work\" icons available for Quick Access to predefined address location for Navigation.");
         mainList.put(questionList.get(que),answerList);
         que++;
 
@@ -113,7 +116,7 @@ public class NavigationFaq {
         que++;
 
         answerList = new ArrayList<>();
-        questionList.add(" On completing my ride, will I get any notification on my phone ?");
+        questionList.add(" On completing my trip, will I get any notification on my phone ?");
         answerList.add("Yes, you will get pop message stating that \"Destination reached, you want to exit the navigation\" ?");
         mainList.put(questionList.get(que),answerList);
         que++;

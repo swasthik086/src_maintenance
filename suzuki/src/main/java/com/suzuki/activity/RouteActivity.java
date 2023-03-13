@@ -1838,9 +1838,6 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
 
     @Override
     public void onResume() {
-
-        SharedPreferences conn = getSharedPreferences("endTimeAppPref", MODE_PRIVATE);
-        endTime = conn.getString("endTime","");
         super.onResume();
         mapView.onResume();
 

@@ -50,10 +50,11 @@
             android:layout_marginBottom="15dp"
             android:background="@color/transaparent"
             android:gravity="center"
+            android:textAllCaps="true"
             android:lineSpacingExtra="2sp"
-            android:text="Please proceed to connect your vehicle"
+            android:text="Please connect your vehicle"
             android:textColor="#eeeeee"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textStyle="normal"
             android:visibility="visible" />
 

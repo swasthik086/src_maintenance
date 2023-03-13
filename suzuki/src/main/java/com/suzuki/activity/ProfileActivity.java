@@ -684,6 +684,7 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
 
         if (vehicleTypeSpinner.getSelectedItem().toString() == "Motorcycle") {
+            switching_of_vehicle=true;
             vehicleType = modelTypeSpinner.getSelectedItem().toString();
 
             switch (position) {
@@ -699,10 +700,10 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
                         viewPager.setAdapter(viewPagerAdapter);
                         dotscount = V_STORM_SX.length;
                         viewPager.setCurrentItem(0);
+                        switching_of_vehicle=true;
+
                         setUpViewPager(V_STORM_SX, 0);
                         viewPagerAdapter.notifyDataSetChanged();
-                        switching_of_vehicle=true;
-                        Toast.makeText(this, "vstrom", Toast.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -713,12 +714,12 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
                         mLinearLayout_profile_viewpager.setVisibility(View.VISIBLE);
                         viewPager.setAdapter(viewPagerAdapter);
                         viewPager.setCurrentItem(0);
+                        switching_of_vehicle=true;
+
                         dotscount = gixxerSFimages.length;
                         setUpViewPager(gixxerSFimages, 0);
                        // viewPager.setVisibility(View.VISIBLE);
                         viewPagerAdapter.notifyDataSetChanged();
-                        switching_of_vehicle=true;
-                        Toast.makeText(this, "gixxer", Toast.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -728,12 +729,12 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
                         mLinearLayout_profile_viewpager.setVisibility(View.VISIBLE);
                         viewPager.setAdapter(viewPagerAdapter);
                         dotscount = gixxer250images.length;
+                        switching_of_vehicle=true;
+
                         viewPager.setCurrentItem(0);
                         setUpViewPager(gixxer250images, 0);
                        // viewPager.setVisibility(View.VISIBLE);
                         viewPagerAdapter.notifyDataSetChanged();
-                        switching_of_vehicle=true;
-                        Toast.makeText(this, "gixxer 250", Toast.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -805,7 +806,6 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
                         dotscount = Avenis.length;
                         setUpViewPager(Avenis, 0);
                         switching_of_vehicle=true;
-                        Toast.makeText(this, "avenis", Toast.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -819,7 +819,6 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
                         dotscount = accessSE125.length;
                         Log.e("dotscount",String.valueOf(dotscount));
                         setUpViewPager(accessSE125, 0);
-                        Toast.makeText(this, "access", Toast.LENGTH_SHORT).show();
 
                     }
                     break;
@@ -833,7 +832,6 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
                         viewPager.setCurrentItem(0);
                         dotscount = BurgmanStreet.length;
                         setUpViewPager(BurgmanStreet, 0);
-                        Toast.makeText(this, "burgman", Toast.LENGTH_SHORT).show();
 
                     }
                     break;
@@ -847,7 +845,6 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
                         viewPager.setCurrentItem(0);
                         dotscount = Burgman_Street_EX.length;
                         setUpViewPager(Burgman_Street_EX, 0);
-                        Toast.makeText(this, "Burgman Street EX", Toast.LENGTH_SHORT).show();
 
                     }
                     break;

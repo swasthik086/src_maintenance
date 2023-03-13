@@ -929,7 +929,7 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
             Toast.makeText(HOME_SCREEN_OBJ, "Please write your comment.", Toast.LENGTH_SHORT).show();
             showDialog(i,true);
         }
-        else if(i<=3 && s.equals("")){
+        else if(i<=3 && !s.equals("")){
             Toast.makeText(HOME_SCREEN_OBJ, "Thanks For Your Feedback!", Toast.LENGTH_SHORT).show();
 
             editor.putInt("START_COUNT", RATINGS_SUBMITTED);

@@ -375,7 +375,7 @@
                         android:lineSpacingExtra="0sp"
                         android:text="- - - - "
                         android:textColor="@color/app_theme_color"
-                        android:textSize="19sp"
+                        android:textSize="16sp"
                         android:textStyle="normal" />
 
                 </RelativeLayout>
@@ -425,7 +425,7 @@
                         android:lineSpacingExtra="0sp"
                         android:text="- - - - "
                         android:textColor="@color/app_theme_color"
-                        android:textSize="19sp"
+                        android:textSize="16sp"
                         android:textStyle="normal" />
 
                 </RelativeLayout>
@@ -463,7 +463,7 @@
                         android:lineSpacingExtra="0sp"
                         android:text="- - - - "
                         android:textColor="@color/app_theme_color"
-                        android:textSize="19sp"
+                        android:textSize="16sp"
                         android:textStyle="normal" />
 
                 </RelativeLayout>

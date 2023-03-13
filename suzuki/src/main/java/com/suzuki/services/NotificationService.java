@@ -262,7 +262,7 @@ public class NotificationService extends NotificationListenerService {
                 else IncomingSms.UNREAD_SMS_COUNT = Integer.parseInt(UNREAD_SMS_COUNT);
             }
         } catch (Exception e) {
-           // Log.e(EXCEPTION, getClass().getName() + " onNotificationPosted_6 " + String.valueOf(e));
+            // Log.e(EXCEPTION, getClass().getName() + " onNotificationPosted_6 " + String.valueOf(e));
         }
 
         try {
@@ -272,7 +272,7 @@ public class NotificationService extends NotificationListenerService {
             }
 
         } catch (Exception e) {
-          //  Log.e(EXCEPTION, getClass().getName() + " onNotificationPosted_7 " + String.valueOf(e));
+            //  Log.e(EXCEPTION, getClass().getName() + " onNotificationPosted_7 " + String.valueOf(e));
         }
 
         /* check only whats app msg */
@@ -907,7 +907,7 @@ public class NotificationService extends NotificationListenerService {
                             else if (full.contains("msg") || full.contains("messag") || full.contains("mms")) w_msg++;
 
                         }
-                       // else if ((full.contains("msg") || full.contains("messag") || full.contains("mms"))&& !full.contains("missed")) sms++;
+                        // else if ((full.contains("msg") || full.contains("messag") || full.contains("mms"))&& !full.contains("missed")) sms++;
                     }
                 }
 

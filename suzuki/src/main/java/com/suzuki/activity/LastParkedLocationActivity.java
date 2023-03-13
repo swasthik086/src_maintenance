@@ -1,8 +1,6 @@
 package com.suzuki.activity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -94,7 +92,6 @@ import static com.suzuki.activity.HomeScreenActivity.TOAST_DURATION;
 import static com.suzuki.activity.RouteNearByActivity.dpToPx;
 
 import static com.suzuki.fragment.DashboardFragment.logData;
-import static com.suzuki.fragment.MapMainFragment.eLocation;
 import static com.suzuki.utils.Common.BikeBleName;
 
 
@@ -183,19 +180,7 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         mStateModel = new StateModel();
 
         llStartNavigation.setOnClickListener(v -> {
-
-           startNavigation();
-
-//            LatLng currentLatlng= new LatLng(locationRealmModule.getLat(),locationRealmModule.getLng());
-//            LatLng destinationLatlng= new LatLng(eLocation.latitude,eLocation.longitude);
-//            if(currentLatlng.distanceTo(destinationLatlng) < 30 ){
-//                showExitNavigationAlert();
-//
-//
-//            }else {
-//                startNavigation();
-//            }
-           // startNavigation();
+            startNavigation();
         });
 
         ivBack.setOnClickListener(new View.OnClickListener() {
@@ -219,46 +204,6 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         });
 
         mapView.getMapAsync(this);
-    }
-
-    public void showExitNavigationAlert() {
-        Dialog dialog = new Dialog(this, R.style.custom_dialog);
-        dialog.setContentView(R.layout.custom_dialog);
-
-        TextView tvAlertText = dialog.findViewById(R.id.tvAlertText);
-        tvAlertText.setText("This place seems to be nearby. Please look around.");
-        ImageView ivCross = dialog.findViewById(R.id.ivCross);
-        ivCross.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-                //  updateDisplay(maneuverID, "00000", dataShortDistanceUnit, dataEta, dataRemainingDistance, dataRemainingDistanceUnit, "1", "0");
-
-//                getActivity().onBackPressed();
-
-            }
-        });
-
-        ImageView ivCheck = dialog.findViewById(R.id.ivCheck);
-
-
-        ivCheck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-                if (this== null)
-                    return;
-                //   updateDisplay(maneuverID, "00000", dataShortDistanceUnit, dataEta, dataRemainingDistance, dataRemainingDistanceUnit, "1", "0");
-                if (RouteActivity.routeActivity != null) {
-                    RouteActivity.routeActivity.finish();
-                } else if (RouteNearByActivity.routeNearByActivity != null) {
-                    RouteNearByActivity.routeNearByActivity.finish();
-                }
-
-
-            }
-        });
-        dialog.show();
     }
 
     private void shareIt() {
@@ -332,11 +277,11 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
 
             try {
                 LatLng currentLocation = null;
-             NavLocation location = MapMainFragment.getUserLocation();
+                NavLocation location = MapMainFragment.getUserLocation();
 
                 if (location != null) currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-               NavLocation navLocation = new NavLocation("navigation");
+                NavLocation navLocation = new NavLocation("navigation");
                 Point position = mStateModel.trip.routes().get(0).legs().get(0).steps().get(0).maneuver().location();
                 LatLng point = new LatLng(position.latitude(), position.longitude());
                 navLocation.setLongitude(point.getLongitude());
@@ -481,7 +426,7 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
                 .origin(origin)
                 .steps(true)
                 .resource(DirectionsCriteria.RESOURCE_ROUTE_ETA)
-                .profile(DirectionsCriteria.PROFILE_BIKING)
+                .profile(DirectionsCriteria.PROFILE_DRIVING)
                 .overview(DirectionsCriteria.OVERVIEW_FULL)
                 .destination(destination)
                 .build();
@@ -586,14 +531,15 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         Point origin = Point.fromLngLat(wayPoints.get(0).getLongitude(), wayPoints.get(0).getLatitude());
         Point destination = Point.fromLngLat(wayPoints.get(wayPoints.size() - 1).getLongitude(), wayPoints.get(wayPoints.size() - 1).getLatitude());
 
-        @SuppressLint("HardwareIds") MapplsDirections.Builder directions = MapplsDirections.builder()
+        MapplsDirections directions = MapplsDirections.builder()
                 .origin(origin)
                 .steps(true)
                 .resource(DirectionsCriteria.RESOURCE_ROUTE_ETA)
-                .profile(DirectionsCriteria.PROFILE_BIKING)
+                .profile(DirectionsCriteria.PROFILE_DRIVING)
                 .overview(DirectionsCriteria.OVERVIEW_FULL)
-                .destination(destination);
-        MapplsDirectionManager.newInstance(directions.build()).call(new OnResponseCallback<DirectionsResponse>() {
+                .destination(destination)
+                .build();
+        MapplsDirectionManager.newInstance(directions).call(new OnResponseCallback<DirectionsResponse>() {
             @Override
             public void onSuccess(DirectionsResponse response) {
 
@@ -819,7 +765,7 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
 //            Log.d("psoodsods", "--" + placeAddress + placeName + mStateModel.trip.distance() + mStateModel.trip.duration());
 //            tvDistance.setText(String.format("%s", NavigationFormatter.getFormattedDistance(mStateModel.trip.distance().floatValue(), getMyApplication())));
             logData("update() => duration.initValue : " + mStateModel.trip.routes().get(0).duration());
-    //        tvTimeForTravel.setText(String.format("%s ", NavigationFormatter.getFormattedDuration(mStateModel.trip.routes().get(0).duration().intValue(), getMyApplication())));
+            //        tvTimeForTravel.setText(String.format("%s ", NavigationFormatter.getFormattedDuration(mStateModel.trip.routes().get(0).duration().intValue(), getMyApplication())));
 //            tvDestinationAddress.setText(placeAddress);
 //            tvPlaceAddress.setText(placeName);
         } catch (Exception e) {
@@ -884,17 +830,17 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
                         ActivityCompat.checkSelfPermission(LastParkedLocationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                     common.showToast("Location permission is not given", TOAST_DURATION);
-                  //  requestLocationPermission();
+                    //  requestLocationPermission();
                     return;
                 }
                 mapboxMap.getLocationComponent().activateLocationComponent(LocationComponentActivationOptions.builder(LastParkedLocationActivity.this, style).build());
                 mapboxMap.getLocationComponent().setLocationComponentEnabled(true);
-              //  mapIsReady = true;
+                //  mapIsReady = true;
             }
         });
 
-     //   mapboxMap.getLocationComponent().activateLocationComponent(locationComponentActivationOptions);
-     //   mapboxMap.getLocationComponent().setLocationComponentEnabled(true);
+        //   mapboxMap.getLocationComponent().activateLocationComponent(locationComponentActivationOptions);
+        //   mapboxMap.getLocationComponent().setLocationComponentEnabled(true);
 
 
         mapboxMap.setPadding(20, 20, 20, 20);
@@ -984,10 +930,8 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         LocationComponentOptions options = LocationComponentOptions.builder(this)
                 .trackingGesturesManagement(true)
                 .accuracyColor(ContextCompat.getColor(this, R.color.colorAccent))
-
+                .foregroundDrawable(R.drawable.location_pointer)
                 .build();
-
-        // .foregroundDrawable(R.drawable.location_pointer)
 // Get an instance of the component LocationComponent
         locationComponent = mapboxMap.getLocationComponent();
         LocationComponentActivationOptions locationComponentActivationOptions = LocationComponentActivationOptions.builder(this, style)
@@ -1017,97 +961,6 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
 // Set the component's camera mode
         locationComponent.setCameraMode(CameraMode.TRACKING);
         locationComponent.setRenderMode(RenderMode.COMPASS);
-
-        locationComponent.setLocationListener(new LocationComponent.LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                if (app != null) {
-                    app =(SuzukiApplication) getMyApplication();
-                }
-                mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(location.getLatitude(), location.getLongitude()), 16));
-                Log.d("sss", "=" + location.getLongitude() + location.getLatitude());
-                Timber.i("onLocationChanged");
-
-
-                currentlocation = location;
-
-                Log.d("locccc", "onloc chang--" + currentlocation.getLatitude() + currentlocation.getLongitude());
-//        Log.d("locccc", "onloc chang--" + eLocation.placeName);
-                try {
-                    if (location == null || location.getLatitude() <= 0)
-                        return;
-                    if (!firstFix) {
-                        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location), 16), 500);
-                        firstFix = true;
-                        Log.d("loccc", "--latlng" + location.getLongitude() + location.getLatitude());
-//                Log.d("locccc", "onloc chang--" + eLocation.placeName);
-//                getReverseGeoCode(location.getLatitude(), location.getLongitude());
-
-
-                    }
-                    if (app != null)
-                        app.setCurrentLocation(location);
-                } catch (Exception e) {
-                    logData("onLocationChanged() : exception: " + e);
-                    //ignore
-                }
-
-
-                try {
-                    if (eLocation != null && mStateModel.trip != null) {
-                        app = (SuzukiApplication) getApplication();
-                        setTrip(mStateModel.trip.routes().get(0));
-//                update();
-//                addPolyLine(new LatLng(currentlocation.getLatitude(),
-//                                currentlocation.getLongitude()),
-//                        new LatLng(Double.parseDouble(eLocation.latitude),
-//                                Double.parseDouble(eLocation.longitude)),
-//                        mStateModel.trip);
-                        Log.d("geopoi", "--" + mStateModel.trip);
-                    } else {
-                        try {
-//                    if (currentlocation != null) {
-                            ArrayList<LatLng> geoPoints = new ArrayList<>();
-
-                            LatLng latLng = new LatLng();
-                            latLng.setLatitude(currentlocation.getLatitude());
-                            latLng.setLongitude(currentlocation.getLongitude());
-                            geoPoints.add(new LatLng(latLng));
-                            LatLng eLatLng = getPoint(eLocation);
-                            geoPoints.add(eLatLng);
-
-                            double distance = latLng.distanceTo(eLatLng);
-
-                            if (distance <= 500) {
-                                Log.d("tag", "onLocationChanged:1 " + distance);
-                                getPedestrainRoute(geoPoints, eLocation);
-                                rlNavigationDetails.setVisibility(View.GONE);
-                            } else {
-                                Log.d("tag", "onLocationChanged:2 " + distance);
-                                getRoute(geoPoints, eLocation);
-                                rlNavigationDetails.setVisibility(View.VISIBLE);
-                            }
-
-                            /*
-                             * commented in v6.2.6
-                             * update();
-                             * */
-                        } catch (Exception e) {
-                            logData("onLocationChanged() : first exception: " + e);
-                            Timber.e(e);
-                        }
-                    }
-                } catch (Exception e) {
-                    Timber.e(e);
-                    logData("onLocationChanged() : second exception: " + e);
-                }
-
-
-
-            }
-        });
-
     }
 
     @Override
@@ -1121,88 +974,88 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
 
     @Override
     public void onLocationChanged(Location location) {
-//        if (app != null) {
-//            app =(SuzukiApplication) getMyApplication();
-//        }
-//        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-//                new LatLng(location.getLatitude(), location.getLongitude()), 16));
-//        Log.d("sss", "=" + location.getLongitude() + location.getLatitude());
-//        Timber.i("onLocationChanged");
-//
-//
-//        currentlocation = location;
-//
-//        Log.d("locccc", "onloc chang--" + currentlocation.getLatitude() + currentlocation.getLongitude());
-////        Log.d("locccc", "onloc chang--" + eLocation.placeName);
-//        try {
-//            if (location == null || location.getLatitude() <= 0)
-//                return;
-//            if (!firstFix) {
-//                mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location), 16), 500);
-//                firstFix = true;
-//                Log.d("loccc", "--latlng" + location.getLongitude() + location.getLatitude());
-////                Log.d("locccc", "onloc chang--" + eLocation.placeName);
-////                getReverseGeoCode(location.getLatitude(), location.getLongitude());
-//
-//
-//            }
-//            if (app != null)
-//                app.setCurrentLocation(location);
-//        } catch (Exception e) {
-//            logData("onLocationChanged() : exception: " + e);
-//            //ignore
-//        }
-//
-//
-//        try {
-//            if (eLocation != null && mStateModel.trip != null) {
-//                app = (SuzukiApplication) getApplication();
-//                setTrip(mStateModel.trip.routes().get(0));
-////                update();
-////                addPolyLine(new LatLng(currentlocation.getLatitude(),
-////                                currentlocation.getLongitude()),
-////                        new LatLng(Double.parseDouble(eLocation.latitude),
-////                                Double.parseDouble(eLocation.longitude)),
-////                        mStateModel.trip);
-//                Log.d("geopoi", "--" + mStateModel.trip);
-//            } else {
-//                try {
-////                    if (currentlocation != null) {
-//                    ArrayList<LatLng> geoPoints = new ArrayList<>();
-//
-//                    LatLng latLng = new LatLng();
-//                    latLng.setLatitude(currentlocation.getLatitude());
-//                    latLng.setLongitude(currentlocation.getLongitude());
-//                    geoPoints.add(new LatLng(latLng));
-//                    LatLng eLatLng = getPoint(eLocation);
-//                    geoPoints.add(eLatLng);
-//
-//                    double distance = latLng.distanceTo(eLatLng);
-//
-//                    if (distance <= 500) {
-//                        Log.d("tag", "onLocationChanged:1 " + distance);
-//                        getPedestrainRoute(geoPoints, eLocation);
-//                        rlNavigationDetails.setVisibility(View.GONE);
-//                    } else {
-//                        Log.d("tag", "onLocationChanged:2 " + distance);
-//                        getRoute(geoPoints, eLocation);
-//                        rlNavigationDetails.setVisibility(View.VISIBLE);
-//                    }
-//
-//                    /*
-//                     * commented in v6.2.6
-//                     * update();
-//                     * */
-//                } catch (Exception e) {
-//                    logData("onLocationChanged() : first exception: " + e);
-//                    Timber.e(e);
-//                }
-//            }
-//        } catch (Exception e) {
-//            Timber.e(e);
-//            logData("onLocationChanged() : second exception: " + e);
-//        }
-//
+        if (app != null) {
+            app =(SuzukiApplication) getMyApplication();
+        }
+        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(location.getLatitude(), location.getLongitude()), 16));
+        Log.d("sss", "=" + location.getLongitude() + location.getLatitude());
+        Timber.i("onLocationChanged");
+
+
+        currentlocation = location;
+
+        Log.d("locccc", "onloc chang--" + currentlocation.getLatitude() + currentlocation.getLongitude());
+//        Log.d("locccc", "onloc chang--" + eLocation.placeName);
+        try {
+            if (location == null || location.getLatitude() <= 0)
+                return;
+            if (!firstFix) {
+                mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location), 16), 500);
+                firstFix = true;
+                Log.d("loccc", "--latlng" + location.getLongitude() + location.getLatitude());
+//                Log.d("locccc", "onloc chang--" + eLocation.placeName);
+//                getReverseGeoCode(location.getLatitude(), location.getLongitude());
+
+
+            }
+            if (app != null)
+                app.setCurrentLocation(location);
+        } catch (Exception e) {
+            logData("onLocationChanged() : exception: " + e);
+            //ignore
+        }
+
+
+        try {
+            if (eLocation != null && mStateModel.trip != null) {
+                app = (SuzukiApplication) getApplication();
+                setTrip(mStateModel.trip.routes().get(0));
+//                update();
+//                addPolyLine(new LatLng(currentlocation.getLatitude(),
+//                                currentlocation.getLongitude()),
+//                        new LatLng(Double.parseDouble(eLocation.latitude),
+//                                Double.parseDouble(eLocation.longitude)),
+//                        mStateModel.trip);
+                Log.d("geopoi", "--" + mStateModel.trip);
+            } else {
+                try {
+//                    if (currentlocation != null) {
+                    ArrayList<LatLng> geoPoints = new ArrayList<>();
+
+                    LatLng latLng = new LatLng();
+                    latLng.setLatitude(currentlocation.getLatitude());
+                    latLng.setLongitude(currentlocation.getLongitude());
+                    geoPoints.add(new LatLng(latLng));
+                    LatLng eLatLng = getPoint(eLocation);
+                    geoPoints.add(eLatLng);
+
+                    double distance = latLng.distanceTo(eLatLng);
+
+                    if (distance <= 500) {
+                        Log.d("tag", "onLocationChanged:1 " + distance);
+                        getPedestrainRoute(geoPoints, eLocation);
+                        rlNavigationDetails.setVisibility(View.GONE);
+                    } else {
+                        Log.d("tag", "onLocationChanged:2 " + distance);
+                        getRoute(geoPoints, eLocation);
+                        rlNavigationDetails.setVisibility(View.VISIBLE);
+                    }
+
+                    /*
+                     * commented in v6.2.6
+                     * update();
+                     * */
+                } catch (Exception e) {
+                    logData("onLocationChanged() : first exception: " + e);
+                    Timber.e(e);
+                }
+            }
+        } catch (Exception e) {
+            Timber.e(e);
+            logData("onLocationChanged() : second exception: " + e);
+        }
+
 
     }
 

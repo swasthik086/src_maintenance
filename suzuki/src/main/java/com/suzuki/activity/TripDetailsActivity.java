@@ -244,7 +244,7 @@ public class TripDetailsActivity extends AppCompatActivity implements OnMapReady
         ridestarttime.setText(StartTime);
         rideendtime.setText(EndTime);
         tvTotalDistance.setText(totalDist);
-        tvTopSpeed.setText(topspeed + " km/h");
+        tvTopSpeed.setText(topspeed + " km/hr");
       //  Toast.makeText(TripDetailsActivity.this, ""+topspeed, Toast.LENGTH_SHORT).show();
         tvtimeLt10.setText(ridetimeLt10 + " mins");
         tvCurrentlocation.setText(startLoc);
