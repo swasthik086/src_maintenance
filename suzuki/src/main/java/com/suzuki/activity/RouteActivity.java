@@ -1029,7 +1029,6 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
                 currentTimeNow.add(Calendar.MINUTE, mStateModel.trip.routes().get(mStateModel.selectedIndex).duration().intValue());
                 long getETA = System.currentTimeMillis()+(mStateModel.trip.routes().get(mStateModel.selectedIndex).duration().intValue()*1000);
                 String dateString = DateFormat.format("hh:mm a", new Date(getETA)).toString();
-
                 SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
                 int saved_speed = prefs.getInt("new_top_speed", 0);
 

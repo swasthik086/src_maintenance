@@ -730,7 +730,8 @@ View view;
                     //DashboardFragment dashboardFragment=new DashboardFragment();
                     //dashboardFragment.putArguments(args);
 
-                } else if (BikeBleName.getValue().charAt(3) == '3' && BikeBleName.getValue().charAt(4) == '1') {
+                }
+                else if (BikeBleName.getValue().charAt(3) == '3' && BikeBleName.getValue().charAt(4) == '1') {
                     type = "Scooter";
                     Model = "Burgman Street EX";
                     Bundle args= new Bundle();
@@ -738,6 +739,15 @@ View view;
                   //  DashboardFragment dashboardFragment=new DashboardFragment();
                  //   dashboardFragment.putArguments(args);
                 }
+
+                else if (BikeBleName.getValue().charAt(3) == '1' && BikeBleName.getValue().charAt(4) == '1') {
+                    type = "Scooter";
+                    Model = "Burgman Street";
+
+                    //  DashboardFragment dashboardFragment=new DashboardFragment();
+                    // dashboardFragment.putArguments(args);
+                }
+
             }
 
             else if (BikeBleName.getValue().charAt(2) == 'M'){
@@ -758,6 +768,7 @@ View view;
 
                 }
             }
+
         }
 
         if (!prev_type.equals(type)){

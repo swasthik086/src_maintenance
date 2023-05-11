@@ -2376,7 +2376,7 @@ if (adviseInfo!=null){
     private void NavigationStatus() {
         if (NoSignal) NavigationStatus = "0";
         else if (NoNetwork) NavigationStatus = "6";
-       else if (SearchingGPS) NavigationStatus = "4";
+       else if (SearchingGPS ) NavigationStatus = "4";
         else if (ReRouting) {
             new Handler().postDelayed(() -> ReRouting = false, 0);
             ReRouting = false;
