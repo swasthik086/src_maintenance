@@ -49,6 +49,7 @@
     <uses-permission android:name="oppo.permission.OPPO_COMPONENT_SAFE" />
     <uses-permission android:name="com.huawei.permission.external_app_settings.USE_COMPONENT" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
@@ -61,6 +62,7 @@
     <uses-permission
         android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation"
+        android:foregroundServiceType="location"
         tools:targetApi="s" />
 
     <uses-feature
@@ -255,6 +257,7 @@
             android:name=".activity.CreateProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait"
+            android:foregroundServiceType="location"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.ZoomProfileImageActivity"

@@ -54,6 +54,14 @@ public class CurrentLoc {
 
                     location = locationManager
                             .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    Log.e("location_network", String.valueOf(location));
+                    if(location==null){
+                        location =  locationManager
+                                .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        Log.e("location_gps", String.valueOf(location));
+
+                    }
+
 
                 }
                 // if GPS Enabled get lat/long using GPS Services
@@ -63,7 +71,15 @@ public class CurrentLoc {
 
                     if (locationGps!=null){
                         location = locationGps;
+                        Log.e("location_gps", String.valueOf(location));
                     }
+                    if(location==null){
+                        location =  locationManager
+                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        Log.e("location_network", String.valueOf(location));
+
+                    }
+
                 }
             }
         } catch (Exception e) {

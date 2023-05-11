@@ -1,10 +1,17 @@
 package com.suzuki.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.util.Log;
@@ -21,8 +28,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.tasks.Task;
 import com.mappls.sdk.services.api.OnResponseCallback;
 import com.mappls.sdk.services.api.PlaceResponse;
 import com.mappls.sdk.services.api.reversegeocode.MapplsReverseGeoCode;
@@ -56,6 +70,9 @@ import static com.suzuki.fragment.DashboardFragment.flag;
 import static com.suzuki.fragment.DashboardFragment.staticConnectionStatus;
 import static com.suzuki.utils.Common.EXCEPTION;
 
+import java.util.List;
+import java.util.Locale;
+
 public class ProfileActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
 
     private Spinner vehicleTypeSpinner, modelTypeSpinner;
@@ -82,6 +99,8 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
 
     String id="text";
 //    private SharedPreferences.Editor editor;
+
+    private Location locationGps;
 
 
     @Override
@@ -881,16 +900,99 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
     }
 
     private void getCurrentPlace() {
-        Location location = new CurrentLoc().getCurrentLoc(this);
 
-        if (location == null) {
-            Toast.makeText(this, "Not able to fetch location", Toast.LENGTH_SHORT).show();
+
+        locationGps = new CurrentLoc().getCurrentLoc(this);
+
+        Log.e("locationMain", String.valueOf(locationGps));
+
+        if (locationGps == null) {
+            checkLocationSettings();
+
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    locationGps = location;
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+                @Override
+                public void onProviderEnabled(String provider) {}
+
+                @Override
+                public void onProviderDisabled(String provider) {}
+            });
+
+            Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if (lastKnownLocation != null) {
+                locationGps = lastKnownLocation;
+            }
+            //requestLocationPermission();
+            //checkLocationEnabled();
+            //checkLocationSettings();
             return;
         }
 
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
-        getPlaceName(latitude, longitude);
+        double latitude = locationGps.getLatitude();
+        double longitude = locationGps.getLongitude();
+        //getPlaceName(latitude, longitude);
+
+        Log.e("latitude", String.valueOf(latitude));
+        Log.e("longitude", String.valueOf(longitude));
+
+
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
+        try {
+
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+
+            if (!addresses.isEmpty()) {
+
+                Address address = addresses.get(0);
+
+                String cityName = address.getLocality();
+
+                etLocation.setText(cityName);
+            }
+        }  catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void checkLocationSettings() {
+        LocationRequest locationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+
+        Task<LocationSettingsResponse> task = LocationServices.getSettingsClient(this)
+                .checkLocationSettings(builder.build());
+
+        task.addOnSuccessListener(locationSettingsResponse -> {
+        });
+
+        task.addOnFailureListener(exception -> {
+            if (exception instanceof ResolvableApiException) {
+
+                try {
+                    ResolvableApiException resolvable = (ResolvableApiException) exception;
+                    resolvable.startResolutionForResult(this, 1);
+                } catch (IntentSender.SendIntentException e) {
+                    e.printStackTrace();
+                }
+            } else {
+            }
+        });
     }
 
     private void getPlaceName(double latitude, double longitude) {

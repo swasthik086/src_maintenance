@@ -136,7 +136,7 @@
             android:ellipsize="end"
             android:lineSpacingExtra="3sp"
             android:maxLines="3"
-            android:text="Start naviagtion to reach the bike"
+            android:text="Start navigation to reach your vehicle"
             android:textColor="#e3e3e3"
             android:textSize="14sp"
             android:textStyle="normal"

@@ -19,6 +19,8 @@ import androidx.viewpager.widget.ViewPager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -44,6 +46,9 @@ import com.suzuki.pojo.RiderProfileModule;
 import com.suzuki.pojo.SettingsPojo;
 import com.suzuki.utils.Common;
 import com.suzuki.utils.CurrentLoc;
+
+import java.util.List;
+import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -778,7 +783,25 @@ public class ColorChangeActivity extends AppCompatActivity{
 
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
-        getPlaceName(latitude, longitude);
+        //getPlaceName(latitude, longitude);
+
+
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+
+            if (!addresses.isEmpty()) {
+
+                Address address = addresses.get(0);
+
+                String cityName = address.getLocality();
+
+                etLocation.setText(cityName);
+            }
+        }  catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void getPlaceName(double latitude, double longitude) {
