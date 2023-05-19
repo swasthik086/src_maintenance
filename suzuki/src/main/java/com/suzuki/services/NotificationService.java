@@ -180,11 +180,11 @@ public class NotificationService extends NotificationListenerService {
                     if (!full.contains("whatsapp")){
 
                         try{
-                            if (Build.VERSION.SDK_INT==33 && sbn.getNotification().extras.get("android.largeIcon")!=null && !getPhoneNumber(title, getApplicationContext()).equals("") || !getContactName(title, getApplicationContext()).equals("") ) {
+                            if (Build.VERSION.SDK_INT==33 &&whatsappMSGEnabled&& sbn.getNotification().toString().contains("whatsapp")&& sbn.getNotification().extras.get("android.largeIcon")!=null && !getPhoneNumber(title, getApplicationContext()).equals("") || !getContactName(title, getApplicationContext()).equals("") ) {
                                 w_MSG_COUNTER++;
                                 sendDatatoDashboard("YY1" + title, (byte) 0x57);
                             }
-                            else if(!getPhoneNumber(title, getApplicationContext()).equals("") || !getContactName(title, getApplicationContext()).equals("")){
+                            else if(!sbn.getNotification().toString().contains("whatsapp")&&!(getPhoneNumber(title, getApplicationContext()).equals("") || !getContactName(title, getApplicationContext()).equals(""))){
                                 SMS_COUNTER++;
                                 sendDatatoDashboard("YY1" + test, (byte) 0x4E);
                             }
