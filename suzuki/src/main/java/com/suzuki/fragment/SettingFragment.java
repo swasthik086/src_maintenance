@@ -108,6 +108,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
     private SharedPreferences sharedPreferences;
     private int speed_value=0, min_speed, max_speed;
 
+    //private boolean isSaveTripClicked;
+
     @RequiresApi(api = Build.VERSION_CODES.O)
 
     @SuppressLint("SetTextI18n")
@@ -150,6 +152,14 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
 //                            //more code....
 //                        }
 //                    });
+
+        /*isSaveTripClicked = sharedPreferences.getBoolean("isSaveTripsChecked",false);
+        if(isSaveTripClicked){
+            switchSaveAllTrips.setChecked(true);
+        }
+        else{
+            switchSaveAllTrips.setChecked(false);
+        }*/
 
 
 
@@ -211,7 +221,16 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
                     if (i==115 && (android.os.Build.VERSION.SDK_INT==26 || android.os.Build.VERSION.SDK_INT==27)) i=120;
                     else if (i==289 && (android.os.Build.VERSION.SDK_INT==26 || android.os.Build.VERSION.SDK_INT==27)) i=299;
 
+                    if(sharedPreferences.getString("vehicle_type","").equals("Scooter")){
+                        min_speed = 5; max_speed = 120;
+                    } else if (sharedPreferences.getString("vehicle_type","").equals("Motorcycle")){
+                        min_speed = 10; max_speed = 299;
+                    }
+
                     speed_value = i;
+                    if(i < min_speed) {
+                        seekBar.setProgress(min_speed);
+                    }
                     SpeedValue.setText(String.valueOf(speed_value));
 
 //                    SpeedValue.addTextChangedListener(new TextWatcher() {
@@ -328,8 +347,16 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
                         settingsPojo.setSaveTrips(false);
                     }
 
-                   if (settingsPojo.isSaveTrips()) switchSaveAllTrips.setChecked(true);
-                   else if (!settingsPojo.isSaveTrips()) switchSaveAllTrips.setChecked(false);
+                   if (settingsPojo.isSaveTrips()) {
+                       switchSaveAllTrips.setChecked(true);
+                      /* editor.putBoolean("isSaveTripsChecked",true);
+                       editor.apply();*/
+                   }
+                   else if (!settingsPojo.isSaveTrips()){
+                       switchSaveAllTrips.setChecked(false);
+                      /* editor.putBoolean("isSaveTripsChecked",false);
+                       editor.apply();*/
+                   }
 
 
                 }
@@ -678,6 +705,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
 
             if (isChecked) {
 
+               /* editor.putBoolean("isSaveTripsChecked",true);
+                editor.apply();*/
+
                 try {
                     realm.executeTransaction(realm -> {
 
@@ -702,6 +732,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
             }
 
             else {
+
+              /*  editor.putBoolean("isSaveTripsChecked",false);
+                editor.apply();*/
 
                 try {
                     realm.executeTransaction(realm -> {
@@ -736,10 +769,25 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
                     min_speed = 10; max_speed = 299;
                 }
 
-                SpeedSeekbar.setMin(min_speed); SpeedSeekbar.setMax(max_speed);
-                SpeedSeekbar.setProgress(speed_value=min_speed);
+                try {
+                    if((Build.VERSION.SDK_INT > 25)) {
+                        SpeedSeekbar.setMin(min_speed);
+                        SpeedSeekbar.setMax(max_speed);
+                        SpeedSeekbar.setProgress(speed_value = min_speed);
 
-                SpeedValue.setText(String.valueOf(speed_value));
+                        SpeedValue.setText(String.valueOf(speed_value));
+                    }
+                    else{
+                        //SpeedSeekbar.setMin(min_speed);
+                        SpeedSeekbar.setMax(max_speed);
+                        SpeedSeekbar.setProgress(speed_value = min_speed);
+
+                        SpeedValue.setText(String.valueOf(speed_value));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
 
             } else{
                 SpeedLayout.setVisibility(View.GONE);
@@ -858,12 +906,16 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
         ivCheck.setOnClickListener(v -> {
 
             switchSaveAllTrips.setChecked(false);
+          /*  editor.putBoolean("isSaveTripsChecked",false);
+            editor.apply();*/
             dialog.dismiss();
         });
 
         ivCross.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               /* editor.putBoolean("isSaveTripsChecked",true);
+                editor.apply();*/
                 switchSaveAllTrips.setChecked(true);
                 dialog.cancel();
             }
@@ -885,7 +937,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
 
         if (speed_value > max_speed) speed_value = max_speed;
 
-        SpeedSeekbar.setMin(min_speed);
+        if(Build.VERSION.SDK_INT>25) {
+            SpeedSeekbar.setMin(min_speed);
+        }
         SpeedSeekbar.setMax(max_speed);
         SpeedSeekbar.setProgress(speed_value);
         SpeedLayout.setVisibility(View.VISIBLE);

@@ -729,8 +729,8 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
     private void updateDestination(ELocation eLocation1, double latitude, double longitude) {
         ArrayList<LatLng> geoPoints = new ArrayList<>();
         eLocation = eLocation1;
-        destinationLat = String.valueOf(latitude);
-        destinationLong = String.valueOf(longitude);
+        //destinationLat = String.valueOf(latitude);
+        //destinationLong = String.valueOf(longitude);
         placeAddress = eLocation1.placeAddress;
         destinationAddress = eLocation1.placeAddress;
         placeName = eLocation1.placeName;

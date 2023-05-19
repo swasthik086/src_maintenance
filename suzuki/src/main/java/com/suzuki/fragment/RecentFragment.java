@@ -408,30 +408,35 @@ public class RecentFragment extends Fragment implements IOnclickFromAdapterToAct
                 viaPointList.add(latLng);
             }
 
-            Log.d("RecentFragment", "adapterItemIsClicked: "+viaPointList);
-            Intent in = new Intent(getActivity(), TripDetailsActivity.class);
-            Log.d("gghhtreee", "" + tripName);
-            in.putExtra("clickedPositon", clickedPositon);
-            in.putExtra("date", date);
-            in.putExtra("dateTime", dateTime.toString());
-            in.putExtra("time", time);
-            in.putExtra("rideStartTime",startTime);
-            in.putExtra("rideEndTime",endTime);
-            in.putExtra("startLoc", startLoc);
-            in.putExtra("endLoc", endLoc);
-            in.putExtra("cuurent_lat", cuurent_lat);
-            in.putExtra("current_long", current_long);
-            in.putExtra("destiny_lat", destiny_lat);
-            in.putExtra("destiny_long", destiny_long);
-            in.putExtra("clicked", clicked);
-            in.putExtra("tripName", tripName);
-            in.putExtra("rideTime", rideTime);
-            in.putExtra("totalDistance", totalDistance);
-            in.putExtra("topspeed", topspeed);
-            in.putExtra("timelt10", timelt10);
-            in.putExtra("viaPointList",viaPointList);
-       //  in.putExtra("viaPointRealmList", String.valueOf(viaPointRealmList));
-            startActivity(in);
+            try {
+
+                Log.d("RecentFragment", "adapterItemIsClicked: " + viaPointList);
+                Intent in = new Intent(getActivity(), TripDetailsActivity.class);
+                Log.d("gghhtreee", "" + tripName);
+                in.putExtra("clickedPositon", clickedPositon);
+                in.putExtra("date", date);
+                in.putExtra("dateTime", dateTime.toString());
+                in.putExtra("time", time);
+                in.putExtra("rideStartTime", startTime);
+                in.putExtra("rideEndTime", endTime);
+                in.putExtra("startLoc", startLoc);
+                in.putExtra("endLoc", endLoc);
+                in.putExtra("cuurent_lat", cuurent_lat);
+                in.putExtra("current_long", current_long);
+                in.putExtra("destiny_lat", destiny_lat);
+                in.putExtra("destiny_long", destiny_long);
+                in.putExtra("clicked", clicked);
+                in.putExtra("tripName", tripName);
+                in.putExtra("rideTime", rideTime);
+                in.putExtra("totalDistance", totalDistance);
+                in.putExtra("topspeed", topspeed);
+                in.putExtra("timelt10", timelt10);
+                in.putExtra("viaPointList", viaPointList);
+                //  in.putExtra("viaPointRealmList", String.valueOf(viaPointRealmList));
+                startActivity(in);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -83,6 +83,9 @@
         android:roundIcon="@mipmap/ic_launcher_suzuki_round"
         android:supportsRtl="true"
         android:theme="@style/AppFullScreenTheme"
+
+        android:hardwareAccelerated="true"
+        android:largeHeap="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".activity.NavigationDeviceListingActivity"
