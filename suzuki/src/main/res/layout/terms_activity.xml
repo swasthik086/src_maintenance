@@ -64,11 +64,12 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="40dp"
                 android:justificationMode="inter_word"
-                android:lineHeight="20sp"
                 android:lineSpacingExtra="6sp"
                 android:text="@string/terms_and_conditions"
                 android:textColor="#fff"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textAlignment="viewStart"
+                android:gravity="start"/>
 
             <!--<LinearLayout
                 android:layout_width="wrap_content"

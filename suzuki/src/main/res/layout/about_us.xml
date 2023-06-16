@@ -57,11 +57,12 @@
             android:layout_marginTop="20dp"
             android:layout_marginRight="40dp"
             android:justificationMode="inter_word"
-            android:lineHeight="20sp"
             android:lineSpacingExtra="10sp"
             android:text="SUZUKI MOTORCYCLE INDIA PRIVATE LIMITED is a subsidiary of Suzuki Motor Corporation, Japan wherein we are having the same manufacturing philosophy of VALUE PACKED PRODUCTS right from the inception. SMIPL will be manufacturing two wheelers best suited for the valuable Indian customers covering all segments. "
             android:textColor="#fff"
-            android:textSize="16sp" />
+            android:textSize="14sp"
+            android:textAlignment="viewStart"
+            android:gravity="start"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
