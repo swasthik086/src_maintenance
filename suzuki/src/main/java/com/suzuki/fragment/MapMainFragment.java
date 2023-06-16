@@ -2104,7 +2104,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
             });
 
 
-            if (currentlocation != null) {
+          /*  if (currentlocation != null) {
 
                 apiProgressBar.setVisibility(View.GONE);
 
@@ -2119,7 +2119,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
                 marker.setPosition(new LatLng(currentlocation));
            //     marker.setIcon(icon);
                 mapboxMap.addMarker(markerOptions);
-            }
+            }*/
 
             try {
                 mapboxMap.enableTraffic(true);

@@ -855,7 +855,7 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
                 latLng.setLatitude(lastPark_Lat);
                 latLng.setLongitude(lastPark_Lng);
 
-                IconFactory iconFactory = IconFactory.getInstance(getApplicationContext());
+             /*   IconFactory iconFactory = IconFactory.getInstance(getApplicationContext());
                 Icon icon = iconFactory.fromResource(R.drawable.marker);
 //            Icon icon = iconFactory.defaultMarker();
                 MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(latLng)).icon(icon);
@@ -869,7 +869,7 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
                 marker.setPosition(new LatLng(latLng));
 
                 marker.setIcon(icon);
-                mapboxMap.addMarker(markerOptions);
+                mapboxMap.addMarker(markerOptions);*/
 
 
             }

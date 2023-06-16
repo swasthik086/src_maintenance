@@ -181,7 +181,7 @@ dependencies {
     ///Mappls
 
     implementation 'com.mappls.sdk:place-widget:2.0.1'
-    implementation 'com.mappls.sdk:mappls-android-sdk:8.0.0'
+    implementation 'com.mappls.sdk:mappls-android-sdk:8.0.8'
     implementation 'android.arch.persistence.room:runtime:1.1.1'
     annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
     //Annotation Plugin
@@ -197,7 +197,7 @@ dependencies {
 
     //Geoanalytics plugin
     implementation 'com.mappls.sdk:geoanalytics-plugin:1.0.0'
-    implementation 'com.google.android.gms:play-services-location:20.0.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'com.github.QuadFlask:colorpicker:0.0.15'
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0'
     implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
