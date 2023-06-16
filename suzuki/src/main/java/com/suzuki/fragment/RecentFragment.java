@@ -215,7 +215,7 @@ public class RecentFragment extends Fragment implements IOnclickFromAdapterToAct
 
                 if (clicked) {
 
-                    if (favTrip.size() < 10) {
+                    if (favTrip.size() < 11) {
 
                         if (receFavDataResult != null) {
 

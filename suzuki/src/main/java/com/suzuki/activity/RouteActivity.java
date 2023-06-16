@@ -116,6 +116,7 @@ import com.suzuki.pojo.SettingsPojo;
 import com.suzuki.pojo.ViaPointLocationRealmModel;
 import com.suzuki.pojo.ViaPointPojo;
 import com.suzuki.utils.Common;
+import com.suzuki.utils.DataRequestManager;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -567,7 +568,7 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
 //                addTripDataToRealm();
                 NavLocation location=MapMainFragment.getUserLocation();
                 if (moveToNavigation) {
-                    if (bookmarkClicked) {
+                    if (bookmarkClicked||DataRequestManager.isSaveTripsEnabled) {
 
                         if (startClicked) {
                             startClicked = false;
@@ -875,6 +876,7 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
               //  startNavigation();
 //                addRideCount();
                 startClicked = true;
+//                DataRequestManager.isSaveTripsClikced=false;
                 dialog.cancel();
 
             }
@@ -900,6 +902,7 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
 
                 addRideCount();
                 startClicked = true;
+//                DataRequestManager.isSaveTripsClikced=true;
                 dialog.cancel();
             }
         });
@@ -1234,6 +1237,36 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
             else{
                 Intent ittt = new Intent(getApplicationContext(), NavigationActivity.class);
                 startActivity(ittt);
+                /*try {
+                    Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
+
+                    Bundle bundle = new Bundle();
+
+                    bundle.putString("currentPlaceName", currentPlaceName);
+
+                    bundle.putString("destionationPlaceName", destionationPlaceName);
+
+                    bundle.putDouble("currentLat", Double.parseDouble(currentLat));
+
+                    bundle.putDouble("currentLong", Double.parseDouble(currentLong));
+
+                    bundle.putDouble("destinyLat", Double.parseDouble(destinyLat));
+
+                    bundle.putDouble("destinyLong", Double.parseDouble(destinyLong));
+
+                    // bundle.putSerializable("mStateModel", mStateModel.trip);
+                    bundle.putString("rideduration", String.valueOf(mStateModel.trip.routes().get(mStateModel.selectedIndex).duration().intValue()));
+
+                    bundle.putString("ridetime", String.valueOf(mStateModel.trip.routes().get(mStateModel.selectedIndex).distance().floatValue()));
+
+                    Log.e("rideduration: ", String.valueOf(mStateModel.trip.routes().get(mStateModel.selectedIndex).duration().intValue()));
+                    Log.e("ridetime: ", String.valueOf(mStateModel.trip.routes().get(mStateModel.selectedIndex).distance().floatValue()));
+
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }*/
             }
 
 

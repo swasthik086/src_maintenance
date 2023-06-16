@@ -53,6 +53,7 @@ import com.suzuki.pojo.EvenConnectionPojo;
 import com.suzuki.pojo.RiderProfileModule;
 import com.suzuki.pojo.SettingsPojo;
 import com.suzuki.utils.Common;
+import com.suzuki.utils.DataRequestManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -108,7 +109,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
     private SharedPreferences sharedPreferences;
     private int speed_value=0, min_speed, max_speed;
 
-    //private boolean isSaveTripClicked;
+    private boolean isSaveTripClicked;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
 
@@ -134,6 +135,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());//this==context
         if (!prefs.contains("FirstTimeDisclaimer")) {
+            DataRequestManager.isSaveTripsEnabled=true;
+            switchSaveAllTrips.setChecked(true);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("FirstTimeDisclaimer", true);
             editor.commit();
@@ -153,8 +156,16 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
 //                        }
 //                    });
 
-        /*isSaveTripClicked = sharedPreferences.getBoolean("isSaveTripsChecked",false);
-        if(isSaveTripClicked){
+        isSaveTripClicked = sharedPreferences.getBoolean("isSaveTripsChecked",false);
+        if(isSaveTripClicked||DataRequestManager.isSaveTripsEnabled){
+            DataRequestManager.isSaveTripsEnabled=true;
+            switchSaveAllTrips.setChecked(true);
+        }
+        else{
+            switchSaveAllTrips.setChecked(false);
+            DataRequestManager.isSaveTripsEnabled=false;
+        }
+        /*if(DataRequestManager.isSaveTripsEnabled){
             switchSaveAllTrips.setChecked(true);
         }
         else{
@@ -340,23 +351,25 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
                         llFirstLayout.setVisibility(View.GONE);
                     }
 
-                    if (switchSaveAllTrips.isChecked() == true){
+                  /*  if (switchSaveAllTrips.isChecked() == true){
                         settingsPojo.setSaveTrips(true);
                     }
                     else {
                         settingsPojo.setSaveTrips(false);
-                    }
+                    }*/
 
-                   if (settingsPojo.isSaveTrips()) {
-                       switchSaveAllTrips.setChecked(true);
-                      /* editor.putBoolean("isSaveTripsChecked",true);
-                       editor.apply();*/
+                  /* if (settingsPojo.isSaveTrips()) {
+                       DataRequestManager.isSaveTripsEnabled=true;
+                      // switchSaveAllTrips.setChecked(true);
+                      *//* editor.putBoolean("isSaveTripsChecked",true);
+                       editor.apply();*//*
                    }
                    else if (!settingsPojo.isSaveTrips()){
-                       switchSaveAllTrips.setChecked(false);
-                      /* editor.putBoolean("isSaveTripsChecked",false);
-                       editor.apply();*/
-                   }
+                       DataRequestManager.isSaveTripsEnabled=false;
+                      // switchSaveAllTrips.setChecked(false);
+                      *//* editor.putBoolean("isSaveTripsChecked",false);
+                       editor.apply();*//*
+                   }*/
 
 
                 }
@@ -704,6 +717,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
         switchSaveAllTrips.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
             if (isChecked) {
+                DataRequestManager.isSaveTripsEnabled=true;
 
                /* editor.putBoolean("isSaveTripsChecked",true);
                 editor.apply();*/
@@ -732,6 +746,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
             }
 
             else {
+                DataRequestManager.isSaveTripsEnabled=false;
 
               /*  editor.putBoolean("isSaveTripsChecked",false);
                 editor.apply();*/
@@ -904,18 +919,20 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
         ImageView ivCheck = dialog.findViewById(R.id.ivCheck);
 
         ivCheck.setOnClickListener(v -> {
+            DataRequestManager.isSaveTripsEnabled =false;
 
             switchSaveAllTrips.setChecked(false);
-          /*  editor.putBoolean("isSaveTripsChecked",false);
-            editor.apply();*/
+            editor.putBoolean("isSaveTripsChecked",false);
+            editor.apply();
             dialog.dismiss();
         });
 
         ivCross.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* editor.putBoolean("isSaveTripsChecked",true);
-                editor.apply();*/
+                DataRequestManager.isSaveTripsEnabled=true;
+                editor.putBoolean("isSaveTripsChecked",true);
+                editor.apply();
                 switchSaveAllTrips.setChecked(true);
                 dialog.cancel();
             }
@@ -1311,6 +1328,13 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
     @Override
     public void onStop() {
         super.onStop();
+        if(DataRequestManager.isSaveTripsEnabled){
+        editor.putBoolean("isSaveTripsChecked",true);
+        editor.apply();}
+        else{
+            editor.putBoolean("isSaveTripsChecked",false);
+            editor.apply();
+        }
 
         EventBus.getDefault().unregister(this);
     }
