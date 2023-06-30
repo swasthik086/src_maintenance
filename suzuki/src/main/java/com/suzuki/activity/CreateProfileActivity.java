@@ -1168,7 +1168,7 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
 
             case PERMISSION_REQUEST_BLUETOOTH_CONNECT:
             {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     if (etUserName.getText().toString().trim().equals("") || etUserName.getText().toString().equals(" ")) {
                         new Common(CreateProfileActivity.this).showToast("Enter Rider's Name", TOAST_DURATION);
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

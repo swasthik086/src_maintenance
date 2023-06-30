@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -47,6 +48,7 @@ import com.suzuki.pojo.EvenConnectionPojo;
 import com.suzuki.pojo.RiderProfileModule;
 import com.suzuki.services.MyBleService;
 import com.suzuki.utils.Common;
+import com.suzuki.utils.DataRequestManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -86,7 +88,7 @@ public class DeviceListingScanActivity extends BaseActivity implements View.OnCl
     private static final int REQUEST_CODE_OPEN_GPS = 1, REQUEST_CODE_PERMISSION_LOCATION = 2;
     String check_navigation;
     public static boolean IsManualConnection = false;
-    boolean switchcluter=false;
+    boolean switchcluter = false;
     ListView listView_device;
     private BleListingDeviceAdapter mDeviceAdapter;
     private ProgressBar api_progress_bar;
@@ -96,7 +98,7 @@ public class DeviceListingScanActivity extends BaseActivity implements View.OnCl
     public static RelativeLayout rlButtonConnect, rlButtonRefresh, rlClose;
     Realm realm;
     //ProgressDialog mProgressDialog;
-View view;
+    View view;
     public static String userName;
 
     public static BleDevice bleDevice;
@@ -110,6 +112,9 @@ View view;
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+    private static final int REQUEST_ENABLE_BT = 1;
+    public static final int PERMISSION_REQUEST_BLUETOOTH_SCAN = 123;
+    public static final int PERMISSION_REQUEST_BLUETOOTH_CONNECT = 101;
 
     public SuzukiApplication getMyApplication() {
         return ((SuzukiApplication) this.getApplication());
@@ -216,16 +221,67 @@ View view;
     }
 
     private void checkforBluetoothConnection() {
-        if (!bluetoothadapter.isEnabled()) bluetoothadapter.enable();
-        else {
+        if (!bluetoothadapter.isEnabled()) {
+            DataRequestManager.isBluetoohDisabled=false;
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            bluetoothadapter.enable();
+            if (!DataRequestManager.isBluetoohDisabled) {
+
+                if (Build.VERSION.SDK_INT >= 32) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                        // Request Bluetooth connect permission
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_CONNECT}, PERMISSION_REQUEST_BLUETOOTH_CONNECT);
+                    } else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                        // Request Bluetooth scan permission
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_SCAN}, PERMISSION_REQUEST_BLUETOOTH_SCAN);
+                    } else {
+                        enableBluetooth();
+                    }
+                } else {
+                    enableBluetooth();
+                }
+            }
+        } else {
             checkPermissions();
-            try{
+            try {
                 bleManager.cancelScan();
 
-            }catch (Exception e){
-                Log.e(EXCEPTION,"ListScan: checkbtconnection: "+String.valueOf(e));
+            } catch (Exception e) {
+                Log.e(EXCEPTION, "ListScan: checkbtconnection: " + String.valueOf(e));
             }
             startScan();
+        }
+    }
+
+    private void enableBluetooth() {
+
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
+            if (Build.VERSION.SDK_INT >= 32) {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            } else {
+               // BluetoothAdapter.getDefaultAdapter().enable();
+            }
         }
     }
 
@@ -335,6 +391,16 @@ View view;
             ImageView ivCheck = dialog.findViewById(R.id.ivCheck);
 
             ivCheck.setOnClickListener(v1 -> {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
                 bluetoothadapter.disable();
                 onDisconnect = true;
                 bleManager.disconnectAllDevice();
@@ -532,7 +598,7 @@ View view;
 
                     if (BikeBleName.getValue().charAt(1) == 'B'){
                         if (PRICOL_CONNECTED==false)
-                        switching_of_vehicle=true;
+                            switching_of_vehicle=true;
                     }
 
                     if (BikeBleName.getValue().charAt(1) == 'A'){
@@ -564,10 +630,6 @@ View view;
                     }
 
 
-
-
-
-
                 }
 
                 if(mBoundService!=null) new Handler().postDelayed(() -> mBoundService.getServicesList(bleDevice), 500);
@@ -575,7 +637,7 @@ View view;
                 new Handler().postDelayed(() -> {
                     try {
 
-                        BluetoothGattService service = gatt.getServices().get(3); 
+                        BluetoothGattService service = gatt.getServices().get(3);
 
                         realm.executeTransaction(realm -> {
 
@@ -620,13 +682,22 @@ View view;
                 sendBroadcast(i);
                 getConnectionStatus(staticConnectionStatus, getApplicationContext());
 
-                if ((!onDisconnect && !displayingDisconnectDialog))
-                {
+                if ((!onDisconnect && !displayingDisconnectDialog)) {
                     displayingDisconnectDialog = true;
                     showBluetoothDialog = false;
                     onDisconnect = false;
 
-                    if (!bluetoothadapter.isEnabled()) bluetoothadapter.enable();
+                    if (!bluetoothadapter.isEnabled())
+                        if (ActivityCompat.checkSelfPermission(DeviceListingScanActivity.this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                            // TODO: Consider calling
+                            //    ActivityCompat#requestPermissions
+                            // here to request the missing permissions, and then overriding
+                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                            //                                          int[] grantResults)
+                            // to handle the case where the user grants the permission. See the documentation
+                            // for ActivityCompat#requestPermissions for more details.
+                            return;
+                        }bluetoothadapter.enable();
                     connect(global_bleDevice);
                 }
             }
@@ -800,6 +871,23 @@ View view;
     @Override
     public final void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (Build.VERSION.SDK_INT >= 32){
+
+            if (requestCode == PERMISSION_REQUEST_BLUETOOTH_CONNECT) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    enableBluetooth();
+                } else {
+                    DataRequestManager.isBluetoohDisabled = true;
+                }
+            } else if (requestCode == PERMISSION_REQUEST_BLUETOOTH_SCAN) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    enableBluetooth();
+                } else {
+                    DataRequestManager.isBluetoohDisabled = true;
+                }
+            }
+    }
         /*if (requestCode == REQUEST_CODE_PERMISSION_LOCATION) {
             if (grantResults.length > 0) {
                 for (int i = 0; i < grantResults.length; i++) {
@@ -845,6 +933,17 @@ View view;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if(Build.VERSION.SDK_INT >= 32) {
+            if (requestCode == REQUEST_ENABLE_BT) {
+                if (resultCode == RESULT_OK) {
+                    DataRequestManager.isBluetoohDisabled = true;
+                    checkforBluetoothConnection();
+                } else if (resultCode == RESULT_CANCELED) {
+                    DataRequestManager.isBluetoohDisabled = true;
+                    //  Toast.makeText(this, "Bluetooth permission got denied", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
         if (requestCode == REQUEST_CODE_OPEN_GPS && checkGPSIsOpen()) startScan();
     }
 }
