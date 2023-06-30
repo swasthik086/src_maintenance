@@ -66,6 +66,7 @@ import com.suzuki.preferences.Preferences;
 import com.suzuki.services.MyBleService;
 import com.suzuki.services.NotificationService;
 import com.suzuki.utils.CurrentLoc;
+import com.suzuki.utils.DataRequestManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
@@ -128,6 +129,8 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
     private Realm realm;
     private Handler handler;
     private BluetoothCheck bluetoothCheck;
+    private static final int REQUEST_ENABLE_BT = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -394,7 +397,7 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
             case PERMISSION_REQUEST_BLUETOOTH_SCAN:
             {
               //  if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 }
                 else{
@@ -410,7 +413,7 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
 
             case PERMISSION_REQUEST_BLUETOOTH_CONNECT: {
               //  if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 }
                 else{
                     startActivity(
@@ -713,6 +716,7 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
 
         ivCheck.setOnClickListener(v -> {
             dialog.cancel();
+
             // if (mBluetoothAdapter.isEnabled()) mBluetoothAdapter.disable();
             if(Build.VERSION.SDK_INT >= 31){
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
@@ -744,11 +748,33 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
                     return;
                 }
                 else{
-                    if (mBluetoothAdapter.isEnabled()) mBluetoothAdapter.disable();
+                    //if (mBluetoothAdapter.isEnabled()) mBluetoothAdapter.disable();
+                    //BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                    if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()) {
+                        if (Build.VERSION.SDK_INT >= 32) {
+                            //DataRequestManager.isBluetoohDisabled=true;
+                            Intent intent = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
+                            startActivity(intent);
+                        } else {
+                            //DataRequestManager.isBluetoohDisabled=true;
+                            mBluetoothAdapter.disable();
+                        }
+                    }
 
                 }
             }else{
-                if (mBluetoothAdapter.isEnabled()) mBluetoothAdapter.disable();
+                //if (mBluetoothAdapter.isEnabled()) mBluetoothAdapter.disable();
+                //BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()) {
+                    if (Build.VERSION.SDK_INT >= 32) {
+                        //DataRequestManager.isBluetoohDisabled=true;
+                        Intent intent = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
+                        startActivity(intent);
+                    } else {
+                        //DataRequestManager.isBluetoohDisabled=true;
+                        mBluetoothAdapter.disable();
+                    }
+                }
             }
 
 
