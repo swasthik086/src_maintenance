@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
 import com.suzuki.R;
 import com.suzuki.broadcaster.BleConnection;
@@ -273,6 +274,19 @@ public class HelpActivity extends AppCompatActivity implements OnClickListener {
             });
         });
         cluster_id = BikeBleName.getValue();
+
+        BikeBleName.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if (s.isEmpty()) {
+                    llRedAlertBle.setVisibility(View.VISIBLE);
+                }
+
+                else{
+                    llRedAlertBle.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     private String createUserDetailsSignature() {

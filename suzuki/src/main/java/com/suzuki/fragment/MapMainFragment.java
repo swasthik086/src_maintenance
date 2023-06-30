@@ -1,6 +1,7 @@
 package com.suzuki.fragment;
 
 import static android.os.Looper.getMainLooper;
+import static android.view.View.GONE;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -46,6 +47,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -119,6 +121,7 @@ import com.suzuki.pojo.MapWorkAndHomeRealmModule;
 import com.suzuki.pojo.ViaPointLocationRealmModel;
 import com.suzuki.utils.CheckInternet;
 import com.suzuki.utils.Common;
+import com.suzuki.utils.DataRequestManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -128,6 +131,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -144,6 +148,7 @@ import static com.suzuki.adapter.DragDropRecyclerViewAdapter.updatedCustomList;
 import static com.suzuki.application.SuzukiApplication.isRegionFixed;
 import static com.suzuki.broadcaster.BluetoothCheck.BLUETOOTH_STATE;
 import static com.suzuki.fragment.DashboardFragment.staticConnectionStatus;
+import static com.suzuki.utils.Common.BikeBleName;
 
 
 public class MapMainFragment extends Fragment implements OnMapReadyCallback, MapplsMap.OnMapLongClickListener,
@@ -975,6 +980,19 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
 
 
         mapView.getMapAsync(this);
+
+        BikeBleName.observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if (s.isEmpty()) {
+                    llRedAlertBle.setVisibility(View.VISIBLE);
+                }
+
+                else{
+                    llRedAlertBle.setVisibility(View.GONE);
+                }
+            }
+        });
         return view;
     }
 
