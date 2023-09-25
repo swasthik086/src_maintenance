@@ -1588,6 +1588,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
 
                 // missed call clear flag
                 RetArray[15] = CALL_CLEAR;
+                //
                 Log.e("clear_flag",String.valueOf(MSG_CLEAR)+"::"+String.valueOf(CALL_CLEAR));
 
                 RetArray[28] = calculateCheckSum(RetArray);
@@ -1954,6 +1955,9 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
 
                         case 5:
                             ivUserBike.setImageResource(R.drawable.access_glossy_grey);
+                            break;
+                        case 6:
+                            ivUserBike.setImageResource(R.drawable.access_125_beige_6);
                             break;
                     }
                     break;

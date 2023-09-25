@@ -34,8 +34,8 @@ android {
         applicationId "suzuki.com.suzuki"
         minSdkVersion 23
         targetSdkVersion 33
-        versionCode 64
-        versionName "2.15.08.04"
+        versionCode 69
+        versionName "2.15.08.05"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true

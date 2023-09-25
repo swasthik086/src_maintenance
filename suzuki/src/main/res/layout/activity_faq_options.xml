@@ -71,7 +71,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/rides"
+                    android:text="@string/trips"
                     android:textSize="16sp"
                     android:padding="4dp"
                     android:textColor="@color/black"

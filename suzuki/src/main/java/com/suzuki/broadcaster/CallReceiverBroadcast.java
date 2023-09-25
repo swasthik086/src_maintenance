@@ -369,6 +369,8 @@ public class CallReceiverBroadcast extends BroadcastReceiver {
                             Log.e("ArraySize","data_sent: " + String.valueOf(MISSED_CALL_COUNT));
                         }
 
+                        //call1 clear
+
                         Log.e("BLEservice","mc: "+String.valueOf(missedCall)+":::::"+"clear: "+String.valueOf(CALL_CLEAR));
                         if (missedCall == 0 || CALL_CLEAR == 0x59) {
                             Log.e("BLEservice","cleared");
@@ -606,21 +608,27 @@ public class CallReceiverBroadcast extends BroadcastReceiver {
     }
 
     public String getContactName(final String phoneNumber, Context context) {
-        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+        try {
+            Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
 
-        String[] projection = new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME};
+            String[] projection = new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME};
 
-        String contactName = "";
-        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+            String contactName = "";
+            Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
 
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                contactName = cursor.getString(0);
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    contactName = cursor.getString(0);
+                }
+                cursor.close();
             }
-            cursor.close();
+            Log.d("getContactNameContext", String.valueOf(context));
+            return contactName;
+        } catch (SecurityException e) {
+            e.printStackTrace();
         }
-        Log.d("getContactNameContext", String.valueOf(context));
-        return contactName;
+        return "";
+
     }
 
     public void sendCAllDatatoDashboard(String dataToSend, String callStatus) {
@@ -775,6 +783,7 @@ public class CallReceiverBroadcast extends BroadcastReceiver {
         char[] check = title.toCharArray();
 
         for (int i=0; i<title.length();i++){
+            try{
             int k=title.charAt(i);
             if(k>127){
                 check[i]=' ';
@@ -783,11 +792,27 @@ public class CallReceiverBroadcast extends BroadcastReceiver {
                     check[i]=' ';
                 }
             }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
         }
         title=String.valueOf(check);
         title=title.replace("  "," ");
         return title;
     }
+       /* StringBuilder result = new StringBuilder();
+
+        for (char ch : title.toCharArray()) {
+            int k = ch;
+
+            // Check if the character's Unicode value is greater than 127 and not equal to 8500
+            if (k <= 127 || k == 8500) {
+                result.append(ch);
+            }
+        }
+
+        return result.toString().replaceAll("\\s+", " ");
+    }*/
 
     public String numberNameValidation(String number, Context context) {
 

@@ -126,7 +126,7 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemS
         BurgmanStreet_color= new String[]{"Glossy Grey","Matte Shadow Green","Matte Black","Matte Blue","Matte Bordeaux Red","Pearl Mirage White"};
         avenis_color=new String[]{"Sonic Silver + Triton Blue","Lush Green + Fibroin Grey","Matte Black + Glass Sparkle Black","Pearl Blaze Orange + Glass Sparkle Black","Pearl Mirage White + Fibroin Grey" };
         BurgmanStreetEX_color= new String[]{"Black","Platinum Silver","Royal Bronze"};
-        accessSE125color=new String[]{"Matte Black","Solid Ice Green + Pearl Mirage White","Matte Blue","Royal Bronze","Pearl Mirage White","Glossy Grey"};
+        accessSE125color=new String[]{"Matte Black","Solid Ice Green + Pearl Mirage White","Matte Blue","Royal Bronze","Pearl Mirage White","Glossy Grey","Pearl Shining Beige + Pearl Mirage White"};
         gixxer250color=new String[]{"Matte Black","Matte Stellar Blue","Matte Black","Sonic Silver/Triton Blue","Matte Stellar Blue"};
         gixxerSfcolor=new String[]{"Glass Sparkle Black","Triton Blue","Pearl Blaze Orange","Glass Sparkle Black","Pearl Blaze Orange","Triton Blue"};
 

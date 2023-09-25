@@ -19,7 +19,7 @@ public class HelpFaq {
         HashMap<String, List<String>> mainList = new HashMap<>();
         int que = 0;
         /*first question*/
-        questionList.add("Can user send any Feedback to Suzuki Motorcycle India within the Application?");
+        questionList.add("Can users share any feedback to Suzuki Motorcycle India via the Application?");
         answerList.add("Users can share their feedbacks within the application from:");
         answerList.add("• Go to Help Section in Last Sync Data tab of the application,");
         answerList.add("• Click on Contact,");

@@ -29,7 +29,7 @@ public class WelcomeFaq {
 
         /*2nd question*/
         answerList = new ArrayList<>();
-        questionList.add("What is the ODOmeter reading?");
+        questionList.add("What is the \"" + "ODOmeter" + "\" reading?");
         answerList.add("ODOmeter reading is the Total Distance Travelled by the vehicle");
         mainList.put(questionList.get(que),answerList);
         que++;

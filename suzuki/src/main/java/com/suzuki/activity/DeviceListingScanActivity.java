@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -549,121 +550,119 @@ public class DeviceListingScanActivity extends BaseActivity implements View.OnCl
 
             @Override
             public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
+                try {
 
-                mDeviceAdapter.addDevice(bleDevice);
-                mDeviceAdapter.notifyDataSetChanged();
-                boolean isConnected = bleManager.isConnected(bleDevice);
+                    mDeviceAdapter.addDevice(bleDevice);
+                    mDeviceAdapter.notifyDataSetChanged();
+                    boolean isConnected = bleManager.isConnected(bleDevice);
 
-                if (isConnected) {
+                    if (isConnected) {
 
-                    setMtu(bleDevice, 250);
-                    app.setBleDevice(bleDevice);
+                        setMtu(bleDevice, 250);
+                        app.setBleDevice(bleDevice);
 
-                    onDisconnect = false;
-                    staticConnectionStatus = true;
-                    staticSendData = true;
+                        onDisconnect = false;
+                        staticConnectionStatus = true;
+                        staticSendData = true;
 
-                    Intent i = new Intent("status").putExtra("status", staticConnectionStatus);
-                    sendBroadcast(i);
-                    getConnectionStatus(staticConnectionStatus, getApplicationContext());
-                    tvStatus.setText("CONNECTED");
-                    rlButtonConnect.setVisibility(View.VISIBLE);
-                    tvStatus.setTextColor(getResources().getColor(R.color.app_theme_color));
-                    rlButtonConnect.setVisibility(View.VISIBLE);
+                        Intent i = new Intent("status").putExtra("status", staticConnectionStatus);
+                        sendBroadcast(i);
+                        getConnectionStatus(staticConnectionStatus, getApplicationContext());
+                        tvStatus.setText("CONNECTED");
+                        rlButtonConnect.setVisibility(View.VISIBLE);
+                        tvStatus.setTextColor(getResources().getColor(R.color.app_theme_color));
+                        rlButtonConnect.setVisibility(View.VISIBLE);
 //                    prev_cluster = bleDevice.getMac();
 
-                    BikeBleName.setValue(bleDevice.getName());
+                        BikeBleName.setValue(bleDevice.getName());
 
-                    update_vehicle_data();
+                        update_vehicle_data();
 
-                    prev_cluster_name = BikeBleName.getValue();
-                    prev_cluster_macAddr = bleDevice.getMac();
-                    SharedPreferences sharedPreferencesFinal = getSharedPreferences("BLE_DEVICE",Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferencesFinal.edit();
-                    editor.putString("prev_cluster_macAddr", bleDevice.getMac());
+                        prev_cluster_name = BikeBleName.getValue();
+                        prev_cluster_macAddr = bleDevice.getMac();
+                        SharedPreferences sharedPreferencesFinal = getSharedPreferences("BLE_DEVICE", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferencesFinal.edit();
+                        editor.putString("prev_cluster_macAddr", bleDevice.getMac());
 
-                    if (sharedPreferencesFinal.getString("prev_cluster","").equals(BikeBleName.getValue())){
-                        FIRST_TIME = false;
-                    }
-
-
-
-                    else FIRST_TIME = true;
-                    editor.putString("prev_cluster_name", BikeBleName.getValue());
-                    editor.putString("prev_cluster", BikeBleName.getValue());//for feedback purpose
-                    editor.putString("old_cluster",BikeBleName.getValue());
-                    editor.apply();
+                        if (sharedPreferencesFinal.getString("prev_cluster", "").equals(BikeBleName.getValue())) {
+                            FIRST_TIME = false;
+                        } else FIRST_TIME = true;
+                        editor.putString("prev_cluster_name", BikeBleName.getValue());
+                        editor.putString("prev_cluster", BikeBleName.getValue());//for feedback purpose
+                        editor.putString("old_cluster", BikeBleName.getValue());
+                        editor.apply();
 
 
-
-                    if (BikeBleName.getValue().charAt(1) == 'B'){
-                        if (PRICOL_CONNECTED==false)
-                            switching_of_vehicle=true;
-                    }
-
-                    if (BikeBleName.getValue().charAt(1) == 'A'){
-                        if (PRICOL_CONNECTED==true)
-                            switching_of_vehicle=true;
-                    }
-
-                    if (navigationStarted==true){
-                        finish();
-                    }
-                   else if(switching_of_vehicle==false){
-                        finish();
-                    }
-                    else{
-                        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(DeviceListingScanActivity.this);//this==context
-                        if (!prefs.contains("FirstTimeConnection")) {
-                            SharedPreferences.Editor editors = prefs.edit();
-                            editors.putBoolean("FirstTimeConnection", false);
-                            editors.commit();
-                            finish();
+                        if (BikeBleName.getValue().charAt(1) == 'B') {
+                            if (PRICOL_CONNECTED == false)
+                                switching_of_vehicle = true;
                         }
-                        else {
-                            Intent intent=new Intent(DeviceListingScanActivity.this, ProfileActivity.class);
-                            intent.putExtra("SwitchCluster","SwitchCluster");
-                            startActivity(intent);
-                            finish();
-                            switching_of_vehicle=false;
+
+                        if (BikeBleName.getValue().charAt(1) == 'A') {
+                            if (PRICOL_CONNECTED == true)
+                                switching_of_vehicle = true;
                         }
+
+                        if (navigationStarted == true) {
+                            finish();
+                        } else if (switching_of_vehicle == false) {
+                            finish();
+                        } else {
+                            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(DeviceListingScanActivity.this);//this==context
+                            if (!prefs.contains("FirstTimeConnection")) {
+                                SharedPreferences.Editor editors = prefs.edit();
+                                editors.putBoolean("FirstTimeConnection", false);
+                                editors.commit();
+                                finish();
+                            } else {
+                                Intent intent = new Intent(DeviceListingScanActivity.this, ProfileActivity.class);
+                                intent.putExtra("SwitchCluster", "SwitchCluster");
+                                startActivity(intent);
+                                finish();
+                                switching_of_vehicle = false;
+                            }
+                        }
+
+
                     }
 
+                    if (mBoundService != null)
+                        new Handler().postDelayed(() -> mBoundService.getServicesList(bleDevice), 500);
 
+                    new Handler().postDelayed(() -> {
+                        try {
+
+                            BluetoothGattService service = gatt.getServices().get(3);
+
+                            realm.executeTransaction(realm -> {
+
+                                BleDataPojo bleDataPojo = realm.where(BleDataPojo.class).equalTo("bleId", 1).findFirst();
+                                if (bleDataPojo == null)
+                                    bleDataPojo = realm.createObject(BleDataPojo.class, 1);
+                                bleDataPojo.setDeviceMacAddress(bleDevice.getMac());
+                                bleDataPojo.setDeviceName(bleDevice.getName());
+                                bleDataPojo.setReadCharacteristic(service.getCharacteristics().get(1).getUuid().toString());
+                                bleDataPojo.setWriteCharacteristic(service.getCharacteristics().get(0).getUuid().toString());
+                                bleDataPojo.setServiceID(gatt.getServices().get(3).getUuid().toString());
+                                realm.insertOrUpdate(bleDataPojo);
+
+                            });
+                        } catch (Exception e) {
+
+                            Log.e(EXCEPTION, "ListScan: connect: " + String.valueOf(e));
+
+                        }
+
+                        SharedPreferences sharedPreferencesFinal = getSharedPreferences("FT", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferencesFinal.edit();
+                        editor.remove("first");
+                        editor.putInt("first", 500);
+                        editor.apply();
+                        finish();
+                    }, 500);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
                 }
-
-                if(mBoundService!=null) new Handler().postDelayed(() -> mBoundService.getServicesList(bleDevice), 500);
-
-                new Handler().postDelayed(() -> {
-                    try {
-
-                        BluetoothGattService service = gatt.getServices().get(3);
-
-                        realm.executeTransaction(realm -> {
-
-                            BleDataPojo bleDataPojo = realm.where(BleDataPojo.class).equalTo("bleId", 1).findFirst();
-                            if (bleDataPojo == null) bleDataPojo = realm.createObject(BleDataPojo.class, 1);
-                            bleDataPojo.setDeviceMacAddress(bleDevice.getMac());
-                            bleDataPojo.setDeviceName(bleDevice.getName());
-                            bleDataPojo.setReadCharacteristic(service.getCharacteristics().get(1).getUuid().toString());
-                            bleDataPojo.setWriteCharacteristic(service.getCharacteristics().get(0).getUuid().toString());
-                            bleDataPojo.setServiceID(gatt.getServices().get(3).getUuid().toString());
-                            realm.insertOrUpdate(bleDataPojo);
-
-                        });
-                    } catch (Exception e) {
-
-                        Log.e(EXCEPTION,"ListScan: connect: "+String.valueOf(e));
-
-                    }
-
-                    SharedPreferences sharedPreferencesFinal = getSharedPreferences("FT",Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferencesFinal.edit();
-                    editor.remove("first");
-                    editor.putInt("first",500);
-                    editor.apply();
-                    finish();
-                }, 500);
             }
 
             @Override

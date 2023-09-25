@@ -20,7 +20,7 @@ public class GeneralFaq {
         int que = 0;
         /*first question*/
         questionList.add("Which Android OS version is compatible for Suzuki Ride Connect Application?");
-        answerList.add("It supports Android OS Version 6.0 and above.");
+        answerList.add("It supports Android OS version 8.0 and above.");
         answerList.add("Note: Certain old smartphones may not be compatible.");
         mainList.put(questionList.get(que),answerList);
         que++;
@@ -28,8 +28,8 @@ public class GeneralFaq {
         /*2nd question*/
         answerList = new ArrayList<>();
         questionList.add("Is Internet Connectivity mandatory for Application to function?");
-        answerList.add("Yes, internet connectivity is mandatory for navigation related features. However other features such as Call/SMS/WhatsApp Call/Messages notifications will function without the internet connectivity.");
-        answerList.add("For Data Enabled Application and certain VOIP services are restricted due to dependency on Mobile Handset and Android OS.");
+        answerList.add("Yes, Internet connectivity is mandatory for navigation-related features. However, other features like Call/SMS notifications will function without internet connectivity.");
+        answerList.add("*For Data Enabled Applications, certain VOIP services are restricted due to dependency on the Mobile handset and Android OS.");
         mainList.put(questionList.get(que),answerList);
         que++;
 
@@ -38,7 +38,7 @@ public class GeneralFaq {
         answerList.add("For proper operation of the Navigation features, user should enable and allow the following permissions to Suzuki Ride Connect Application\n" +
                 "1. Bluetooth ON\n" +
                 "2. Location Permission with Allow all the time\n" +
-                "3. Give Background activity permission to the Application.\n" +
+                "3. Give Background activity permission to the Application\n" +
                 "4. Mobile Data (Internet Services)\n" +
                 "5. Allow Notification access to receive alerts during Navigation (Call/SMS/WhatsApp)");
         mainList.put(questionList.get(que),answerList);

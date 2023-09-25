@@ -149,6 +149,7 @@ public class NotificationService extends NotificationListenerService {
         }
 
         Bundle extras = sbn.getNotification().extras;
+        //Log.e("Notification bundle0", String.valueOf(extras));
         String title = "", text = " ", full = " ", test = " ";
 
         title = String.valueOf(extras.get("android.title"));
@@ -196,6 +197,7 @@ public class NotificationService extends NotificationListenerService {
                         try{
 
                             if ( !getPhoneNumber(title, getApplicationContext()).equals("") || !getContactName(title, getApplicationContext()).equals("")) {
+                                //whatsapp_notification_1
                                 Log.e("messag check", "cond 1 sent");
                                 w_MSG_COUNTER++;
                                 sendDatatoDashboard("YY1" + test, (byte) 0x57);
@@ -242,6 +244,8 @@ public class NotificationService extends NotificationListenerService {
 
 
         Bundle abc = sbn.getNotification().extras;
+
+        //Log.e("Notification bundle1", String.valueOf(abc));
 
         String name = abc.getString("android.title");
         name = prev_title;
@@ -376,6 +380,7 @@ public class NotificationService extends NotificationListenerService {
     }
 
     public String getContactName(final String phoneNumber, Context context) {
+        try {
         Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
 
         String[] projection = new String[]{ContactsContract.PhoneLookup.HAS_PHONE_NUMBER};
@@ -390,20 +395,29 @@ public class NotificationService extends NotificationListenerService {
             cursor.close();
         }
         return contactName;
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     public String getPhoneNumber(String name, Context context) {
-        String ret = null;
-        String selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " like'%" + name + "%'";
-        String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER};
-        Cursor c = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                projection, selection, null, null);
-        if (c.moveToFirst()) {
-            ret = c.getString(0);
+        try {
+            String ret = null;
+            String selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " like'%" + name + "%'";
+            String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER};
+            Cursor c = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    projection, selection, null, null);
+            if (c.moveToFirst()) {
+                ret = c.getString(0);
+            }
+            c.close();
+            if (ret == null) ret = "";
+            return ret;
+        } catch (SecurityException e) {
+            e.printStackTrace();
         }
-        c.close();
-        if (ret == null) ret = "";
-        return ret;
+        return "";
     }
 
     @NotNull
@@ -411,6 +425,7 @@ public class NotificationService extends NotificationListenerService {
         char[] check = title.toCharArray();
 
         for (int i = 0; i < title.length(); i++) {
+            try{
             int k = title.charAt(i);
             if (k > 127) {
                 check[i] = ' ';
@@ -419,6 +434,9 @@ public class NotificationService extends NotificationListenerService {
                     check[i] = ' ';
                 }
             }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
         }
 
         title = String.valueOf(check);
@@ -426,41 +444,50 @@ public class NotificationService extends NotificationListenerService {
         title = title.replace("  ", " ");
         return title;
     }
+   /* @NotNull
+    private String remove_invalid_char(String title) {
+        char[] check = title.toCharArray();
+        int writeIndex = 0;
+
+        for (int i = 0; i < title.length(); i++) {
+            int k = title.charAt(i);
+            if (k <= 127 || k > 8500) { // Keep valid characters (ASCII <= 127 and ASCII > 8500).
+               // check[writeIndex] = check[i];
+                if (writeIndex < check.length) {
+                    check[writeIndex] = check[i];
+                }
+                writeIndex++;
+            }
+        }
+
+        title = new String(check, 0, writeIndex);
+
+        title = title.replace("  ", " ");
+        return title;
+    }*/
+
 
     private void checkWhatsAppMsg(StatusBarNotification sbn, Bundle bundle) {
 
-        /*Log.d(TAG, "checkWhatsAppMsg1: package name1: " + sbn.getPackageName());
-
-        Log.d(TAG, "checkWhatsAppMsg1: sbn id1: " + sbn.getId());
-
-        Log.d(TAG, "checkWhatsAppMsg1: sbn sender1: " + sbn.getNotification().tickerText);
-
-        String title1 = bundle.getString("android.title");
-        Log.d(TAG, "checkWhatsAppMsg1: bundle title1: " + title1);
-
-        String info1 = ""+bundle.getString("android.text");
-        Log.d(TAG, "checkWhatsAppMsg1: msg info & name / total msg1:  " + info1);*/
 
         if (sbn.getNotification().tickerText == null) {
             sender = bundle.getString("android.title");
-            /* this will give name of sender until tickerText has some value
-             *  so we can use this as how is sender of last message
-             * */
 //            return;
         }
 
         if (sbn.getPackageName() != null && sbn.getNotification().tickerText != null) {
             if ( whatsappMSGEnabled) {
 
-//                Log.d(TAG, "checkWhatsAppMsg() called with: sbn = [" + sbn + "], bundle = [" + bundle + "]");
+//
 
-                /*extract data from sbn as well as from bundle*/
 
-                /*if sender name length is 0 then try to get name from tickerText*/
-                if (sender.length() < 1) {
+                if (sender != null && sender.length() < 1) {
                     String[] arr = sbn.getNotification().tickerText.toString().split("\\s+");
-                    if (arr.length > 2) sender = arr[2];
+                    if (arr.length > 2) {
+                        sender = arr[2];
+                    }
                 }
+
 
                 String title = bundle.getString("android.title");
                 String info = "" + bundle.getString("android.text");
@@ -484,44 +511,13 @@ public class NotificationService extends NotificationListenerService {
                             String noOfUnreadSMS = "";
                             String contactNameSMS = sender;
                             String smsType = "W";
-                            // check for contact no contains only numbers and +
                             String isOnlyNo = sender.replace("+", "");
-                            /*if (sender.contains("+")) {
-                                sender = sender.replace("+", "");
-                            }*/
 
-//                            if (sender.length() < 10 || !(sender.matches("^[0-9-\\s]*$"))) {
                             contactNameSMS = numberNameValidation(sender);
 
-                            if (contactNameSMS.length() > 0) {
+                            if (contactNameSMS != null && contactNameSMS.length() > 0) {
                                 String data = unReadSMSStatus + newSMS + "1" + contactNameSMS;
-
-                                /*send the data to cluster*/
-                                //updateWhatsapSMSDisplay(data, smsType);//deactiveated recently
                             }
-                            /*if (sender.length() < 10 || !(isOnlyNo.matches("^[0-9-\\s]*$"))) {
-                                //contactNameSMS = numberNameValidation(sender);
-
-
-                                *//*if (contactNameSMS.trim().length() > 0) {
-                                    String data = unReadSMSStatus + newSMS + "1" + contactNameSMS;
-
-                                    Log.d(TAG, "checkWhatsAppMsg: data : " + data + " smsType " + smsType + " byteArray "
-                                            + Arrays.toString(data.getBytes()));
-
-                                    send the data to cluster
-                                    updateWhatsapSMSDisplay(data, smsType);
-                                }*//*
-
-                                contactNameSMS = numberNameValidation(sender);
-
-                                if (contactNameSMS.length() > 0) {
-                                    String data = unReadSMSStatus + newSMS + "1" + contactNameSMS;
-
-                                    *//*send the data to cluster*//*
-                                    updateWhatsapSMSDisplay(data, smsType);
-                                }
-                            }*/
                         }
                     }
                 }
@@ -602,6 +598,7 @@ public class NotificationService extends NotificationListenerService {
 
     public void sendDatatoDashboard(String dataToSend, byte smsType) {
 
+        //whatsapp_notification_2
         Log.e("messaging check", "D2D: " + dataToSend);
         SMS_POSTED = System.currentTimeMillis();
 
@@ -819,6 +816,7 @@ public class NotificationService extends NotificationListenerService {
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn, RankingMap rankingMap, int reason) {
+        try{
 
         if (!CALL_ACTIVE ) {
             Bundle extra = sbn.getNotification().extras;
@@ -940,7 +938,10 @@ public class NotificationService extends NotificationListenerService {
             }
         }
 
-        super.onNotificationRemoved(sbn, rankingMap, reason);
+            super.onNotificationRemoved(sbn, rankingMap, reason);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
     }
 
     private void whatsAppNotificationRemoved(Notification notification) {

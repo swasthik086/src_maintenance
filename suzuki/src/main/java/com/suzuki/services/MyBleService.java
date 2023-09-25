@@ -247,6 +247,9 @@ public class MyBleService extends Service {
     public void writeDataFromAPPtoDevice(byte[] PKT, int Flag) {
         Log.e("test_Packet",String.valueOf(Flag));
 
+        String str = new String(PKT);
+        Log.e("Data Packet",str);
+
         if (Flag==36){
             for (int i=0; i<PKT.length; i++){
 

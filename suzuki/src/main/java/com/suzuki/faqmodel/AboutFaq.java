@@ -20,12 +20,13 @@ public class AboutFaq {
         int que = 0;
         /*first question*/
         questionList.add("Will the Application behaviour be affected if the required permissions are not provided during installation of Application?");
-        answerList.add("Please check the following permissions.To check- Settings>App Management>Suzuki Ride Connect\n");
-        answerList.add("1.Permissions>Location>Allow All the Time \n");
-        answerList.add("2.Battery Usage>Allow Background Activity \n");
-        answerList.add("3.Unused Apps>Turn OFF (Battery>Optimize Battery Use>Don't Optimize)\n");
+        answerList.add("Please check the following permissions\n");
+        answerList.add("To check- Settings>App Management>Suzuki Ride Connect\n");
+        answerList.add("1. Permissions>Location>Allow All the Time \n");
+        answerList.add("2. Battery Usage>Allow Background Activity \n");
+        answerList.add("3. Unused Apps>Turn OFF (Battery>Optimize Battery Use>Don't Optimize)\n");
         answerList.add("4. Allow Notification Access in App \n");
-        answerList.add("If unresolved, mail to customer.queries@suzukimotorcycle.in");
+        answerList.add("If unresolved, mail to\ncustomer.queries@suzukimotorcycle.in");
         mainList.put(questionList.get(que),answerList);
         que++;
 

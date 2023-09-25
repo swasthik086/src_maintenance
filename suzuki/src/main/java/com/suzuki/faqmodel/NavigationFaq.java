@@ -116,7 +116,7 @@ public class NavigationFaq {
         que++;
 
         answerList = new ArrayList<>();
-        questionList.add(" On completing my trip, will I get any notification on my phone ?");
+        questionList.add(" On completing my ride, will I get any notification on my phone ?");
         answerList.add("Yes, you will get pop message stating that \"Destination reached, you want to exit the navigation\" ?");
         mainList.put(questionList.get(que),answerList);
         que++;
