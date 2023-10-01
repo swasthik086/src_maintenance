@@ -2089,10 +2089,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         }
 
         //button data
-        if (BikeBleName.getValue().isEmpty()){
-            rlButtonWhiePair.setVisibility(View.VISIBLE);
-            rlButtonConnect.setVisibility(View.GONE);
-        } else{
+        if (BikeBleName != null && BikeBleName.getValue() != null && !BikeBleName.getValue().isEmpty()) {
 
             model = sharedPreferences.getString("vehicle_name","");
 
@@ -2100,6 +2097,10 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
             //      tvBleName.setText(BikeBleName.getValue());
             rlButtonWhiePair.setVisibility(View.GONE);
             rlButtonConnect.setVisibility(View.VISIBLE);
+        } else{
+
+            rlButtonWhiePair.setVisibility(View.VISIBLE);
+            rlButtonConnect.setVisibility(View.GONE);
         }
 
         // if(!ALREADY_DISPLAYED && dashboardFragment.isVisible()) change_color_popup();

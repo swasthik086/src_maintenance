@@ -740,7 +740,7 @@ public class DeviceListingScanActivity extends BaseActivity implements View.OnCl
         String prev_type = sharedPreferences.getString("vehicle_type","");
         int prev_model=sharedPreferences.getInt("vehicle_model",0);
 
-        if (BikeBleName.getValue().charAt(1) == 'A'){
+        if (BikeBleName != null && BikeBleName.getValue() != null && BikeBleName.getValue().charAt(1) == 'A'){
 
             //access, burgman
             if (BikeBleName.getValue().charAt(2) == 'S') {
@@ -788,7 +788,7 @@ public class DeviceListingScanActivity extends BaseActivity implements View.OnCl
 
         }
 
-        else if (BikeBleName.getValue().charAt(1) == 'B'){
+        else if (BikeBleName != null && BikeBleName.getValue() != null && BikeBleName.getValue().charAt(1) == 'B'){
             //Avenis, Burgman EX, V strom, Gixxer , Gixxer SF
             PRICOL_CONNECTED=false;
             if (BikeBleName.getValue().charAt(2) == 'S'){

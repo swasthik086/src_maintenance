@@ -123,6 +123,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
 
         sharedPreferences = getApplicationContext().getSharedPreferences("vehicle_data", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+
         realm = Realm.getDefaultInstance();
         initWidgets(view);
         etCustomMsg.setHorizontallyScrolling(false);
@@ -141,11 +142,11 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
             editor.putBoolean("FirstTimeDisclaimer", true);
             editor.commit();
             saveTripsDisclaimer("Total 10 trips can be saved\n"+ "for both Recent and Favourites.\n"+" While 11th trip, oldest will get deleted automatically.");
-
+            DataRequestManager.isSaveTripsClikced = true;
         }
 
 
-            //Other dialog code
+        //Other dialog code
 //                    alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 //
 //                        public void onClick(DialogInterface dialog, int which) {
@@ -158,11 +159,13 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
 
         isSaveTripClicked = sharedPreferences.getBoolean("isSaveTripsChecked",false);
         if(isSaveTripClicked||DataRequestManager.isSaveTripsEnabled){
+            DataRequestManager.isSaveTripsClikced = true;
             DataRequestManager.isSaveTripsEnabled=true;
             switchSaveAllTrips.setChecked(true);
         }
         else{
             switchSaveAllTrips.setChecked(false);
+            DataRequestManager.isSaveTripsClikced = false;
             DataRequestManager.isSaveTripsEnabled=false;
         }
         /*if(DataRequestManager.isSaveTripsEnabled){
@@ -183,8 +186,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
                     if (!switchSaveAllTrips.isChecked()){
 
                         SharedPreferences.Editor editor = prefs.edit();
-                            editor.putBoolean("FirstTime",true);
-                            editor.commit();
+                        editor.putBoolean("FirstTime",true);
+                        editor.commit();
 
                         dontSaveTripsAlert("Do you want to turn OFF Save All Trips?");
 
@@ -201,6 +204,14 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
 //                            //more code....
 //                        }
 //                    });
+                }
+                if(switchSaveAllTrips.isChecked()){
+                    DataRequestManager.isSaveTripsEnabled = true;
+                    DataRequestManager.isSaveTripsClikced = true;
+                }
+                else{
+                    DataRequestManager.isSaveTripsEnabled = false;
+                    DataRequestManager.isSaveTripsClikced = false;
                 }
             }
         });
@@ -610,13 +621,13 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
 
                         if (settingsPojo == null) settingsPojo = realm18.createObject(SettingsPojo.class, 1);
 
-                      //  if(check_permission(Manifest.permission.RECEIVE_SMS)){
+                        //  if(check_permission(Manifest.permission.RECEIVE_SMS)){
                         //    settingsPojo.setWhatsappMSG(true);
 
-                       // }
-                       // if(check_call_permission()) {
+                        // }
+                        // if(check_call_permission()) {
                         //    settingsPojo.setWhatsappCall(true);
-                       // }
+                        // }
 
                         settingsPojo.setCallsms(true);
                         settingsPojo.setWhatsappMSG(true);
@@ -648,7 +659,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
                             settingsPojo = realm19.createObject(SettingsPojo.class, 1);
                         }
                         settingsPojo.setCallsms(false);
-                     //   settingsPojo.setWhatsappMSG(false);
+                        //   settingsPojo.setWhatsappMSG(false);
 
                         settingsPojo.setWhatsappMSG(false);
                         settingsPojo.setWhatsappCall(false);
@@ -803,6 +814,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
                     e.printStackTrace();
                 }
 
+                SpeedValue.setText(String.valueOf(speed_value));
 
             } else{
                 SpeedLayout.setVisibility(View.GONE);
@@ -877,13 +889,25 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
         manaul_speed_entry();
         editTextOkListener();
 
-        BikeBleName.observe(getActivity(), new Observer<String>() {
+       /* BikeBleName.observe(getActivity(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 if (s.isEmpty()) llRedAlertBle.setVisibility(View.VISIBLE);
                 else llRedAlertBle.setVisibility(View.GONE);
             }
+        });*/
+
+        BikeBleName.observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if (s != null && !s.isEmpty()) {
+                    llRedAlertBle.setVisibility(View.GONE);
+                } else {
+                    llRedAlertBle.setVisibility(View.VISIBLE);
+                }
+            }
         });
+
         return view;
     }
 
@@ -959,7 +983,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
         }
         SpeedSeekbar.setMax(max_speed);
         SpeedSeekbar.setProgress(speed_value);
+
         SpeedLayout.setVisibility(View.VISIBLE);
+
         SpeedValue.setText(String.valueOf(speed_value));
     }
 
@@ -1329,8 +1355,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
     public void onStop() {
         super.onStop();
         if(DataRequestManager.isSaveTripsEnabled){
-        editor.putBoolean("isSaveTripsChecked",true);
-        editor.apply();}
+            editor.putBoolean("isSaveTripsChecked",true);
+            editor.apply();}
         else{
             editor.putBoolean("isSaveTripsChecked",false);
             editor.apply();
@@ -1364,7 +1390,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
         switchWhatsappMSG = view.findViewById(R.id.switchWhatsappMSG);
         switchSaveAllTrips = view.findViewById(R.id.switchSaveAllTrips);
         llRedAlertBle = view.findViewById(R.id.llRedAlertBle);
-
     }
 
     public void showExitAlert(String message, int PERMISSION_CODE) {
@@ -1641,10 +1666,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         requireActivity().unregisterReceiver(mReceiver);
         realm.close();
-
     }
 
     @SuppressLint("SetTextI18n")

@@ -410,6 +410,7 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
                     );
                     }
             }
+            break;
 
             case PERMISSION_REQUEST_BLUETOOTH_CONNECT: {
               //  if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -423,12 +424,13 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
                             )
                     );
                 }
+                break;
             }
         }
     }
 
     private void scan() {
-        if (BikeBleName.getValue().isEmpty()) {
+        if (BikeBleName != null && (BikeBleName.getValue() == null || BikeBleName.getValue().isEmpty())) {
             bleManager = BleManager.getInstance();
             bleManager.init(getApplication());
             bleManager.scan(new BleScanCallback() {
@@ -824,8 +826,10 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
             dialog.cancel();
 
             if (messsage.equals(getString(R.string.exit_app))) {
-                editor.putBoolean("EXIT_STATUS", true);
-                editor.commit();
+                if(editor !=null) {
+                    editor.putBoolean("EXIT_STATUS", true);
+                    editor.commit();
+                }
                 HomeScreenActivity.this.finish();
             }
 
@@ -887,8 +891,10 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        editor.putBoolean("EXIT_STATUS",true);
-        editor.commit();
+        if (editor != null) {
+            editor.putBoolean("EXIT_STATUS", true);
+            editor.commit();
+        }
         try {
             if (serviceIntent != null) stopService(serviceIntent);
 
@@ -913,7 +919,9 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
 
         if (mReceiver != null) unregisterReceiver(mReceiver);
 
-        preferences.clearSharePreference();
+        if (preferences != null) {
+
+        preferences.clearSharePreference();}
 
         System.exit(0);
     }

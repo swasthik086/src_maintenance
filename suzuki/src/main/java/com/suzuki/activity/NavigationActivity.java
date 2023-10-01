@@ -1,6 +1,8 @@
 package com.suzuki.activity;
 
+import static com.suzuki.activity.RouteActivity.viaPoints;
 import static com.suzuki.activity.RouteNearByActivity.tripID;
+import static com.suzuki.application.SuzukiApplication.calculateCheckSum;
 import static com.suzuki.fragment.NavigationFragment.navigationModeEnabled;
 
 import android.annotation.SuppressLint;
@@ -11,6 +13,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -57,15 +60,24 @@ import com.suzuki.maps.plugins.BearingIconPlugin;
 import com.suzuki.maps.plugins.DirectionPolylinePlugin;
 import com.suzuki.maps.plugins.MapEventsPlugin;
 import com.suzuki.maps.plugins.RouteArrowPlugin;
+import com.suzuki.pojo.ClusterStatusPktPojo;
 import com.suzuki.pojo.RecentTripRealmModule;
+import com.suzuki.pojo.RiderProfileModule;
 import com.suzuki.pojo.ViaPointLocationRealmModel;
+import com.suzuki.utils.DataRequestManager;
 import com.suzuki.utils.NavigationCompassEngine;
 import com.suzuki.utils.NavigationLocationEngine;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -97,6 +109,24 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
     private MapEventsPlugin mapEventsPlugin;
     private boolean firstFix;
     private Fragment currentFragment;
+
+    private int top_speeds=0;
+
+    int Max_speed;
+
+    private String currentPlaceName, destionationPlaceName;
+
+    //RouteActivity.StateModel mStateModel;
+
+    private Double currentLat, currentLong, destinyLat, destinyLong;
+
+    private String  tripARideStart, tripARideEnd, duration, rideTime;
+
+    String endTime;
+
+
+
+
     Runnable backStackRunnable = () -> {
         try {
             onBackStackChangedWithDelay();
@@ -135,7 +165,38 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
         }
         this.navigateTo(new NavigationFragment(), true);
 
+        try {
+            Intent intent = getIntent();
 
+            Bundle bundle = intent.getExtras();
+
+            if (bundle != null) {
+                currentPlaceName = bundle.getString("currentPlaceName");
+                destionationPlaceName = bundle.getString("destionationPlaceName");
+                currentLat = bundle.getDouble("currentLat");
+                currentLong = bundle.getDouble("currentLong");
+                destinyLat = bundle.getDouble("destinyLat");
+                destinyLong = bundle.getDouble("destinyLong");
+
+                duration = bundle.getString("rideduration");
+                rideTime = bundle.getString("ridetime");
+
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -280,11 +341,121 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
         }
     }
 
+    public void addTripDataToRealm() {
+        //  Date startTime = Calendar.getInstance().getTime();
+
+
+        Realm realm = Realm.getDefaultInstance();
+        try {
+            realm.executeTransaction(realm1 -> {
+
+                RealmResults<RecentTripRealmModule> results = realm1.where(RecentTripRealmModule.class).findAll();
+                RecentTripRealmModule recentTripRealmModule = realm1.createObject(RecentTripRealmModule.class);
+                RiderProfileModule riderProfile = realm1.where(RiderProfileModule.class).equalTo("id", 1).findFirst();
+
+                Date d=new Date();
+                SimpleDateFormat sdf=new SimpleDateFormat("hh:mm a");
+                String startTime = sdf.format(d);
+
+                Calendar currentTimeNow = Calendar.getInstance();
+                System.out.println("Current time now : " + currentTimeNow.getTime());
+                currentTimeNow.add(Calendar.MINUTE, Integer.parseInt(duration));
+                long getETA = System.currentTimeMillis()+(Integer.parseInt(duration)*1000);
+                String dateString = DateFormat.format("hh:mm a", new Date(getETA)).toString();
+
+                SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
+                int saved_speed = prefs.getInt("new_top_speed", 0);
+
+                //getting end time from navigation
+
+
+
+                SharedPreferences conn = getSharedPreferences("endTimeAppPref", MODE_PRIVATE);
+                endTime = conn.getString("endTime","");
+
+                int tripSize = results.size();
+                Date date = new Date();
+                tripID = (int) new Date().getTime();
+
+
+                recentTripRealmModule.setDate(getDate());
+                recentTripRealmModule.setId(tripID);
+                for (LatLng latLng : viaPoints) {
+                    ViaPointLocationRealmModel model = new ViaPointLocationRealmModel();
+                    model.setLatitude(latLng.getLatitude());
+                    model.setLongitude(latLng.getLongitude());
+                    recentTripRealmModule.setPointLocationRealmModels(model);
+                }
+                recentTripRealmModule.setTime(String.format("%s ", NavigationFormatter.getFormattedDuration(Integer.parseInt(duration), getMyApplication())));
+                recentTripRealmModule.setTotalDistance(String.format("%s", NavigationFormatter.getFormattedDistance(Float.parseFloat(rideTime), getMyApplication())));
+                recentTripRealmModule.setRideTime(String.format("%s ", NavigationFormatter.getFormattedDuration(Integer.parseInt(duration), getMyApplication())));
+                recentTripRealmModule.setStartlocation(currentPlaceName);
+                //  recentTripRealmModule.setTopSpeed(saved_speed);
+                //recentTripRealmModule.setTopSpeed(0);
+
+                recentTripRealmModule.setEndlocation(destionationPlaceName);
+                recentTripRealmModule.setFavorite(false);
+                recentTripRealmModule.setCurrent_lat(String.valueOf(currentLat));
+                recentTripRealmModule.setCurrent_long(String.valueOf(currentLong));
+                recentTripRealmModule.setStartTime(startTime);
+                recentTripRealmModule.setETA(dateString);
+                recentTripRealmModule.setDestination_lat(String.valueOf(destinyLat));
+                recentTripRealmModule.setDestination_long(String.valueOf(destinyLong));
+                recentTripRealmModule.setDateTime(date);
+                recentTripRealmModule.setTopSpeed(top_speeds);
+
+                Log.e("Top_speed_saved", String.valueOf(top_speeds));
+
+                realm1.insertOrUpdate(recentTripRealmModule);
+
+
+//                    tvDistance.setText(String.format("%s", NavigationFormatter.getFormattedDistance(mStateModel.trip.distance().floatValue(), getMyApplication())));
+//                    tvTimeForTravel.setText(String.format("%s ", NavigationFormatter.getFormattedDuration(mStateModel.trip.duration().intValue(), getMyApplication())));
+
+
+                if (tripSize > 10) {
+                    RealmResults<RecentTripRealmModule> recentTrip = realm1.where(RecentTripRealmModule.class)
+                            .sort("dateTime", Sort.ASCENDING)
+                            .findAll();
+
+                    recentTrip.get(0).deleteFromRealm();
+                }
+            });
+
+        }
+
+
+        catch (Exception e) {
+            Log.d("realmex", "--" + e.getMessage());
+
+        }
+    }
+
 
     @Override
     public void onBackStackChanged() {
         backStackHandler.removeCallbacksAndMessages(null);
         backStackHandler.postDelayed(backStackRunnable, 100);
+    }
+
+    private String getDate() {
+
+        Calendar c = Calendar.getInstance();
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        int year = c.get(Calendar.YEAR);
+
+        String[] monthName = {"JAN", "FEB",
+                "MAR", "APR", "MAY", "JUN", "JUL",
+                "AUG", "SEP", "OCT", "NOV",
+                "DEC"};
+
+        String monthname = monthName[c.get(Calendar.MONTH)];
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String tripDate = monthname + " " + day + ", " + year;
+
+        Log.d("datet--", "-" + c + timestamp);
+        return tripDate;
     }
 
 
@@ -404,6 +575,9 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
         ivCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(DataRequestManager.isSaveTripsClikced) {
+                    addTripDataToRealm();
+                }
                 navigationModeEnabled = "0";
 //                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(NavigationActivity.this);
 //                SharedPreferences.Editor editor = preferences.edit();
@@ -416,6 +590,40 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
         });
 
         dialog.show();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onClusterDataRecev(ClusterStatusPktPojo event) {
+        if(DataRequestManager.isSaveTripsClikced) {
+            ClusterDataPacket(event.getClusterByteData());
+        }
+    }
+
+    public void ClusterDataPacket(byte[] u1_buffer) {
+        if ((u1_buffer[0] == -91) && (u1_buffer[1] == 55) && (u1_buffer[29] == 127)) {
+            byte Crc = calculateCheckSum(u1_buffer);
+
+            if (u1_buffer[28] == Crc) {
+                try {
+                    String cluster_data = new String(u1_buffer);
+
+                    //String tripA = cluster_data.substring(11, 17);
+                    //int Max_speed;
+                    Max_speed = Integer.parseInt(cluster_data.substring(2, 5));
+
+                    if (Max_speed > top_speeds) {
+                        top_speeds = Max_speed;
+                    }
+
+                    Log.e("Top_speed_data", String.valueOf(top_speeds));
+                } catch (NumberFormatException e) {
+                    top_speeds=0;
+                    e.printStackTrace();
+                }
+
+
+            }
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.suzuki.fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -689,31 +690,35 @@ public int saved_speed, top_speeds;
 
         setBluetoothStatus();
 
-        BikeBleName.observe(getActivity(), new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                if (s.isEmpty()){
 
-                    llRedAlertBle.setVisibility(View.VISIBLE);
-                    top_strip_layout.setVisibility(GONE);
+        Activity activity = getActivity();
 
-                    soundFab.setVisibility(GONE);
-                    mFollowMeButton.setVisibility(GONE);
-                    options_recycler_view_container.setVisibility(GONE);
+        if (activity != null) {
+            BikeBleName.observe(getViewLifecycleOwner(), new Observer<String>() {
+                @Override
+                public void onChanged(String s) {
+                    if (s.isEmpty()) {
+
+                        llRedAlertBle.setVisibility(View.VISIBLE);
+                        top_strip_layout.setVisibility(GONE);
+
+                        soundFab.setVisibility(GONE);
+                        mFollowMeButton.setVisibility(GONE);
+                        options_recycler_view_container.setVisibility(GONE);
 
 
+                    } else {
+                        llRedAlertBle.setVisibility(View.GONE);
+                        soundFab.setVisibility(View.VISIBLE);
+
+
+                        top_strip_layout.setVisibility(View.VISIBLE);
+                        options_recycler_view_container.setVisibility(View.VISIBLE);
+                        //   main_layout.getForeground().setAlpha( 0);
+                    }
                 }
-                else {
-                    llRedAlertBle.setVisibility(View.GONE);
-                    soundFab.setVisibility(View.VISIBLE);
-
-
-                    top_strip_layout.setVisibility(View.VISIBLE);
-                    options_recycler_view_container.setVisibility(View.VISIBLE);
-                    //   main_layout.getForeground().setAlpha( 0);
-                }
-            }
-        });
+            });
+        }
         requireContext().registerReceiver(this.mConnReceiver,
                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
@@ -1622,7 +1627,22 @@ if (adviseInfo!=null){
     @Override
     public void onNavigationFinished() {
 
+        try{
+            NavigationActivity navigationActivity = (NavigationActivity) getActivity();
+            if (navigationActivity != null) {
+                navigationActivity.addTripDataToRealm();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+
+        //addTripDataToRealm();
         DestinationReached = true;
+
+        //NavigationActivity.addTripACount();
 
         showExitNavigationAlert(getActivity(), this);
 

@@ -517,48 +517,49 @@ public final class DirectionPolylinePlugin implements MapView.OnDidFinishLoading
         mapplsMap.getStyle(new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
-                setVisibility(true, style);
-                List<Feature> features = new ArrayList<>(trips.size());
-                for (int i = 0; i < trips.size(); i++) {
-                    LineString lineString = trips.get(i);
-                    Feature feature = Feature.fromGeometry(lineString);
-                    feature.addStringProperty(FILTER_TEXT, (selected == i) ? "selected" : "alternate");
-                    feature.addNumberProperty(POSITION_TEXT, i);
-                    features.add(feature);
-                }
-                if (position != null) {
-                    Feature bearingFeature = Feature.fromGeometry(
-                            Point.fromLngLat(position.getLongitude(), position.getLatitude()));
-                    bearingFeature.addStringProperty("icon", DirectionsSymbolLayer.ICON_BEARING_IMAGE);
-                    bearingFeature.addStringProperty(FILTER_TEXT, "bearing");
-                    features.add(bearingFeature);
-                }
-                if (endLatLng != null) {
-                    Feature endFeature = Feature.fromGeometry(
-                            Point.fromLngLat(endLatLng.getLongitude(), endLatLng.getLatitude()));
-                    endFeature.addStringProperty("icon", CONSTANT_END);
-                    endFeature.addStringProperty(FILTER_TEXT, "marker");
-                    features.add(appendIdInFeature(endFeature, "end-marker"));
-                }
-                if (wayPoints != null) {
-                    int i = 0;
-                    for (LatLng latLng : wayPoints) {
-                        Feature viaFeature = Feature.fromGeometry(
-                                Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
-                        viaFeature.addStringProperty("icon", CONSTANT_WAYPOINTS + (i+1));
-                        viaFeature.addStringProperty(PROPERTY_NAME, i + 1 +"");
-                        viaFeature.addStringProperty("title", i + 1 +"");
-                        viaFeature.addStringProperty(FILTER_TEXT, "marker");
-                        features.add(appendIdInFeature(viaFeature, "via-marker-" + (i++)));
+                try {
+                    setVisibility(true, style);
+                    List<Feature> features = new ArrayList<>(trips.size());
+                    for (int i = 0; i < trips.size(); i++) {
+                        LineString lineString = trips.get(i);
+                        Feature feature = Feature.fromGeometry(lineString);
+                        feature.addStringProperty(FILTER_TEXT, (selected == i) ? "selected" : "alternate");
+                        feature.addNumberProperty(POSITION_TEXT, i);
+                        features.add(feature);
                     }
-                }
-                if (startLatLng != null) {
-                    Feature endFeature = Feature.fromGeometry(
-                            Point.fromLngLat(startLatLng.getLongitude(), startLatLng.getLatitude()));
-                    endFeature.addStringProperty("icon", CONSTANT_START);
-                    endFeature.addStringProperty(FILTER_TEXT, "marker");
-                    features.add(appendIdInFeature(endFeature, "start-marker"));
-                }
+                    if (position != null) {
+                        Feature bearingFeature = Feature.fromGeometry(
+                                Point.fromLngLat(position.getLongitude(), position.getLatitude()));
+                        bearingFeature.addStringProperty("icon", DirectionsSymbolLayer.ICON_BEARING_IMAGE);
+                        bearingFeature.addStringProperty(FILTER_TEXT, "bearing");
+                        features.add(bearingFeature);
+                    }
+                    if (endLatLng != null) {
+                        Feature endFeature = Feature.fromGeometry(
+                                Point.fromLngLat(endLatLng.getLongitude(), endLatLng.getLatitude()));
+                        endFeature.addStringProperty("icon", CONSTANT_END);
+                        endFeature.addStringProperty(FILTER_TEXT, "marker");
+                        features.add(appendIdInFeature(endFeature, "end-marker"));
+                    }
+                    if (wayPoints != null) {
+                        int i = 0;
+                        for (LatLng latLng : wayPoints) {
+                            Feature viaFeature = Feature.fromGeometry(
+                                    Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
+                            viaFeature.addStringProperty("icon", CONSTANT_WAYPOINTS + (i + 1));
+                            viaFeature.addStringProperty(PROPERTY_NAME, i + 1 + "");
+                            viaFeature.addStringProperty("title", i + 1 + "");
+                            viaFeature.addStringProperty(FILTER_TEXT, "marker");
+                            features.add(appendIdInFeature(viaFeature, "via-marker-" + (i++)));
+                        }
+                    }
+                    if (startLatLng != null) {
+                        Feature endFeature = Feature.fromGeometry(
+                                Point.fromLngLat(startLatLng.getLongitude(), startLatLng.getLatitude()));
+                        endFeature.addStringProperty("icon", CONSTANT_START);
+                        endFeature.addStringProperty(FILTER_TEXT, "marker");
+                        features.add(appendIdInFeature(endFeature, "start-marker"));
+                    }
 
       /*  Layer locationLayer = mapmyIndiaMap.getLayer(DirectionsSymbolLayer.BASE_BEARING_LAYER_ID);
         if (locationLayer != null) {
@@ -567,18 +568,21 @@ public final class DirectionPolylinePlugin implements MapView.OnDidFinishLoading
             );
         }
 */
-                if (enableCongestion) {
-                    if (directionsRouteList != null && trips != null) {
-                        List<Feature> congestionList = createCongestionFeature(directionsRouteList.get(selected), trips.get(selected));
-                        features.addAll(congestionList);
+                    if (enableCongestion) {
+                        if (directionsRouteList != null && trips != null) {
+                            List<Feature> congestionList = createCongestionFeature(directionsRouteList.get(selected), trips.get(selected));
+                            features.addAll(congestionList);
+                        }
                     }
+                    FeatureCollection featureCollection = FeatureCollection.fromFeatures(features);
+                    GeoJsonSource source = style.getSourceAs(DirectionPolylineData.SOURCE_ID);
+                    if (source != null) {
+                        source.setGeoJson(featureCollection);
+                    }
+                    new GenerateViewIconTask(DirectionPolylinePlugin.this).execute(featureCollection);
+                } catch (IndexOutOfBoundsException e) {
+                    e.printStackTrace();
                 }
-                FeatureCollection featureCollection = FeatureCollection.fromFeatures(features);
-                GeoJsonSource source = style.getSourceAs(DirectionPolylineData.SOURCE_ID);
-                if (source != null) {
-                    source.setGeoJson(featureCollection);
-                }
-                new GenerateViewIconTask(DirectionPolylinePlugin.this).execute(featureCollection);
             }
         });
     }

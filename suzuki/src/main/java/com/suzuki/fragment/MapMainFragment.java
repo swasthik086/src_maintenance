@@ -2122,11 +2122,11 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
             });
 
 
-          /*  if (currentlocation != null) {
+            if (currentlocation != null) {
 
                 apiProgressBar.setVisibility(View.GONE);
 
-                IconFactory iconFactory = IconFactory.getInstance(getActivity());
+             /*   IconFactory iconFactory = IconFactory.getInstance(getActivity());
                 Icon icon = iconFactory.fromResource(R.drawable.marker);
 //              Icon icon = iconFactory.defaultMarker();
                 MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(currentlocation)).icon(icon);
@@ -2136,8 +2136,8 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
                 markerOptions.setSnippet("");
                 marker.setPosition(new LatLng(currentlocation));
            //     marker.setIcon(icon);
-                mapboxMap.addMarker(markerOptions);
-            }*/
+                mapboxMap.addMarker(markerOptions);*/
+            }
 
             try {
                 mapboxMap.enableTraffic(true);
@@ -2408,7 +2408,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
         public SuzukiApplication getMyApplication() {
 
 //        if (((SuzukiApplication) getActivity().getApplication()) != null)
-            return ((SuzukiApplication) getActivity().getApplication());
+            return ((SuzukiApplication) requireActivity().getApplication());
 
         }
 

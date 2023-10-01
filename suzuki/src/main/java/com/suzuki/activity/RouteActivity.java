@@ -564,9 +564,63 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
             @Override
             public void onClick(View v) {
 
+                if (viaPointAdapter != null) {
+                    boolean isAnyEditTextEmpty = false;
+
+                    for (int i = 1; i < viaPointAdapter.getItemCount(); i++) {
+                        ViaPointAdapter.ViaPoint viaPointViewHolder = (ViaPointAdapter.ViaPoint) viaPointRv.findViewHolderForAdapterPosition(i);
+
+                        if (viaPointViewHolder != null) {
+                            EditText viaPointEt = viaPointViewHolder.viaPointEt;
+                            if (viaPointEt != null) {
+                                String editTextValue = viaPointEt.getText().toString().trim();
+
+                                if (editTextValue.isEmpty()) {
+                                    isAnyEditTextEmpty = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (isAnyEditTextEmpty) {
+                        Toast.makeText(RouteActivity.this, "Please enter the destination address to continue", Toast.LENGTH_SHORT).show();
+                    } else {
+                        NavLocation location=MapMainFragment.getUserLocation();
+                        if (moveToNavigation) {
+                            if (bookmarkClicked||DataRequestManager.isSaveTripsEnabled) {
+
+                                if (startClicked) {
+                                    startClicked = false;
+                                  //  addTripDataToRealm();
+                                    LatLng currentLatlng= new LatLng(location.getLatitude(),location.getLongitude());
+                                    LatLng destinationLatlng= new LatLng(eLocation.latitude,eLocation.longitude);
+                                    if(currentLatlng.distanceTo(destinationLatlng) < 30 ){
+                                        showExitNavigationAlert();
+
+                                    }else {
+                                        startNavigation();
+                                    }
+                                    addRideCount();
+                                }
+                            } else {
+
+
+                                showSaveTripsAlert();
+
+                            }
+
+                        } else {
+                            showConnectToBluetoothAlert();
+                            //startNavigation();
+                        }
+                    }
+
+                }
+
 //                startNavigation();
 //                addTripDataToRealm();
-                NavLocation location=MapMainFragment.getUserLocation();
+            /*    NavLocation location=MapMainFragment.getUserLocation();
                 if (moveToNavigation) {
                     if (bookmarkClicked||DataRequestManager.isSaveTripsEnabled) {
 
@@ -592,7 +646,7 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
 
                 } else {
                     showConnectToBluetoothAlert();
-                }
+                }*/
             }
         });
 
@@ -621,6 +675,8 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
 
         mapView.getMapAsync(this);
         requestLocationPermission();
+
+        DataRequestManager.isSaveTripsClikced = true;
     }
 
     @Override
@@ -865,6 +921,7 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
         ivCustomClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DataRequestManager.isSaveTripsClikced = false;
                 NavLocation location=MapMainFragment.getUserLocation();
                 LatLng currentLatlng= new LatLng(location.getLatitude(),location.getLongitude());
                 LatLng destinationLatlng= new LatLng(eLocation.latitude,eLocation.longitude);
@@ -886,9 +943,10 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
         llSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DataRequestManager.isSaveTripsClikced = true;
 
                 NavLocation location=MapMainFragment.getUserLocation();
-                addTripDataToRealm();
+               // addTripDataToRealm();
                 LatLng currentLatlng= new LatLng(location.getLatitude(),location.getLongitude());
                 LatLng destinationLatlng= new LatLng(eLocation.latitude,eLocation.longitude);
                 if(currentLatlng.distanceTo(destinationLatlng) < 30 ){
@@ -1235,9 +1293,9 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
             }
 
             else{
-                Intent ittt = new Intent(getApplicationContext(), NavigationActivity.class);
-                startActivity(ittt);
-                /*try {
+               /* Intent ittt = new Intent(getApplicationContext(), NavigationActivity.class);
+                startActivity(ittt);*/
+                try {
                     Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
 
                     Bundle bundle = new Bundle();
@@ -1266,7 +1324,7 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
                     startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
-                }*/
+                }
             }
 
 

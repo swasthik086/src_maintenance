@@ -1,11 +1,13 @@
 package com.suzuki.services;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -18,6 +20,7 @@ import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.sachinvarma.easypermission.EasyPermissionList;
 import com.suzuki.broadcaster.CallReceiverBroadcast;
 import com.suzuki.broadcaster.IncomingSms;
 import com.suzuki.pojo.SettingsPojo;
@@ -55,6 +58,9 @@ import static com.suzuki.utils.Common.SMS_POSTED;
 import static com.suzuki.utils.Common.w_MISSED_CALL_COUNT;
 import static com.suzuki.utils.Common.w_MSG_COUNTER;
 import static com.suzuki.utils.Common.w_call_posted;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class NotificationService extends NotificationListenerService {
 
@@ -149,7 +155,7 @@ public class NotificationService extends NotificationListenerService {
         }
 
         Bundle extras = sbn.getNotification().extras;
-        //Log.e("Notification bundle0", String.valueOf(extras));
+        Log.e("Notification bundle0", String.valueOf(extras));
         String title = "", text = " ", full = " ", test = " ";
 
         title = String.valueOf(extras.get("android.title"));
@@ -181,7 +187,7 @@ public class NotificationService extends NotificationListenerService {
                     if (!full.contains("whatsapp")){
 
                         try{
-                            if (Build.VERSION.SDK_INT==33 &&whatsappMSGEnabled&& sbn.getNotification().toString().contains("whatsapp")&& sbn.getNotification().extras.get("android.largeIcon")!=null && !getPhoneNumber(title, getApplicationContext()).equals("") || !getContactName(title, getApplicationContext()).equals("") ) {
+                            if (Build.VERSION.SDK_INT>=33 &&whatsappMSGEnabled&& sbn.getNotification().toString().contains("whatsapp")&& sbn.getNotification().extras.get("android.largeIcon")!=null && !getPhoneNumber(title, getApplicationContext()).equals("") || !getContactName(title, getApplicationContext()).equals("") ) {
                                 w_MSG_COUNTER++;
                                 sendDatatoDashboard("YY1" + title, (byte) 0x57);
                             }
@@ -209,7 +215,7 @@ public class NotificationService extends NotificationListenerService {
 
                                 title = get_backup_title(full);
 
-                                if (Build.VERSION.SDK_INT== 33 && title.matches(".*[\\u0900-\\u097F]+.*") && title.matches(".*[a-zA-Z]+.*")) {
+                                if (Build.VERSION.SDK_INT>= 33 && title.matches(".*[\\u0900-\\u097F]+.*") && title.matches(".*[a-zA-Z]+.*")) {
                                     w_MSG_COUNTER++;
                                     Log.e("messag check", "worked: " + title);
                                     sendDatatoDashboard("YY1" + title, (byte) 0x57);
@@ -245,7 +251,7 @@ public class NotificationService extends NotificationListenerService {
 
         Bundle abc = sbn.getNotification().extras;
 
-        //Log.e("Notification bundle1", String.valueOf(abc));
+        Log.e("Notification bundle1", String.valueOf(abc));
 
         String name = abc.getString("android.title");
         name = prev_title;
@@ -254,8 +260,12 @@ public class NotificationService extends NotificationListenerService {
         try {
             packageName = "" + abc.getString("android.text");
             UNREAD_SMS_COUNT = packageName.replaceAll("[^0-9]", "");
-
-        } catch (Exception e) {
+        }
+        catch (NumberFormatException e) {
+            Log.e(EXCEPTION, getClass().getName() + " onNotificationPosted_5 NumberFormatException: " + String.valueOf(e));
+            return;
+        }
+        catch (Exception e) {
             Log.e(EXCEPTION, getClass().getName() + " onNotificationPosted_5 " + String.valueOf(e));
             return;
         }
@@ -266,7 +276,7 @@ public class NotificationService extends NotificationListenerService {
                 else IncomingSms.UNREAD_SMS_COUNT = Integer.parseInt(UNREAD_SMS_COUNT);
             }
         } catch (Exception e) {
-            // Log.e(EXCEPTION, getClass().getName() + " onNotificationPosted_6 " + String.valueOf(e));
+             Log.e(EXCEPTION, getClass().getName() + " onNotificationPosted_6 " + String.valueOf(e));
         }
 
         try {
@@ -276,7 +286,7 @@ public class NotificationService extends NotificationListenerService {
             }
 
         } catch (Exception e) {
-            //  Log.e(EXCEPTION, getClass().getName() + " onNotificationPosted_7 " + String.valueOf(e));
+              Log.e(EXCEPTION, getClass().getName() + " onNotificationPosted_7 " + String.valueOf(e));
         }
 
         /* check only whats app msg */
@@ -345,11 +355,11 @@ public class NotificationService extends NotificationListenerService {
 
                 } else if (title != null) { //missed call
                     if (packageName.contains("group voice call")) return;
-                    if (Build.VERSION.SDK_INT == 33 && staticConnectionStatus && whatsappCallEnabled &&  full.toLowerCase().contains("com.whatsapp") || full.toLowerCase().contains("com.whatsapp.w4b")){
+                    if (Build.VERSION.SDK_INT >= 33 && staticConnectionStatus && whatsappCallEnabled &&  full.toLowerCase().contains("com.whatsapp") || full.toLowerCase().contains("com.whatsapp.w4b")){
                         sendMISSEDCAllDatatoDashboard(datatoSend, "Y");
 
                     }
-//                    else  if (Build.VERSION.SDK_INT == 33 && staticConnectionStatus && whatsappCallEnabled &&  full.toLowerCase().contains("com.whatsapp") ){
+//                    else  if (Build.VERSION.SDK_INT >= 33 && staticConnectionStatus && whatsappCallEnabled &&  full.toLowerCase().contains("com.whatsapp") ){
 //                        sendMISSEDCAllDatatoDashboard(datatoSend, "Y");
 //
 //                    }
@@ -401,24 +411,79 @@ public class NotificationService extends NotificationListenerService {
         return "";
     }
 
-    public String getPhoneNumber(String name, Context context) {
+    /*public String getPhoneNumber(String name, Context context) {
         try {
-            String ret = null;
-            String selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " like'%" + name + "%'";
-            String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER};
-            Cursor c = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    projection, selection, null, null);
-            if (c.moveToFirst()) {
-                ret = c.getString(0);
+            boolean allowed = false;
+
+            if (ContextCompat.checkSelfPermission(context, EasyPermissionList.READ_CONTACTS)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions((Activity) context,
+                        new String[]{EasyPermissionList.READ_CONTACTS},
+                        100);
+            } else {
+                allowed = true;
             }
-            c.close();
-            if (ret == null) ret = "";
-            return ret;
-        } catch (SecurityException e) {
+            if (allowed) {
+                try {
+                    allowed = false;
+                    String ret = null;
+                    String selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " like'%" + name + "%'";
+                    String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER};
+                    Cursor c = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            projection, selection, null, null);
+                    if (c.moveToFirst()) {
+                        ret = c.getString(0);
+                    }
+                    c.close();
+                    if (ret == null) ret = "";
+                    return ret;
+                } catch (SecurityException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SecurityException | IllegalArgumentException e) {
             e.printStackTrace();
         }
+
         return "";
+
+    }*/
+
+    public String getPhoneNumber(String name, Context context) {
+
+        if (ContextCompat.checkSelfPermission(context, EasyPermissionList.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions((Activity) context,
+                    new String[]{EasyPermissionList.READ_CONTACTS},
+                    100);
+            return "";
+        }
+
+        String ret = null;
+        String selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " like '%" + name + "%'";
+        String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER};
+
+        try {
+            Cursor c = context.getContentResolver().query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    projection, selection, null, null);
+
+            if (c != null && c.moveToFirst()) {
+                ret = c.getString(0);
+                c.close();
+            }
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        return ret != null ? ret : "";
     }
+
 
     @NotNull
     private String remove_invalid_char(String title) {
@@ -481,7 +546,7 @@ public class NotificationService extends NotificationListenerService {
 //
 
 
-                if (sender != null && sender.length() < 1) {
+                if (sender != null && !sender.isEmpty()) {
                     String[] arr = sbn.getNotification().tickerText.toString().split("\\s+");
                     if (arr.length > 2) {
                         sender = arr[2];
@@ -867,7 +932,7 @@ public class NotificationService extends NotificationListenerService {
                     Bundle extras = sbn_one.getNotification().extras;
 
                     title = String.valueOf(extras.get("android.title"));
-                    if (Build.VERSION.SDK_INT==33 && !title.equals("Suzuki Ride Connect is running") && !title.equals("null")) {
+                    if (Build.VERSION.SDK_INT>=33 && !title.equals("Suzuki Ride Connect is running") && !title.equals("null")) {
                         title = title.toLowerCase();
 
                         text = String.valueOf(extras.get("android.text"));
@@ -930,9 +995,9 @@ public class NotificationService extends NotificationListenerService {
                 Log.e(EXCEPTION, getClass().getName() + " onNotificationRemoved" + String.valueOf(e));
             }
 
-            if (Build.VERSION.SDK_INT==33 && sbn.getPackageName() != null && sbn.getPackageName().equalsIgnoreCase("com.whatsapp")||sbn.getPackageName() != null && sbn.getPackageName().equalsIgnoreCase("com.whatsapp.w4b")) {
+            if (Build.VERSION.SDK_INT>=33 && sbn.getPackageName() != null && sbn.getPackageName().equalsIgnoreCase("com.whatsapp")||sbn.getPackageName() != null && sbn.getPackageName().equalsIgnoreCase("com.whatsapp.w4b")) {
                 Notification notification = sbn.getNotification();
-                if (Build.VERSION.SDK_INT==33 && notification != null) {
+                if (Build.VERSION.SDK_INT>=33 && notification != null) {
                     whatsAppNotificationRemoved(notification);
                 }
             }

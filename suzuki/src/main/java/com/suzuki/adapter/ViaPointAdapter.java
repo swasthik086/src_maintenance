@@ -173,9 +173,9 @@ public class ViaPointAdapter extends RecyclerView.Adapter<ViaPointAdapter.ViaPoi
         return super.getItemId(position);
     }
 
-    static class ViaPoint extends RecyclerView.ViewHolder {
+    public static class ViaPoint extends RecyclerView.ViewHolder {
         WeakReference<ViaPointAdapter> viaPointAdapterWeakReference;
-        EditText viaPointEt;
+        public EditText viaPointEt;
         AutoCompleteTextWatcher textWatcher;
         TextView markerNo;
         ImageView markerView;
