@@ -80,6 +80,7 @@ public class NotificationService extends NotificationListenerService {
     boolean whatsappMSGEnabled = false;
     boolean SMSEnabled = false;
     int unread;
+   // long unread = 0L;
     private Timer timer;
 
     private String previousString = "";
@@ -570,6 +571,13 @@ public class NotificationService extends NotificationListenerService {
                                 unread = 1;
                             }
 
+                           /* if (noOfMsg.matches("[0-9]+")) {
+                                unread = Long.parseLong(noOfMsg);
+                            } else {
+                                unread = 1L;
+                            }*/
+
+
 
                             String unReadSMSStatus = "Y";
                             String newSMS = "Y";
@@ -919,6 +927,69 @@ public class NotificationService extends NotificationListenerService {
                         }
                     }
                 }
+                else{
+                    {
+                        StatusBarNotification activeNotifications[] = getActiveNotifications();
+
+                        int sms = 0, w_msg = 0, w_call = 0;
+
+                        for (StatusBarNotification sbn_one : activeNotifications) {
+                            Bundle extras = sbn_one.getNotification().extras;
+
+                            title = String.valueOf(extras.get("android.title"));
+                            if (Build.VERSION.SDK_INT>=33 && !title.equals("Suzuki Ride Connect is running") && !title.equals("null")) {
+                                title = title.toLowerCase();
+
+                                text = String.valueOf(extras.get("android.text"));
+
+                                if (!text.isEmpty()) {
+                                    text = text.toLowerCase();
+                                    full = String.valueOf(extras.toString());
+                                } else return;
+
+                                if (!full.isEmpty()) {
+                                    full = full.toLowerCase();
+                                } else return;
+
+//                        if (Build.VERSION.SDK_INT == 33 && !full.contains("whatsapp") && full.contains("missed") || full.contains("voice")){
+//                            w_call++;
+//
+//                        }else  if (!full.contains("whatsapp")  && full.contains("missed") || full.contains("voice")) w_call++ ;
+//
+//                        if (Build.VERSION.SDK_INT == 33 && !full.contains("whatsapp")  && full.contains("msg") || full.contains("messag") || full.contains("mms")){
+//                            w_msg++;
+//                        }else if(!full.contains("whatsapp")  && full.contains("msg") || full.contains("messag") || full.contains("mms")){
+//                            w_msg++;
+//                        }
+//
+//                        if ((Build.VERSION.SDK_INT == 33 && full.contains("msg") || full.contains("messag") || full.contains("mms"))&& !full.contains("missed")) {
+//                            sms++;
+//                        }
+//                        else if ((full.contains("msg") || full.contains("messag") || full.contains("mms"))&& !full.contains("missed")) {
+//                            sms++;
+//                        }
+//
+                                if ( !full.contains("whatsapp")) {
+
+                                    if (full.contains("missed") || full.contains("voice")) w_call++;
+                                    else if (full.contains("msg") || full.contains("messag") || full.contains("mms")) w_msg++;
+
+                                }
+                                // else if ((full.contains("msg") || full.contains("messag") || full.contains("mms"))&& !full.contains("missed")) sms++;
+                            }
+                        }
+
+
+                        if(sms==0) SMS_COUNTER=0;
+                        if(w_msg==0) w_MSG_COUNTER=0;
+                        if(w_call==0){
+                            w_MISSED_CALL_COUNT=0;
+                            if(LAST_CALL_TYPE_IS_WHATSAPP) new CallReceiverBroadcast().sendMISSEDCAllDatatoDashboard(MISSED_NUMBER,"Y", w_MISSED_CALL_COUNT);
+                        }
+
+                        if(SMS_COUNTER==0 && w_MSG_COUNTER==0) MSG_CLEAR=0x59;
+                    }
+                }
             } catch (Exception z) {
                 Log.e(EXCEPTION, getClass().getName() + " onNotificationRemoved: CALL_ACTIVE" + String.valueOf(z));
             }
@@ -978,11 +1049,12 @@ public class NotificationService extends NotificationListenerService {
                 if(sms==0) SMS_COUNTER=0;
                 if(w_msg==0) w_MSG_COUNTER=0;
                 if(w_call==0){
+
                     w_MISSED_CALL_COUNT=0;
                     if(LAST_CALL_TYPE_IS_WHATSAPP) new CallReceiverBroadcast().sendMISSEDCAllDatatoDashboard(MISSED_NUMBER,"Y", w_MISSED_CALL_COUNT);
                 }
 
-                if(SMS_COUNTER==0 && w_MSG_COUNTER==0) MSG_CLEAR=0x59;
+                //if(SMS_COUNTER==0 && w_MSG_COUNTER==0) MSG_CLEAR=0x59;
             }
 
             Bundle extras = sbn.getNotification().extras;

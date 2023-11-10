@@ -46,6 +46,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.viewmodel.CreationExtras;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -70,6 +71,7 @@ import com.mappls.sdk.navigation.NavLocation;
 import com.mappls.sdk.navigation.NavigationApplication;
 import com.mappls.sdk.navigation.NavigationFormatter;
 import com.mappls.sdk.navigation.NavigationLocationProvider;
+import com.mappls.sdk.navigation.data.WayPoint;
 import com.mappls.sdk.navigation.events.NavEvent;
 import com.mappls.sdk.navigation.iface.INavigationListener;
 import com.mappls.sdk.navigation.iface.IStopSession;
@@ -91,12 +93,10 @@ import com.mappls.sdk.services.utils.Constants;
 import com.suzuki.R;
 import com.suzuki.activity.DeviceListingScanActivity;
 import com.suzuki.activity.NavigationActivity;
-import com.suzuki.activity.NavigationDeviceListingActivity;
 import com.suzuki.activity.RouteActivity;
 import com.suzuki.activity.RouteNearByActivity;
 import com.suzuki.adapter.NavigationPagerAdapter;
 import com.suzuki.application.SuzukiApplication;
-import com.suzuki.base.BaseFragment;
 import com.suzuki.broadcaster.BleConnection;
 import com.suzuki.broadcaster.BluetoothCheck;
 import com.suzuki.broadcaster.MapShortDistBroadcast;
@@ -110,12 +110,9 @@ import com.suzuki.maps.plugins.DirectionPolylinePlugin;
 import com.suzuki.maps.plugins.MapEventsPlugin;
 import com.suzuki.maps.plugins.RouteArrowPlugin;
 import com.suzuki.model.Stop;
-import com.suzuki.pojo.BleDataPojo;
-import com.suzuki.pojo.ClusterStatusPktPojo;
 import com.suzuki.pojo.EvenConnectionPojo;
-import com.suzuki.pojo.RecentTripRealmModule;
 import com.suzuki.pojo.RiderProfileModule;
-import com.suzuki.pojo.ViaPointLocationRealmModel;
+import com.suzuki.utils.Logger;
 import com.suzuki.utils.NavigationLocationEngine;
 import com.suzuki.utils.Utils;
 import com.suzuki.views.LockableBottomSheetBehavior;
@@ -129,7 +126,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -137,9 +133,6 @@ import java.util.Objects;
 import java.util.Timer;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.Sort;
-import okhttp3.Route;
 import timber.log.Timber;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -149,7 +142,6 @@ import static com.mappls.sdk.maps.style.layers.PropertyFactory.visibility;
 import static com.suzuki.activity.HomeScreenActivity.HOME_SCREEN_OBJ;
 import static com.suzuki.activity.HomeScreenActivity.mBoundService;
 import static com.suzuki.activity.RouteNearByActivity.startClicked;
-import static com.suzuki.activity.RouteNearByActivity.tripID;
 import static com.suzuki.application.SuzukiApplication.calculateCheckSum;
 import static com.suzuki.broadcaster.BluetoothCheck.BLUETOOTH_STATE;
 import static com.suzuki.fragment.DashboardFragment.staticConnectionStatus;
@@ -1915,6 +1907,9 @@ if (adviseInfo!=null){
                 dataEta = dataEta.replaceAll(":", "");
                 dataEta = dataEta.replaceAll("pm", "PM");
                 dataEta = dataEta.replaceAll("am", "AM");
+                dataEta = dataEta.replaceAll(" ", " ");
+
+                dataEta = dataEta.replaceAll(" ","");
 
                 if (dataEta.length() <= 6) {
 
@@ -1931,15 +1926,22 @@ if (adviseInfo!=null){
             try {
                 DateFormat dateFormat = new SimpleDateFormat("HH:mm a");
 //                DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm a");
-                Date d = dateFormat.parse(adviseInfo.getEta());
-                String mydat = simpleDateFormat.format(d);
+
+              /*  Date d = dateFormat.parse(adviseInfo.getEta());
+                String mydat = simpleDateFormat.format(d);*/
 
 
                 String etaTime = adviseInfo.getEta();
+              //  String etaTime = "6:46 pm";
+
                 dataEta = etaTime.replaceAll(" ", "");
                 dataEta = dataEta.replaceAll(":", "");
                 dataEta = dataEta.replaceAll("pm", "PM");
                 dataEta = dataEta.replaceAll("am", "AM");
+                dataEta = dataEta.replaceAll(" ", " ");
+
+                dataEta = dataEta.replaceAll(" ","");
+
 
 
                 if (dataEta.length() <= 6) {
@@ -1949,7 +1951,7 @@ if (adviseInfo!=null){
                     dataEta.substring(0, 6);
 //                dataEta = ("000000" + dataEta).substring(dataEta.length());
                 }
-            } catch (ParseException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -2361,6 +2363,14 @@ if (adviseInfo!=null){
 
             byte[] PKT = GetNavigationPkt(maneuverID, dataShortDistance, shortDistanceUnit, eta, remainingDist, remainigDistanceUnit, navigationStatus, navigationModeStatus);
             if(mBoundService!=null) mBoundService.writeDataFromAPPtoDevice(PKT,31);
+          /*  logNavigationPacket(PKT);
+            String str = new String(PKT);
+
+            Logger.log(getContext(),"NavigationPacket"+String.valueOf(str));*/
+        }
+        else{
+            /*
+          Logger.log(getContext(),"NF - sendNavigationData - mBoundService-=null");*/
         }
     }
 
@@ -2371,6 +2381,20 @@ if (adviseInfo!=null){
             NoNetwork = !currentNetworkInfo.isConnected();
         }
     };
+
+    public void logNavigationPacket(byte[] PKT) {
+        String hexString = bytesToHex(PKT);
+       /* Logger.log(getContext(),"Navigation Packet: " + hexString);
+        Log.e("Navigation_data",hexString);*/
+    }
+
+    private static String bytesToHex(byte[] bytes) {
+        StringBuilder hex = new StringBuilder();
+        for (byte b : bytes) {
+            hex.append(String.format("%02X ", b));
+        }
+        return hex.toString().trim();
+    }
 
 
 
