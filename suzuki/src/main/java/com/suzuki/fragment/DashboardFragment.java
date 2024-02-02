@@ -1251,7 +1251,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         });
     }*/
 
-    public static void logData(String log) {
+  /*  public static void logData(String log) {
         try {
             String timeStamp = dateFormat.format(new Date());
             File root = new File(Environment.getExternalStorageDirectory(), "Suzuki");
@@ -1267,7 +1267,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     //don't set MTU on dashboard
     /*private void setMtu(BleDevice bleDevice, int mtu) {

@@ -981,7 +981,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
 
         mapView.getMapAsync(this);
 
-        BikeBleName.observe(getActivity(), new Observer<String>() {
+        BikeBleName.observe(requireActivity(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 if (s.isEmpty()) {
@@ -1230,8 +1230,8 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
 
                     etSearchLoc.setHint(navigationHint);
                     etNearbySearchLoc.setHint(navigationHint);
-                    Toast.makeText(app, "Address updated successfully", Toast.LENGTH_SHORT).show();
-                   // common.showToast("Address updated successfully", TOAST_DURATION);
+                    //Toast.makeText(app, "Address updated successfully", Toast.LENGTH_SHORT).show();
+                    common.showToast("Address updated successfully", TOAST_DURATION);
                 } else {
 
                     MapWorkAndHomeRealmModule module = realm1.createObject(MapWorkAndHomeRealmModule.class, "Home");
@@ -2408,7 +2408,11 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
         public SuzukiApplication getMyApplication() {
 
 //        if (((SuzukiApplication) getActivity().getApplication()) != null)
-            return ((SuzukiApplication) requireActivity().getApplication());
+            if(isAdded()) {
+                return ((SuzukiApplication) requireActivity().getApplication());
+            }
+            else
+                return null;
 
         }
 
@@ -2492,14 +2496,17 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
 //                Log.d("locccc", "onloc chang--" + eLocation.placeName);
                                     getReverseGeoCode(location.getLatitude(), location.getLongitude());
 //                fromLocation = "Axiom";
-                                    app = getMyApplication();
-                                    app.setCurrentLocation(location);
+                                    if(getMyApplication()!=null) {
+                                        app = getMyApplication();
+                                        app.setCurrentLocation(location);
+                                    }
+
 
 
                                 }
 
 //            getReverseGeoCode(location.getLatitude(), location.getLongitude());
-                                app.setCurrentLocation(location);
+                               // app.setCurrentLocation(location);
                             } catch (Exception e) {
                                 //ignore
                             }

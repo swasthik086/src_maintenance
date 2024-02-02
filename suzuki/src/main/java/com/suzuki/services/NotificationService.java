@@ -455,10 +455,11 @@ public class NotificationService extends NotificationListenerService {
 
         if (ContextCompat.checkSelfPermission(context, EasyPermissionList.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions((Activity) context,
-                    new String[]{EasyPermissionList.READ_CONTACTS},
-                    100);
+            if (context instanceof Activity) {
+                ActivityCompat.requestPermissions((Activity) context,
+                        new String[]{EasyPermissionList.READ_CONTACTS},
+                        100);
+            }
             return "";
         }
 
@@ -564,12 +565,13 @@ public class NotificationService extends NotificationListenerService {
                         if (notificationInfo != null) {
 
                             String[] arr = notificationInfo.split("\\s+");
-                            String noOfMsg = arr[0];
-                            if (noOfMsg.matches("[0-9]+")) {
-                                unread = Integer.parseInt(noOfMsg);
-                            } else {
-                                unread = 1;
-                            }
+                            if (arr.length > 0) {
+                                String noOfMsg = arr[0];
+                                if (noOfMsg.matches("[0-9]+")) {
+                                    unread = Integer.parseInt(noOfMsg);
+                                } else {
+                                    unread = 1;
+                                }
 
                            /* if (noOfMsg.matches("[0-9]+")) {
                                 unread = Long.parseLong(noOfMsg);
@@ -578,18 +580,20 @@ public class NotificationService extends NotificationListenerService {
                             }*/
 
 
+                                String unReadSMSStatus = "Y";
+                                String newSMS = "Y";
+                                String noOfUnreadSMS = "";
+                                String contactNameSMS = sender;
+                                String smsType = "W";
+                              //  String isOnlyNo = sender.replace("+", "");
+                               // String isOnlyNo = sender != null ? sender.replace("+", "") : null;
 
-                            String unReadSMSStatus = "Y";
-                            String newSMS = "Y";
-                            String noOfUnreadSMS = "";
-                            String contactNameSMS = sender;
-                            String smsType = "W";
-                            String isOnlyNo = sender.replace("+", "");
 
-                            contactNameSMS = numberNameValidation(sender);
+                                contactNameSMS = numberNameValidation(sender);
 
-                            if (contactNameSMS != null && contactNameSMS.length() > 0) {
-                                String data = unReadSMSStatus + newSMS + "1" + contactNameSMS;
+                                if (contactNameSMS != null && contactNameSMS.length() > 0) {
+                                    String data = unReadSMSStatus + newSMS + "1" + contactNameSMS;
+                                }
                             }
                         }
                     }

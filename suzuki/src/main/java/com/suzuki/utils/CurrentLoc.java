@@ -54,11 +54,17 @@ public class CurrentLoc {
 
                     location = locationManager
                             .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
                     Log.e("location_network", String.valueOf(location));
+
+                    DataRequestManager.currentLatitude = location.getLatitude();
+                    DataRequestManager.currentLongitude = location.getLongitude();
                     if(location==null){
                         location =  locationManager
                                 .getLastKnownLocation(LocationManager.GPS_PROVIDER);
                         Log.e("location_gps", String.valueOf(location));
+                        DataRequestManager.currentLatitude = location.getLatitude();
+                        DataRequestManager.currentLongitude = location.getLongitude();
 
                     }
 

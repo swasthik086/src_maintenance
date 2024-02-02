@@ -830,6 +830,7 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
                     editor.putBoolean("EXIT_STATUS", true);
                     editor.commit();
                 }
+                setBluetoothStatusExit();
                 HomeScreenActivity.this.finish();
             }
 
@@ -891,6 +892,8 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        setBluetoothStatusExit();
         if (editor != null) {
             editor.putBoolean("EXIT_STATUS", true);
             editor.commit();
@@ -1052,6 +1055,7 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
 //    }
 
     public void addLastParkedLatLong() {
+        try {
 
         if (lat==null&&lng==null) {
 
@@ -1089,6 +1093,11 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
                 Log.e(EXCEPTION,getClass().getName()+" addLastParkedLatLong "+String.valueOf(e));
             }
         }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -1135,12 +1144,29 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
 
                 Boolean status = intent.getExtras().getBoolean("status");
 
-                if (status) addLastParkedLatLong();
-                else addLastParkedLatLong();
+
+                DataRequestManager.isBluetoothConnected = status;
+
+                if (!status) addLastParkedLatLong();
+               // else addLastParkedLatLong();
             }
         };
 
         registerReceiver(mReceiver, intentFilter);
+    }
+
+    public void setBluetoothStatusExit() {
+
+
+        if(DataRequestManager.isBluetoothConnected){
+            try {
+                addLastParkedLatLong();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
     }
 
     public void viewRecord() {

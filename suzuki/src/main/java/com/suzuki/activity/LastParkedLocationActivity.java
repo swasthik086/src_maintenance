@@ -1,6 +1,7 @@
 package com.suzuki.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -39,6 +41,7 @@ import com.mappls.sdk.maps.annotations.IconFactory;
 import com.mappls.sdk.maps.annotations.Marker;
 import com.mappls.sdk.maps.annotations.MarkerOptions;
 import com.mappls.sdk.maps.annotations.PolylineOptions;
+import com.mappls.sdk.maps.camera.CameraPosition;
 import com.mappls.sdk.maps.camera.CameraUpdateFactory;
 import com.mappls.sdk.maps.geometry.LatLng;
 import com.mappls.sdk.maps.geometry.LatLngBounds;
@@ -81,9 +84,12 @@ import com.suzuki.maps.plugins.DirectionPolylinePlugin;
 import com.suzuki.maps.traffic.TrafficPlugin;
 import com.suzuki.pojo.LastParkedLocationRealmModule;
 import com.suzuki.utils.Common;
+import com.suzuki.utils.CurrentLoc;
+import com.suzuki.utils.DataRequestManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import io.realm.Realm;
 import timber.log.Timber;
@@ -91,7 +97,8 @@ import timber.log.Timber;
 import static com.suzuki.activity.HomeScreenActivity.TOAST_DURATION;
 import static com.suzuki.activity.RouteNearByActivity.dpToPx;
 
-import static com.suzuki.fragment.DashboardFragment.logData;
+//import static com.suzuki.fragment.DashboardFragment.logData;
+import static com.suzuki.fragment.MapMainFragment.eLocation;
 import static com.suzuki.utils.Common.BikeBleName;
 
 
@@ -105,14 +112,129 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
     private String profile = DirectionsCriteria.PROFILE_DRIVING;
     private static final long DEFAULT_INTERVAL_IN_MILLISECONDS = 1000L;
     private static final long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5;
+
+    private boolean onLocationChecked = false;
+
+    private static final int REQUEST_NAVIGATION = 1;
     LocationEngineCallback<LocationEngineResult> locationEngineCallback = new LocationEngineCallback<LocationEngineResult>()
     {
 
         @Override
         public void onSuccess(LocationEngineResult locationEngineResult) {
+
             if (locationEngineResult.getLastLocation() != null) {
-                Location location = locationEngineResult.getLastLocation();
-                mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16));
+
+                //enableLocationComponent();
+               /* if(!onLocationChecked) {
+                    currentlocation = locationEngineResult.getLastLocation();
+
+                    currentLatitude = currentlocation.getLatitude();
+                    currentLongitude = currentlocation.getLongitude();
+
+                    Log.e("loc1", "Latitude: " + currentLatitude + ", Longitude: " + currentLongitude);
+                    onLocationChecked = true;
+
+                }*/
+
+
+               /* if(!onLocationChecked) {
+                    mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16));
+                    onLocationChanged(location);
+                    onLocationChecked = true;
+                }*/
+                currentlocation = locationEngineResult.getLastLocation();
+
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+
+
+                        LastParkedLocationRealmModule locationRealmModule = realm.where(LastParkedLocationRealmModule.class).equalTo("id", 1).findFirst();
+
+
+                        if (locationRealmModule != null) {
+
+                    lastPark_Lat = locationRealmModule.getLat();
+                    lastPark_Lng = locationRealmModule.getLng();
+
+                            //  Log.e("loc0", "--" + lastPark_Lng + "====" + lastPark_Lat);
+                            if (lastPark_Lat != null || lastPark_Lng != null) {
+//                        getReverseGeoCode(lastPark_Lat, lastPark_Lng);
+
+                                eLocation = new ELocation();
+                                eLocation.latitude = Double.valueOf(String.valueOf(lastPark_Lat));
+                                eLocation.longitude = Double.valueOf(String.valueOf(lastPark_Lng));
+                                eLocation.entryLatitude = Double.valueOf(String.valueOf(lastPark_Lat));
+                                eLocation.entryLongitude = Double.valueOf(String.valueOf(lastPark_Lng));
+
+
+                                //  Log.e("loc01", "--" + eLocation.latitude + "====" + eLocation.longitude);
+                            } else {
+                               // common.showToast("Could not find any recent last parked location", TOAST_DURATION);
+                            }
+                        } else {
+                           // common.showToast("Could not find any recent last parked location", TOAST_DURATION);
+                        }
+
+
+                    }
+                });
+              //  mapboxMap.setPadding(20, 20, 20, 20);
+                if (lastPark_Lat != null || lastPark_Lng != null) {
+
+                  /*  try {
+                        mapboxMap.enableTraffic(true);
+                        TrafficPlugin trafficPlugin = new TrafficPlugin(mapView, mapboxMap);
+                        trafficPlugin.enableFreeFlow(true);
+                    } catch (Exception e) {
+                        // logData("onMapReady() : exception: " + e);
+                        Timber.e(e);
+                    }
+                    directionPolylinePlugin = new DirectionPolylinePlugin(mapView, mapboxMap);
+
+
+                    _bearingIconPlugin = new BearingIconPlugin(mapView, mapboxMap);
+
+                    mapboxMap.setPadding(20, 20, 20, 20);
+
+                    setTrip(mStateModel.trip);*/
+                    ArrayList<LatLng> geoPoints = new ArrayList<>();
+
+
+                    LatLng latLng = new LatLng();
+
+                    //  Log.e("loc10", "--" + DataRequestManager.currentLatitude + "====" + DataRequestManager.currentLongitude);
+                    latLng.setLatitude(currentlocation.getLatitude());
+                    latLng.setLongitude(currentlocation.getLongitude());
+                    // latLng.setLatitude(13.1817249);
+                    // latLng.setLongitude(74.9507119);
+
+
+                    LatLng eLatLng = getPoint(eLocation);
+                    geoPoints.add(eLatLng);
+                    geoPoints.add(new LatLng(latLng));
+
+                    // geoPoints.add(new LatLng(DataRequestManager.currentLatitude, DataRequestManager.currentLongitude));
+
+                    double distance = latLng.distanceTo(eLatLng);
+
+
+                    if (distance <= 500) {
+
+
+                        //getPedestrainRoute(geoPoints, eLocation);
+
+                        //getRoute(geoPoints, eLocation, mapboxMap, true);
+                        rlNavigationDetails.setVisibility(View.GONE);
+
+                    } else {
+                        //getRoute(geoPoints, eLocation, mapboxMap, false);
+                        rlNavigationDetails.setVisibility(View.VISIBLE);
+                    }
+
+                } else {
+
+                }
             }
         }
 
@@ -139,12 +261,14 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
     //double destinationLat, destinationLong;
     public ELocation eLocation;
 
-    private DirectionsRoute trip;
+    private DirectionsResponse trip;
     RelativeLayout rlNavigationDetails;
     //    LinearLayout llBack, llStartNavigation;
     StateModel mStateModel;
     ImageView ivBack, ivShareLoc;
-    public Location currentlocation;
+    private Location currentlocation;
+    private  double currentLatitude = 0.0;
+    private  double currentLongitude = 0.0;
     LinearLayout llStartNavigation;
     //private static final String KEY_STATE_MODEL = "state_model";
     Realm realm;
@@ -155,9 +279,12 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
     private boolean shareButtonClicked = false;
     Common common;
 
+    ArrayList<LatLng> viaPointList = new ArrayList<>();
+
     private static class StateModel {
-        //private ELocation eLocation;
+        private ELocation eLocation;
         private DirectionsResponse trip;
+
     }
 
     @Override
@@ -203,7 +330,10 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
             }
         });
 
-        mapView.getMapAsync(this);
+        if (mapView != null) {
+
+            mapView.getMapAsync(this);
+        }
     }
 
     private void shareIt() {
@@ -270,35 +400,97 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         operation.execute();
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class LongOperation extends AsyncTask<Void, Void, NavigationResponse> {
 
         @Override
         protected NavigationResponse doInBackground(Void... params) {
-
             try {
                 LatLng currentLocation = null;
-                NavLocation location = MapMainFragment.getUserLocation();
-
-                if (location != null) currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+               /* NavLocation location = MapMainFragment.getUserLocation();
+                if (location != null) {
+                    currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                }
+                else {
+                    Location loc = new CurrentLoc().getCurrentLoc(getApplicationContext());
+                    if (loc != null) {
+                        currentLocation = new LatLng(loc.getLatitude(), loc.getLongitude());
+                    }
+                }*/
+                Location loc = new CurrentLoc().getCurrentLoc(getApplicationContext());
+                if (loc != null) {
+                    currentLocation = new LatLng(loc.getLatitude(), loc.getLongitude());
+                }
+                else {
+                    NavLocation location = MapMainFragment.getUserLocation();
+                    if (location != null) {
+                        currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                    }
+                }
 
                 NavLocation navLocation = new NavLocation("navigation");
                 Point position = mStateModel.trip.routes().get(0).legs().get(0).steps().get(0).maneuver().location();
                 LatLng point = new LatLng(position.latitude(), position.longitude());
                 navLocation.setLongitude(point.getLongitude());
                 navLocation.setLatitude(point.getLatitude());
-                app = (SuzukiApplication) getApplication();
+                app = getMyApplication();
+                app.setStartNavigationLocation(navLocation);
+                if (currentLocation == null)
+                    return new NavigationResponse(ErrorType.UNKNOWN_ERROR, null);
+
+                //Log.d("tag", "onSuggestionListItemClicked: eLoc async " + eLocation + "   " + viaPointList);
+
+                //app.setViaPoints(viaPointList);
+                app.setELocation(eLocation);
+
+                List<WayPoint> wayPoints = new ArrayList<>();
+                /*for (LatLng latLng : viaPointList) {
+                    wayPoints.add(new WayPoint(latLng.getLatitude(), latLng.getLongitude(), null));
+                }*/
+
+                return MapplsNavigationHelper.getInstance().startNavigation(app.getTrip(),
+                        0, currentLocation,
+                        getNavigationGeoPoint(eLocation), wayPoints, BikeBleName.getValue());
+
+               /* NavLocation navLocation = new NavLocation("navigation");
+
+                //if (location != null)
+
+
+                NavLocation navLocation = new NavLocation("navigation");
+               // Point position = mStateModel.trip.routes().get(0).legs().get(0).steps().get(0).maneuver().location();
+              //  LatLng point = new LatLng(position.latitude(), position.longitude());
+
+
+
+//                currentLocation = point;
+                navLocation.setLongitude(point.getLongitude());
+                navLocation.setLatitude(point.getLatitude());
+
+
+                app = getMyApplication();
                 app.setStartNavigationLocation(navLocation);
 
-                if (currentLocation == null) return new NavigationResponse(ErrorType.UNKNOWN_ERROR, null);
+                if (currentLocation == null)
+                    return new NavigationResponse(ErrorType.UNKNOWN_ERROR, null);
+
+                List<WayPoint> wayPoints = new ArrayList<>();
+               *//* for (LatLng latLng : viaPoints) {
+                    wayPoints.add(new WayPoint(latLng.getLatitude(), latLng.getLongitude(), null));
+
+                }*//*
+
+
+                //  app.setViaPoints(viaPoints);
 
 
 
+                app.setELocation(eLocation);
 
-                return MapplsNavigationHelper.getInstance().startNavigation(app.getTrip(), 0,
-                        currentLocation,
-                        getNavigationGeoPoint(eLocation), null, BikeBleName.getValue());
-
+                return MapplsNavigationHelper.getInstance().startNavigation(app.getTrip(), 0, currentLocation,
+                        getNavigationGeoPoint(eLocation), wayPoints, BikeBleName.getValue());*/
             } catch (Exception e) {
+                Timber.e(e);
                 return new NavigationResponse(ErrorType.UNKNOWN_ERROR, e);
             }
         }
@@ -307,51 +499,18 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         protected void onPostExecute(NavigationResponse result) {
 
             dismissProgress();
+                try {
+                    Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("LastParkedLocation",true);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, REQUEST_NAVIGATION);
 
-            if (result != null && result.getError() != null) {
-                if (result.getError().errorCode == 409) {
-                    MapplsNavigationHelper.getInstance().deleteSession(BikeBleName.getValue(), new IStopSession() {
-                        @Override
-                        public void onSuccess() {
-                            LongOperation operation = new LongOperation();
-                            operation.execute();
-                        }
-
-                        @Override
-                        public void onFailure() { }
-                    });
-                    /*show dialog to user*/
-                    /*new AlertDialog.Builder(LastParkedLocationActivity.this)
-                            .setMessage(getApplicationContext().getResources().getString(R.string.Session_Message))
-                            .setTitle("Navigation Alert")
-                            .setPositiveButton("Ok", (dialog, which) ->
-                                    MapmyIndiaNavigationHelper.getInstance().deleteSession(BikeBleName, new IStopSession() {
-                                        @Override
-                                        public void onSuccess() {
-                                            LongOperation operation = new LongOperation();
-                                            operation.execute();
-                                        }
-
-                                        @Override
-                                        public void onFailure() {
-
-                                        }
-                                    }))
-                            .setNegativeButton("No", (dialog, which) -> {
-                                dialog.cancel();
-                                dialog.dismiss();
-                            })
-                            .create()
-                            .show();*/
-                } else {
-                    Log.d("tag", "onPostExecute: error : " + result.getError());
+                    //startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
-                return;
-            }
-
-            Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
-            startActivity(intent);
         }
 
         @Override
@@ -359,6 +518,20 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
 
         @Override
         protected void onProgressUpdate(Void... values) { }
+    }
+
+    public NavLocation getUserLocation() {
+//        if (currentlocation != null) {
+        NavLocation loc = new NavLocation("router");
+      /*  loc.setLatitude(Double.parseDouble(cuurent_lat));
+        loc.setLongitude(Double.parseDouble(current_long));*/
+        loc.setLatitude(DataRequestManager.currentLatitude);
+        loc.setLongitude(DataRequestManager.currentLongitude);
+        return loc;
+
+//        } else {
+//            return null;
+//        }
     }
 
 
@@ -373,8 +546,8 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
     }
 
     public void addPolyLine(LatLng start, LatLng stop, final DirectionsRoute directionsResponse) {
-        if (this == null || mapboxMap == null || directionsResponse == null || directionsResponse.geometry() == null)
-            return;
+      /*  if (this == null || mapboxMap == null || directionsResponse == null || directionsResponse.geometry() == null)
+            return;*/
 
         ArrayList<LatLng> latLngs = new ArrayList<>();
         if (directionPolylinePlugin != null) {
@@ -413,11 +586,11 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
     }
 
     private void getPedestrainRoute(final ArrayList<LatLng> wayPoints, final ELocation eLocation) {
-        if (this == null) return;
+        //if (this == null) return;
 
         if (directionPolylinePlugin != null) directionPolylinePlugin.removeAllData();
 
-        if (wayPoints == null || wayPoints.size() < 2) return;
+       // if (wayPoints == null || wayPoints.size() < 2) return;
 
         Point origin = Point.fromLngLat(wayPoints.get(0).getLongitude(), wayPoints.get(0).getLatitude());
         Point destination = Point.fromLngLat(wayPoints.get(wayPoints.size() - 1).getLongitude(), wayPoints.get(wayPoints.size() - 1).getLatitude());
@@ -425,7 +598,7 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         MapplsDirections directions = MapplsDirections.builder()
                 .origin(origin)
                 .steps(true)
-                .resource(DirectionsCriteria.RESOURCE_ROUTE_ETA)
+            /*    .resource(DirectionsCriteria.RESOURCE_ROUTE_ETA)*/
                 .profile(DirectionsCriteria.PROFILE_DRIVING)
                 .overview(DirectionsCriteria.OVERVIEW_FULL)
                 .destination(destination)
@@ -434,141 +607,118 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
             @Override
             public void onSuccess(DirectionsResponse response) {
 
-
                 try {
-                    if (response.code().equals(200)) {
-                        if (response == null) return;
+                   // if (response.code().equals(200)) {
+                     //   if (response == null) return;
 
-                        DirectionsResponse directionsResponse = response;
+                      //  DirectionsResponse directionsResponse = response;
 
-                        List<DirectionsRoute> results = directionsResponse.routes();
+                        List<DirectionsRoute> results = response.routes();
 
                         if (results.size() > 0) {
                             DirectionsRoute directionsRoute = results.get(0);
-                            drawPath(PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6), mapboxMap, true);
+                            drawPath(PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6), mapboxMap, true);  // commented TO DO
                         }
 
                         app =getMyApplication();
                         mStateModel = new StateModel();
-                        mStateModel.trip = directionsResponse;
+                        mStateModel.trip = response;
                         app.setTrip(mStateModel.trip);
 
-                        List<DirectionsWaypoint> waypointsList = directionsResponse.waypoints();
+                        List<DirectionsWaypoint> waypointsList = response.waypoints();
 
                         update();
-                    }
+                  //  }
                 }
 
-                catch (Exception e) { }
+                catch (Exception e) {
+                }
 
             }
 
             @Override
             public void onError(int i, String s) {
-
             }
         });
 
 
-
-//        MapmyIndiaDirections.Builder builder = MapmyIndiaDirections.builder()
-//                .origin(origin)
-//                .destination(destination)
-//                .annotations(DirectionsCriteria.ANNOTATION_CONGESTION)
-//                .resource(DirectionsCriteria.RESOURCE_ROUTE)
-//                .profile(DirectionsCriteria.PROFILE_WALKING)
-//                .steps(true)
-//                .alternatives(true)
-//                .overview(DirectionsCriteria.OVERVIEW_FULL);
-//
-//        MapmyIndiaDirections mapmyIndiaDirections = builder.build();
-//        mapmyIndiaDirections.enqueueCall(new Callback<DirectionsResponse>() {
-//            @Override
-//            public void onResponse(@NonNull Call<DirectionsResponse> call, @NonNull Response<DirectionsResponse> response) {
-//                // You can get generic HTTP info about the response
-//
-//                try {
-//                    if (response.code() == 200) {
-//                        if (response.body() == null) return;
-//
-//                        DirectionsResponse directionsResponse = response.body();
-//
-//                        List<DirectionsRoute> results = directionsResponse.routes();
-//
-//                        if (results.size() > 0) {
-//                            DirectionsRoute directionsRoute = results.get(0);
-//                            drawPath(PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6), mapboxMap, true);
-//                        }
-//
-//                        app = getMyApplication();
-//                        mStateModel = new StateModel();
-//                        mStateModel.trip = directionsResponse;
-//                        app.setTrip(mStateModel.trip);
-//
-//                        List<DirectionsWaypoint> waypointsList = directionsResponse.waypoints();
-//
-//                        update();
-//                    }
-//                }
-//
-//                catch (Exception e) { }
-//            }
-//
-//            @Override
-//            public void onFailure(@NonNull Call<DirectionsResponse> call, @NonNull Throwable throwable) {
-//                if (this == null) return;
-//
-//                if (!call.isCanceled()) throwable.printStackTrace();
-//            }
-//        });
     }
 
-    private void getRoute(final ArrayList<LatLng> wayPoints, final ELocation eLocation) {
-        if (directionPolylinePlugin != null) directionPolylinePlugin.removeAllData();
-
-        if (wayPoints == null || wayPoints.size() < 2) return;
-
+    private void getRoute(final ArrayList<LatLng> wayPoints, final ELocation eLocation, MapplsMap mapboxMap, boolean isWalkingMode) {
+        if (directionPolylinePlugin != null)
+            directionPolylinePlugin.removeAllData();
+        if (wayPoints == null || wayPoints.size() < 2)
+            return;
+        LatLng startLocation = new LatLng();
+        startLocation.setLongitude(wayPoints.get(0).getLongitude());
+        startLocation.setLatitude(wayPoints.get(0).getLatitude());
         Point origin = Point.fromLngLat(wayPoints.get(0).getLongitude(), wayPoints.get(0).getLatitude());
         Point destination = Point.fromLngLat(wayPoints.get(wayPoints.size() - 1).getLongitude(), wayPoints.get(wayPoints.size() - 1).getLatitude());
 
-        MapplsDirections directions = MapplsDirections.builder()
+        String drivingMode ;
+
+        if(isWalkingMode){
+            drivingMode = DirectionsCriteria.PROFILE_WALKING;
+        }
+        else{
+            drivingMode = DirectionsCriteria.PROFILE_BIKING;
+        }
+
+        MapplsDirections.Builder directions = MapplsDirections.builder()
                 .origin(origin)
                 .steps(true)
-                .resource(DirectionsCriteria.RESOURCE_ROUTE_ETA)
-                .profile(DirectionsCriteria.PROFILE_DRIVING)
+                /*.resource(DirectionsCriteria.RESOURCE_ROUTE_ETA)*/
+                .profile(drivingMode)
                 .overview(DirectionsCriteria.OVERVIEW_FULL)
-                .destination(destination)
-                .build();
-        MapplsDirectionManager.newInstance(directions).call(new OnResponseCallback<DirectionsResponse>() {
+                .destination(destination);
+
+        if (viaPointList != null && viaPointList.size() > 0)
+            for (LatLng latLng : viaPointList) {
+                directions.addWaypoint(Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
+            }
+        MapplsDirectionManager.newInstance(directions.build()).call(new OnResponseCallback<DirectionsResponse>() {
             @Override
             public void onSuccess(DirectionsResponse response) {
-
                 try {
-                    if (response.code().equals(200)) {
-                        if (response == null) return;
+                    // You can get generic HTTP info about the response
+                    Log.d("Response code: %d", "" + response.code());
 
-                        DirectionsResponse directionsResponse = response;
+                    DirectionsResponse directionsResponse = response;
+                    Log.d("diereeee", "--" + directionsResponse.routes().get(0));
 
-                        List<DirectionsRoute> results = directionsResponse.routes();
 
-                        if (results.size() > 0) {
-                            DirectionsRoute directionsRoute = results.get(0);
-                            drawPath(PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6), mapboxMap, false);
-                        }
+                    List<DirectionsRoute> results = directionsResponse.routes();
 
-                        app = getMyApplication();
-                        mStateModel = new StateModel();
-                        mStateModel.trip = directionsResponse;
-                        app.setTrip(mStateModel.trip);
+                    if (results.size() > 0) {
+                        DirectionsRoute directionsRoute = results.get(0);
+                        drawPath(startLocation, getPoint(eLocation), directionsResponse, mapboxMap);
+//                            drawPath(PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6), mapboxMap);
+                    }
 
-                        //List<DirectionsWaypoint> waypointsList = directionsResponse.waypoints();
+                 /*   List<DirectionsRoute> results = response.routes();
 
-                        update();
+
+                    if (results.size() > 0) {
+                        DirectionsRoute directionsRoute = results.get(0);
+                        drawPath(PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6), mapboxMap, true);  // commented TO DO
+
+                    }*/
+
+
+                    app = getMyApplication();
+                    mStateModel = new StateModel();
+                    mStateModel.trip = directionsResponse;
+                    app.setTrip(mStateModel.trip);
+                    Log.d("sjsjsjjs", "--" + app.getTrip());
+//                        Log.d("sjsjsjjs", "-sss-" + mStateModel.trip);
+                    List<DirectionsWaypoint> waypointsList = directionsResponse.waypoints();
+
+//                        update();
 //                        addPolyLine(new LatLng(currentlocation.getLatitude(),
 //                                        currentlocation.getLongitude()),
 //                                getPoint(eLocation), mStateModel.trip);
 
-//                        LatLng destinyLatLong = new LatLng(destinationLat, destinationLong);
+//                        LatLng destinyLatLong = new LatLng(Double.parseDouble(destiny_lat), Double.parseDouble(destiny_long));
 //                        if (destinyLatLong != null) {
 //                            IconFactory iconFactory = IconFactory.getInstance(getApplicationContext());
 //                            Icon icon = iconFactory.fromResource(R.drawable.marker);
@@ -584,9 +734,12 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
 //                            mapboxMap.addMarker(markerOptions);
 //                        }
 
-                    }
+
+                } catch (Exception e) {
+                    Timber.e(e);
+//                    showErrorMessage(R.string.something_went_wrong);
+//                    onFragmentBackPressed();
                 }
-                catch (Exception e) { }
 
             }
 
@@ -608,38 +761,55 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
 //                .alternatives(true)
 //                .overview(DirectionsCriteria.OVERVIEW_FULL);
 //
+////        showProgress(getApplicationContext());
+//
+////        if (viaPointList != null && viaPointList.size() > 0)
+////            for (LatLng latLng : viaPointList) {
+////                builder.addWaypoint(Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
+////            }
 //        MapmyIndiaDirections mapmyIndiaDirections = builder.build();
 //        mapmyIndiaDirections.enqueueCall(new Callback<DirectionsResponse>() {
 //            @Override
 //            public void onResponse(@NonNull Call<DirectionsResponse> call, @NonNull Response<DirectionsResponse> response) {
-//                // You can get generic HTTP info about the response
 //
 //                try {
 //                    if (response.code() == 200) {
-//                        if (response.body() == null) return;
+//                        if (response.body() == null) {
+////                            showErrorMessage(R.string.something_went_wrong);
+////                            onFragmentBackPressed();
+//                            Log.d("diereeee", "--" + response.body());
+//                            return;
+//                        }
+//
+//                        // You can get generic HTTP info about the response
+//                        Log.d("Response code: %d", "" + response.code());
 //
 //                        DirectionsResponse directionsResponse = response.body();
+//                        Log.d("diereeee", "--" + directionsResponse.routes().get(0));
+//
 //
 //                        List<DirectionsRoute> results = directionsResponse.routes();
 //
 //                        if (results.size() > 0) {
 //                            DirectionsRoute directionsRoute = results.get(0);
-//                            drawPath(PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6), mapboxMap, false);
+//                            drawPath(startLocation, getPoint(eLocation), directionsResponse, mapboxMap);
+////                            drawPath(PolylineUtils.decode(directionsRoute.geometry(), Constants.PRECISION_6), mapboxMap);
 //                        }
 //
 //                        app = getMyApplication();
 //                        mStateModel = new StateModel();
 //                        mStateModel.trip = directionsResponse;
 //                        app.setTrip(mStateModel.trip);
+//                        Log.d("sjsjsjjs", "--" + app.getTrip());
+////                        Log.d("sjsjsjjs", "-sss-" + mStateModel.trip);
+//                        List<DirectionsWaypoint> waypointsList = directionsResponse.waypoints();
 //
-//                        //List<DirectionsWaypoint> waypointsList = directionsResponse.waypoints();
-//
-//                        update();
+////                        update();
 ////                        addPolyLine(new LatLng(currentlocation.getLatitude(),
 ////                                        currentlocation.getLongitude()),
 ////                                getPoint(eLocation), mStateModel.trip);
 //
-////                        LatLng destinyLatLong = new LatLng(destinationLat, destinationLong);
+////                        LatLng destinyLatLong = new LatLng(Double.parseDouble(destiny_lat), Double.parseDouble(destiny_long));
 ////                        if (destinyLatLong != null) {
 ////                            IconFactory iconFactory = IconFactory.getInstance(getApplicationContext());
 ////                            Icon icon = iconFactory.fromResource(R.drawable.marker);
@@ -655,18 +825,32 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
 ////                            mapboxMap.addMarker(markerOptions);
 ////                        }
 //
+//                    } else {
+////                        showErrorMessage(R.string.something_went_wrong);
+////                        onFragmentBackPressed();
 //                    }
+//                } catch (Exception e) {
+//                    Timber.e(e);
+////                    showErrorMessage(R.string.something_went_wrong);
+////                    onFragmentBackPressed();
 //                }
-//                catch (Exception e) { }
+////                hideProgress();
 //            }
 //
 //            @Override
 //            public void onFailure(@NonNull Call<DirectionsResponse> call, @NonNull Throwable throwable) {
-//                if (this == null) return;
-//
-//                if (!call.isCanceled()) throwable.printStackTrace();
+//                if (this == null)
+//                    return;
+//                Timber.d("onFailure url: %s", call.request().url().toString());
+//                if (!call.isCanceled()) {
+//                    throwable.printStackTrace();
+////                    showErrorMessage(R.string.something_went_wrong);
+//                }
+////                hideProgress();
+////                onFragmentBackPressed();
 //            }
 //        });
+
     }
 
     private void drawPath(List<Point> waypoints, MapplsMap mapboxMap, boolean finalIsDistanceLess) {
@@ -681,9 +865,34 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
             Log.e("TAG", "drawPath: ", e);
         }
 
-//        mapmyIndiaMap.addPolyline(new PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(4));
-//        LatLngBounds latLngBounds = new LatLngBounds.Builder().includes(listOfLatlang).build();
-//        mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 30));
+ /*       mapboxMap.addPolyline(new PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(8));
+        LatLngBounds latLngBounds = new LatLngBounds.Builder().includes(listOfLatlang).build();
+       // mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 30));
+        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 70));
+*/    }
+
+
+        private void drawPath(LatLng startLocation, LatLng stop, DirectionsResponse directionsResponse, MapplsMap mapboxMap) {
+
+        ArrayList<LineString> lineStrings = new ArrayList<>();
+//        LineString lineString = LineString.fromPolyline(directionsResponse.routes().get(0).geometry(), Constants.PRECISION_6);
+//        lineStrings.add(lineString);
+        for (DirectionsRoute directionsRoute: directionsResponse.routes() ){
+            LineString lineString = LineString.fromPolyline(Objects.requireNonNull(directionsRoute.geometry()), Constants.PRECISION_6);
+            lineStrings.add(lineString);
+        }
+
+        directionPolylinePlugin.setTrips(lineStrings, startLocation, stop, viaPointList, directionsResponse.routes());
+        listOfLatlang = new ArrayList<>();
+        for (Point point : PolylineUtils.decode(Objects.requireNonNull(directionsResponse.routes().get(0).geometry()), Constants.PRECISION_6)) {
+            listOfLatlang.add(new LatLng(point.latitude(), point.longitude()));
+        }
+
+        /* this is done for animating/moving camera to particular position */
+
+            //mapboxMap.addPolyline(new PolylineOptions().addAll(listOfLatlang).color(Color.parseColor("#3bb2d0")).width(8));
+        LatLngBounds latLngBounds = new LatLngBounds.Builder().includes(listOfLatlang).build();
+        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 70));
     }
 
     public void myDrawing(MapplsMap mapboxMap, boolean finalIsDistanceLess) {
@@ -751,7 +960,7 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         try {
             return new LatLng(Double.parseDouble(String.valueOf(eLocation.latitude)), Double.parseDouble(String.valueOf(eLocation.longitude)));
         } catch (Exception e) {
-            logData("getPoint() :exception: " + e);
+            //logData("getPoint() :exception: " + e);
             return new LatLng(0, 0);
         }
     }
@@ -764,12 +973,12 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         try {
 //            Log.d("psoodsods", "--" + placeAddress + placeName + mStateModel.trip.distance() + mStateModel.trip.duration());
 //            tvDistance.setText(String.format("%s", NavigationFormatter.getFormattedDistance(mStateModel.trip.distance().floatValue(), getMyApplication())));
-            logData("update() => duration.initValue : " + mStateModel.trip.routes().get(0).duration());
+           // logData("update() => duration.initValue : " + mStateModel.trip.routes().get(0).duration());
             //        tvTimeForTravel.setText(String.format("%s ", NavigationFormatter.getFormattedDuration(mStateModel.trip.routes().get(0).duration().intValue(), getMyApplication())));
 //            tvDestinationAddress.setText(placeAddress);
 //            tvPlaceAddress.setText(placeName);
         } catch (Exception e) {
-            logData("update() :  exception: " + e);
+            //logData("update() :  exception: " + e);
             Timber.e(e);
             Log.d("ddderrr", "--" + e.getMessage());
         }
@@ -790,7 +999,16 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
     @Override
     public void onMapReady(MapplsMap mapboxMap) {
         this.mapboxMap = mapboxMap;
-        mapboxMap.getUiSettings().enableLogoClick(false);
+
+        //mapboxMap.getUiSettings().enableLogoClick(false);
+
+
+        mapboxMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                enableLocationComponent(style);
+            }
+        });
 
         realm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -804,16 +1022,25 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
 
                     lastPark_Lat = locationRealmModule.getLat();
                     lastPark_Lng = locationRealmModule.getLng();
-                    Log.d("sjsjjs", "--" + lastPark_Lng + "====" + lastPark_Lat);
+
+                  //  Log.e("loc0", "--" + lastPark_Lng + "====" + lastPark_Lat);
                     if (lastPark_Lat != null || lastPark_Lng != null) {
 //                        getReverseGeoCode(lastPark_Lat, lastPark_Lng);
 
                         eLocation = new ELocation();
                         eLocation.latitude = Double.valueOf(String.valueOf(lastPark_Lat));
                         eLocation.longitude = Double.valueOf(String.valueOf(lastPark_Lng));
+                        eLocation.entryLatitude = Double.valueOf(String.valueOf(lastPark_Lat));
+                        eLocation.entryLongitude = Double.valueOf(String.valueOf(lastPark_Lng));
+
+
+                      //  Log.e("loc01", "--" + eLocation.latitude + "====" + eLocation.longitude);
                     } else {
                         common.showToast("Could not find any recent last parked location", TOAST_DURATION);
                     }
+                }
+                else {
+                    common.showToast("Could not find any recent last parked location", TOAST_DURATION);
                 }
 
 
@@ -823,21 +1050,18 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
 //            return;
 //        }
 
-        mapboxMap.getStyle(new Style.OnStyleLoaded() {
+      /*  mapboxMap.getStyle(new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
                 if (ActivityCompat.checkSelfPermission(LastParkedLocationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                         ActivityCompat.checkSelfPermission(LastParkedLocationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
                     common.showToast("Location permission is not given", TOAST_DURATION);
-                    //  requestLocationPermission();
                     return;
                 }
                 mapboxMap.getLocationComponent().activateLocationComponent(LocationComponentActivationOptions.builder(LastParkedLocationActivity.this, style).build());
                 mapboxMap.getLocationComponent().setLocationComponentEnabled(true);
-                //  mapIsReady = true;
             }
-        });
+        });*/
 
         //   mapboxMap.getLocationComponent().activateLocationComponent(locationComponentActivationOptions);
         //   mapboxMap.getLocationComponent().setLocationComponentEnabled(true);
@@ -846,16 +1070,89 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         mapboxMap.setPadding(20, 20, 20, 20);
         if (lastPark_Lat != null || lastPark_Lng != null) {
 
-            if (eLocation != null) {
+         /*   if (eLocation != null) {
                 Marker marker;
 
 
                 LatLng latLng = new LatLng();
-                logData("onMapReady() => lat_lng : " + lastPark_Lat + " lng " + lastPark_Lng);
+                //logData("onMapReady() => lat_lng : " + lastPark_Lat + " lng " + lastPark_Lng);
                 latLng.setLatitude(lastPark_Lat);
                 latLng.setLongitude(lastPark_Lng);
 
-             /*   IconFactory iconFactory = IconFactory.getInstance(getApplicationContext());
+                IconFactory iconFactory = IconFactory.getInstance(getApplicationContext());
+                Icon icon = iconFactory.fromResource(R.drawable.marker);
+//            Icon icon = iconFactory.defaultMarker();
+                MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(latLng)).icon(icon);
+
+
+                marker = mapboxMap.addMarker(markerOptions);
+
+                mapboxMap.removeMarker(marker);
+                markerOptions.setTitle("");
+                markerOptions.setSnippet("");
+                marker.setPosition(new LatLng(latLng));
+
+                marker.setIcon(icon);
+                mapboxMap.addMarker(markerOptions);
+
+
+            }*/
+            try {
+                mapboxMap.enableTraffic(true);
+                TrafficPlugin trafficPlugin = new TrafficPlugin(mapView, mapboxMap);
+                trafficPlugin.enableFreeFlow(true);
+            } catch (Exception e) {
+               // logData("onMapReady() : exception: " + e);
+                Timber.e(e);
+            }
+            directionPolylinePlugin = new DirectionPolylinePlugin(mapView, mapboxMap);
+
+
+            _bearingIconPlugin = new BearingIconPlugin(mapView, mapboxMap);
+
+            mapboxMap.setPadding(20, 20, 20, 20);
+
+            setTrip(mStateModel.trip);
+            ArrayList<LatLng> geoPoints = new ArrayList<>();
+
+
+            LatLng latLng = new LatLng();
+
+            latLng.setLatitude(DataRequestManager.currentLatitude);
+            latLng.setLongitude(DataRequestManager.currentLongitude);
+
+
+            LatLng eLatLng = getPoint(eLocation);
+            geoPoints.add(eLatLng);
+            geoPoints.add(new LatLng(latLng));
+
+
+            double distance = latLng.distanceTo(eLatLng);
+
+         /*   Log.e("loc_distance", String.valueOf(distance));
+            Log.e("loc_eLocation", String.valueOf(eLocation));
+            Log.e("loc_eLatLng", String.valueOf(eLatLng));
+            Log.e("loc_geoPoints", String.valueOf(geoPoints));
+*/
+              /*IconFactory iconFactory = IconFactory.getInstance(getApplicationContext());
+                Icon icon = iconFactory.fromResource(R.drawable.marker);
+//            Icon icon = iconFactory.defaultMarker();
+                MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(eLatLng)).icon(icon);
+
+
+                marker = mapboxMap.addMarker(markerOptions);
+
+                mapboxMap.removeMarker(marker);
+                markerOptions.setTitle("");
+                markerOptions.setSnippet("");
+                marker.setPosition(new LatLng(latLng));
+
+                marker.setIcon(icon);
+                mapboxMap.addMarker(markerOptions);*/
+
+            if (distance <= 500) {
+
+              /*  IconFactory iconFactory = IconFactory.getInstance(getApplicationContext());
                 Icon icon = iconFactory.fromResource(R.drawable.marker);
 //            Icon icon = iconFactory.defaultMarker();
                 MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(latLng)).icon(icon);
@@ -871,45 +1168,146 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
                 marker.setIcon(icon);
                 mapboxMap.addMarker(markerOptions);*/
 
+                //getPedestrainRoute(geoPoints, eLocation);
+                getRoute(geoPoints, eLocation, mapboxMap, true);
+                rlNavigationDetails.setVisibility(View.GONE);
+            } else {
+                getRoute(geoPoints, eLocation, mapboxMap, false);
+                rlNavigationDetails.setVisibility(View.VISIBLE);
+            }
 
-            }
-            try {
-                mapboxMap.enableTraffic(true);
-//                TrafficPlugin trafficPlugin = new TrafficPlugin(mapView, mapboxMap);
-//                trafficPlugin.enableFreeFlow(true);
-            } catch (Exception e) {
-                logData("onMapReady() : exception: " + e);
-                Timber.e(e);
-            }
-            directionPolylinePlugin = new DirectionPolylinePlugin(mapView, mapboxMap);
-            mapboxMap.getStyle(new Style.OnStyleLoaded() {
+                /*    if (distance <= 500) {
+
+                        getPedestrainRoute(geoPoints, eLocation);
+                        rlNavigationDetails.setVisibility(View.VISIBLE);
+                    } else {
+
+                    }
+                 */
+
+            //LatLng latLng = new LatLng();
+
+            //latLng.setLatitude(13.1817249);
+            //latLng.setLongitude(74.9507119);
+            //geoPoints.add(new LatLng(latLng));
+
+            //LatLng eLatLng = getPoint(eLocation);
+           // geoPoints.add(eLatLng);
+
+            //double distance = latLng.distanceTo(eLatLng);
+
+
+            //getRoute(geoPoints, eLocation, mapboxMap);
+
+           /* mapboxMap.getStyle(new Style.OnStyleLoaded() {
                 @Override
                 public void onStyleLoaded(@NonNull Style style) {
                     enableLocationComponent(style);
                 }
-            });
-            _bearingIconPlugin = new BearingIconPlugin(mapView, mapboxMap);
-            mapboxMap.setMaxZoomPreference(18.5);
-            mapboxMap.setMinZoomPreference(4);
+            });*/
 
-            setCompassDrawable();
+            setCompassDrawable(mapboxMap);
+           // mapboxMap.setCameraPosition(setCameraAndTilt());
             mapboxMap.getUiSettings().setLogoMargins(40, dpToPx(120), 40, dpToPx(60));
             mapboxMap.getUiSettings().setCompassMargins(40, dpToPx(150), 40, dpToPx(40));
+            //mapboxMap.getUiSettings().setRotateGesturesEnabled(true);
+           // mapboxMap.getUiSettings().setTiltGesturesEnabled(true);
+           // mapboxMap.getUiSettings().setZoomGesturesEnabled(false);
+          /*  mapboxMap.setCameraPosition(setCameraAndTilt());
+            mapboxMap.setMinZoomPreference(4);
+            mapboxMap.setMaxZoomPreference(18.5);*/
+            /*mapboxMap.setMaxZoomPreference(18.5);
+            mapboxMap.setMinZoomPreference(4);
+
+            setCompassDrawable(mapboxMap);
+            mapboxMap.getUiSettings().setLogoMargins(40, dpToPx(120), 40, dpToPx(60));
+            mapboxMap.getUiSettings().setCompassMargins(40, dpToPx(150), 40, dpToPx(40));*/
 
         }
 
-        setCompassDrawable();
-        mapboxMap.getUiSettings().setLogoMargins(40, dpToPx(120), 40, dpToPx(60));
-        mapboxMap.getUiSettings().setCompassMargins(40, dpToPx(150), 40, dpToPx(40));
-        mapboxMap.setMaxZoomPreference(18.5);
+      /*  mapboxMap.getUiSettings().enableLogoClick(false);
+
+
+        try {
+            TrafficPlugin trafficPlugin = new TrafficPlugin(mapView, mapboxMap);
+            trafficPlugin.enableFreeFlow(true);
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+        directionPolylinePlugin = new DirectionPolylinePlugin(mapView, mapboxMap);
+//        enableLocationComponent();
+
+        _bearingIconPlugin = new BearingIconPlugin(mapView, mapboxMap);
+
+        mapboxMap.setPadding(20, 20, 20, 20);
+
+
+        try {
+            if (eLocation != null && mStateModel.trip != null) {
+                app = getMyApplication();
+                setTrip(mStateModel.trip);
+//                update();
+//                addPolyLine(new LatLng(currentlocation.getLatitude(),
+//                                currentlocation.getLongitude()),
+//                        new LatLng(Double.parseDouble(eLocation.latitude),
+//                                Double.parseDouble(eLocation.longitude)),
+//                        mStateModel.trip);
+                Log.d("geopoi", "--" + mStateModel.trip);
+            } else {
+                try {
+//                    if (currentlocation != null) {
+                  *//*  ArrayList<LatLng> geoPoints = new ArrayList<>();
+
+                    //geoPoints.add(new LatLng(Double.parseDouble(cuurent_lat), Double.parseDouble(current_long)));
+                    geoPoints.add(new LatLng(13.1817249, 74.9507119));
+                    geoPoints.add(getPoint(eLocation));*//*
+                    ArrayList<LatLng> geoPoints = new ArrayList<>();
+
+                    LatLng latLng = new LatLng();
+                   *//* latLng.setLatitude(currentlocation.getLatitude());
+                    latLng.setLongitude(currentlocation.getLongitude());*//*
+
+                    geoPoints.add(new LatLng(latLng));
+
+                    LatLng eLatLng = getPoint(eLocation);
+                    geoPoints.add(eLatLng);
+
+                    double distance = latLng.distanceTo(eLatLng);
+
+
+                    getRoute(geoPoints, eLocation, mapboxMap);
+//                        Log.d("geopoits", "-" + getNavigationGeoPoint(eLocation) + currentlocation.getLatitude() + "--" + currentlocation.getLongitude());
+//                        update();
+//                    } else {
+//                        Toast.makeText(this, R.string.current_location_not_available, Toast.LENGTH_SHORT).show();
+////                        onFragmentBackPressed();
+//                    }
+                } catch (Exception e) {
+                    Timber.e(e);
+//                    onFragmentBackPressed();
+                }
+            }
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+
+        setCompassDrawable(mapboxMap);
+        mapboxMap.setCameraPosition(setCameraAndTilt());
         mapboxMap.setMinZoomPreference(4);
+        mapboxMap.setMaxZoomPreference(18.5);*/
     }
 
-    public void setCompassDrawable() {
+    protected CameraPosition setCameraAndTilt() {
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(
+                28.551087, 77.257373)).zoom(5).tilt(0).build();
+        return cameraPosition;
+    }
+
+    void setCompassDrawable(MapplsMap mapboxMap) {
         mapView.getCompassView().setBackgroundResource(R.drawable.compass_background);
-        mapboxMap.getUiSettings().setCompassImage(ContextCompat.getDrawable(this, R.drawable.compass_north_up));
+        mapboxMap.getUiSettings().setCompassImage(getDrawable(R.drawable.compass_north_up));
         int padding = dpToPx(8);
-        int elevation = dpToPx(8);
+        int elevation = dpToPx(18);
         mapView.getCompassView().setPadding(padding, padding, padding, padding);
         ViewCompat.setElevation(mapView.getCompassView(), elevation);
     }
@@ -918,11 +1316,11 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         return (SuzukiApplication) getApplication();
     }
 
-    public DirectionsRoute getTrip() {
+    public DirectionsResponse getTrip() {
         return trip;
     }
 
-    public void setTrip(DirectionsRoute trip) {
+    public void setTrip(DirectionsResponse trip) {
         this.trip = trip;
     }
 
@@ -952,6 +1350,22 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         }
         locationComponent.setLocationComponentEnabled(true);
         locationEngine = locationComponent.getLocationEngine();
+     /*   LocationEngineCallback<LocationEngineResult> locationEngineCallback = new LocationEngineCallback<LocationEngineResult>()
+        {
+
+            @Override
+            public void onSuccess(LocationEngineResult locationEngineResult) {
+                if (locationEngineResult.getLastLocation() != null) {
+                    Location location = locationEngineResult.getLastLocation();
+                    //mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        };*/
         LocationEngineRequest request = new LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
                 .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
                 .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME).build();
@@ -968,26 +1382,29 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
         locationEngine.requestLocationUpdates(request, locationEngineCallback, getMainLooper());
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        if (app != null) {
+
+    /* //
+       *//* if (app != null) {
             app =(SuzukiApplication) getMyApplication();
         }
         mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(location.getLatitude(), location.getLongitude()), 16));
         Log.d("sss", "=" + location.getLongitude() + location.getLatitude());
-        Timber.i("onLocationChanged");
+       *//*
 
 
         currentlocation = location;
+        //mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location), 16), 500);
+
 
         Log.d("locccc", "onloc chang--" + currentlocation.getLatitude() + currentlocation.getLongitude());
 //        Log.d("locccc", "onloc chang--" + eLocation.placeName);
-        try {
+       *//* try {
             if (location == null || location.getLatitude() <= 0)
                 return;
             if (!firstFix) {
@@ -1002,59 +1419,78 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
             if (app != null)
                 app.setCurrentLocation(location);
         } catch (Exception e) {
-            logData("onLocationChanged() : exception: " + e);
+            //logData("onLocationChanged() : exception: " + e);
             //ignore
-        }
+        }*//*
 
 
         try {
-            if (eLocation != null && mStateModel.trip != null) {
+          //  app.setCurrentLocation(location);
+          *//*  if (eLocation != null && mStateModel.trip != null) {
                 app = (SuzukiApplication) getApplication();
-                setTrip(mStateModel.trip.routes().get(0));
-//                update();
-//                addPolyLine(new LatLng(currentlocation.getLatitude(),
-//                                currentlocation.getLongitude()),
-//                        new LatLng(Double.parseDouble(eLocation.latitude),
-//                                Double.parseDouble(eLocation.longitude)),
-//                        mStateModel.trip);
+                setTrip(mStateModel.trip);
+                update();
+                addPolyLine(new LatLng(currentlocation.getLatitude(),
+                                currentlocation.getLongitude()),
+                        new LatLng(eLocation.latitude,
+                                eLocation.longitude),
+                        mStateModel.trip.routes().get(0));
                 Log.d("geopoi", "--" + mStateModel.trip);
-            } else {
+            } else {*//*
                 try {
 //                    if (currentlocation != null) {
                     ArrayList<LatLng> geoPoints = new ArrayList<>();
 
                     LatLng latLng = new LatLng();
-                    latLng.setLatitude(currentlocation.getLatitude());
-                    latLng.setLongitude(currentlocation.getLongitude());
+                   *//* latLng.setLatitude(currentlocation.getLatitude());
+                    latLng.setLongitude(currentlocation.getLongitude());*//*
+
                     geoPoints.add(new LatLng(latLng));
+
                     LatLng eLatLng = getPoint(eLocation);
                     geoPoints.add(eLatLng);
 
                     double distance = latLng.distanceTo(eLatLng);
 
-                    if (distance <= 500) {
-                        Log.d("tag", "onLocationChanged:1 " + distance);
-                        getPedestrainRoute(geoPoints, eLocation);
-                        rlNavigationDetails.setVisibility(View.GONE);
-                    } else {
-                        Log.d("tag", "onLocationChanged:2 " + distance);
-                        getRoute(geoPoints, eLocation);
-                        rlNavigationDetails.setVisibility(View.VISIBLE);
-                    }
 
-                    /*
+                *//*    if (distance <= 500) {
+
+                        getPedestrainRoute(geoPoints, eLocation);
+                        rlNavigationDetails.setVisibility(View.VISIBLE);
+                    } else {*//*
+
+                        mapboxMap.getUiSettings().enableLogoClick(false);
+
+
+                        try {
+                            TrafficPlugin trafficPlugin = new TrafficPlugin(mapView, mapboxMap);
+                            trafficPlugin.enableFreeFlow(true);
+                        } catch (Exception e) {
+                            Timber.e(e);
+                        }
+                        directionPolylinePlugin = new DirectionPolylinePlugin(mapView, mapboxMap);
+//        enableLocationComponent();
+
+                        _bearingIconPlugin = new BearingIconPlugin(mapView, mapboxMap);
+
+                        mapboxMap.setPadding(20, 20, 20, 20);
+                        getRoute(geoPoints, eLocation, mapboxMap, false);
+                        rlNavigationDetails.setVisibility(View.VISIBLE);
+                  //  }
+
+                    *//*
                      * commented in v6.2.6
                      * update();
-                     * */
+                     * *//*
                 } catch (Exception e) {
-                    logData("onLocationChanged() : first exception: " + e);
+                    //logData("onLocationChanged() : first exception: " + e);
                     Timber.e(e);
                 }
-            }
+           // }
         } catch (Exception e) {
             Timber.e(e);
-            logData("onLocationChanged() : second exception: " + e);
-        }
+            //logData("onLocationChanged() : second exception: " + e);
+        }*/
 
 
     }
@@ -1077,9 +1513,9 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
     public void onStop() {
         super.onStop();
         mapView.onStop();
-        if (locationEngine != null) {
+       /* if (locationEngine != null) {
             locationEngine.removeLocationUpdates(locationEngineCallback);
-        }
+        }*/
     }
 
     @Override
@@ -1095,18 +1531,18 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
     public void onPause() {
         super.onPause();
         mapView.onPause();
-        if (locationEngine != null)
-            locationEngine.removeLocationUpdates(locationEngineCallback);
+        /*if (locationEngine != null)
+            locationEngine.removeLocationUpdates(locationEngineCallback);*/
     }
 
     @Override
     public void onResume() {
         super.onResume();
         mapView.onResume();
-        if (locationEngine != null) {
+       /* if (locationEngine != null) {
             locationEngine.removeLocationUpdates(locationEngineCallback);
             //locationEngine.addLocationEngineListener(this);
-        }
+        }*/
     }
 
     @Override
@@ -1148,7 +1584,7 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
     }
 
 
-    public NavLocation getUserLocation() {
+   /* public NavLocation getUserLocation() {
         if (currentlocation != null) {
             NavLocation loc = new NavLocation("router");
             loc.setLatitude(currentlocation.getLatitude());
@@ -1157,7 +1593,7 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
         } else {
             return null;
         }
-    }
+    }*/
 
     public void clearPOIs() {
         try {

@@ -92,6 +92,7 @@ import com.mappls.sdk.services.api.event.route.model.ReportDetails;
 import com.mappls.sdk.services.utils.Constants;
 import com.suzuki.R;
 import com.suzuki.activity.DeviceListingScanActivity;
+import com.suzuki.activity.LastParkedLocationActivity;
 import com.suzuki.activity.NavigationActivity;
 import com.suzuki.activity.RouteActivity;
 import com.suzuki.activity.RouteNearByActivity;
@@ -220,6 +221,7 @@ public int saved_speed, top_speeds;
     private long last_frame_timestamp = 0L;
     private int counter=0;
     private long DELAY=300;
+    private boolean lastparkedlocation = false;
 
 
     private final Runnable gpsRunnable = new Runnable() {
@@ -271,6 +273,8 @@ public int saved_speed, top_speeds;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 //        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 //        if (mBluetoothAdapter == null) {
 //            // Device does not support Bluetooth
@@ -468,12 +472,21 @@ public int saved_speed, top_speeds;
 
             }
             else{
-                llRedAlertBle.setVisibility(View.VISIBLE);
-                soundFab.setVisibility(GONE);
-                mFollowMeButton.setVisibility(GONE);
-                top_strip_layout.setVisibility(GONE);
-                options_recycler_view_container.setVisibility(GONE);
-                //   main_layout.getForeground().setAlpha( 220); // dim
+                if(lastparkedlocation){
+                    llRedAlertBle.setVisibility(GONE);
+                    soundFab.setVisibility(View.VISIBLE);
+                    mFollowMeButton.setVisibility(View.VISIBLE);
+                    top_strip_layout.setVisibility(View.VISIBLE);
+                    options_recycler_view_container.setVisibility(View.VISIBLE);
+                }
+                else {
+                    llRedAlertBle.setVisibility(View.VISIBLE);
+                    soundFab.setVisibility(GONE);
+                    mFollowMeButton.setVisibility(GONE);
+                    top_strip_layout.setVisibility(GONE);
+                    options_recycler_view_container.setVisibility(GONE);
+                    //   main_layout.getForeground().setAlpha( 220); // dim
+                }
 
             }
         }
@@ -498,6 +511,8 @@ public int saved_speed, top_speeds;
 //            }
 //        }, delay);
 
+
+
         return view ;
 
     }
@@ -516,23 +531,43 @@ public int saved_speed, top_speeds;
 
             }
             else{
+                if(lastparkedlocation){
+                    llRedAlertBle.setVisibility(GONE);
+                    top_strip_layout.setVisibility(View.VISIBLE);
+                    soundFab.setVisibility(View.VISIBLE);
+                    mFollowMeButton.setVisibility(View.VISIBLE);
+
+                    options_recycler_view_container.setVisibility(GONE);
+                }
+                else {
+                    llRedAlertBle.setVisibility(View.VISIBLE);
+                    top_strip_layout.setVisibility(GONE);
+                    soundFab.setVisibility(GONE);
+                    mFollowMeButton.setVisibility(GONE);
+
+                    options_recycler_view_container.setVisibility(GONE);
+                    //   main_layout.getForeground().setAlpha( 220); // dim
+                }
+
+            }
+
+        } else{
+            if(lastparkedlocation){
+                llRedAlertBle.setVisibility(GONE);
+                top_strip_layout.setVisibility(View.VISIBLE);
+                soundFab.setVisibility(View.VISIBLE);
+                mFollowMeButton.setVisibility(View.VISIBLE);
+
+                options_recycler_view_container.setVisibility(View.VISIBLE);
+            }
+            else {
                 llRedAlertBle.setVisibility(View.VISIBLE);
                 top_strip_layout.setVisibility(GONE);
                 soundFab.setVisibility(GONE);
                 mFollowMeButton.setVisibility(GONE);
 
                 options_recycler_view_container.setVisibility(GONE);
-                //   main_layout.getForeground().setAlpha( 220); // dim
-
             }
-
-        } else{
-            llRedAlertBle.setVisibility(View.VISIBLE);
-            top_strip_layout.setVisibility(GONE);
-            soundFab.setVisibility(GONE);
-            mFollowMeButton.setVisibility(GONE);
-
-            options_recycler_view_container.setVisibility(GONE);
             //    main_layout.getForeground().setAlpha( 220); // dim
 
         }
@@ -557,6 +592,39 @@ public int saved_speed, top_speeds;
 
                     }
                     else{
+                        if(lastparkedlocation){
+                            llRedAlertBle.setVisibility(GONE);
+                            top_strip_layout.setVisibility(View.VISIBLE);
+                            soundFab.setVisibility(View.VISIBLE);
+                            mFollowMeButton.setVisibility(View.VISIBLE);
+
+
+                            options_recycler_view_container.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            llRedAlertBle.setVisibility(View.VISIBLE);
+                            top_strip_layout.setVisibility(GONE);
+                            soundFab.setVisibility(GONE);
+                            mFollowMeButton.setVisibility(GONE);
+
+
+                            options_recycler_view_container.setVisibility(GONE);
+                        }
+                        //   main_layout.getForeground().setAlpha( 220); // dim
+
+                    }
+
+                } else{
+                    if(lastparkedlocation){
+                        llRedAlertBle.setVisibility(GONE);
+                        top_strip_layout.setVisibility(View.VISIBLE);
+                        soundFab.setVisibility(View.VISIBLE);
+                        mFollowMeButton.setVisibility(View.VISIBLE);
+
+
+                        options_recycler_view_container.setVisibility(View.VISIBLE);
+                    }
+                    else {
                         llRedAlertBle.setVisibility(View.VISIBLE);
                         top_strip_layout.setVisibility(GONE);
                         soundFab.setVisibility(GONE);
@@ -564,17 +632,7 @@ public int saved_speed, top_speeds;
 
                         options_recycler_view_container.setVisibility(GONE);
                         //   main_layout.getForeground().setAlpha( 220); // dim
-
                     }
-
-                } else{
-                    llRedAlertBle.setVisibility(View.VISIBLE);
-                    top_strip_layout.setVisibility(GONE);
-                    soundFab.setVisibility(GONE);
-                    mFollowMeButton.setVisibility(GONE);
-
-                    options_recycler_view_container.setVisibility(GONE);
-                    //   main_layout.getForeground().setAlpha( 220); // dim
 
                 }
             }
@@ -592,7 +650,10 @@ public int saved_speed, top_speeds;
 
         if (getActivity() instanceof NavigationActivity) {
             ((NavigationActivity) getActivity()).getMapView().getMapAsync(this);
+            lastparkedlocation = ((NavigationActivity) getActivity()).getLastParkedLocation();
         }
+
+
         MapplsNavigationHelper.getInstance().addNavigationListener(this);
 
         onRouteProgress(MapplsNavigationHelper.getInstance().getAdviseInfo());
@@ -686,17 +747,27 @@ public int saved_speed, top_speeds;
         Activity activity = getActivity();
 
         if (activity != null) {
-            BikeBleName.observe(getViewLifecycleOwner(), new Observer<String>() {
+            BikeBleName.observe(requireActivity(), new Observer<String>() {
                 @Override
                 public void onChanged(String s) {
                     if (s.isEmpty()) {
+                        if(lastparkedlocation){
+                            llRedAlertBle.setVisibility(GONE);
+                            top_strip_layout.setVisibility(View.VISIBLE);
+                            soundFab.setVisibility(View.VISIBLE);
+                            mFollowMeButton.setVisibility(View.VISIBLE);
 
-                        llRedAlertBle.setVisibility(View.VISIBLE);
-                        top_strip_layout.setVisibility(GONE);
 
-                        soundFab.setVisibility(GONE);
-                        mFollowMeButton.setVisibility(GONE);
-                        options_recycler_view_container.setVisibility(GONE);
+                            options_recycler_view_container.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            llRedAlertBle.setVisibility(View.VISIBLE);
+                            top_strip_layout.setVisibility(GONE);
+
+                            soundFab.setVisibility(GONE);
+                            mFollowMeButton.setVisibility(GONE);
+                            options_recycler_view_container.setVisibility(GONE);
+                        }
 
 
                     } else {
@@ -1670,13 +1741,21 @@ if (adviseInfo!=null){
                 if (getActivity() == null)
                     return;
                 //   updateDisplay(maneuverID, "00000", dataShortDistanceUnit, dataEta, dataRemainingDistance, dataRemainingDistanceUnit, "1", "0");
-                if (RouteActivity.routeActivity != null) {
-                    RouteActivity.routeActivity.finish();
-                } else if (RouteNearByActivity.routeNearByActivity != null) {
-                    RouteNearByActivity.routeNearByActivity.finish();
-                }
+                if(lastparkedlocation){
+                    Intent intent = new Intent(requireActivity(), LastParkedLocationActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
-                getActivity().onBackPressed();
+                    startActivity(intent);
+                }
+                else {
+                    if (RouteActivity.routeActivity != null) {
+                        RouteActivity.routeActivity.finish();
+                    } else if (RouteNearByActivity.routeNearByActivity != null) {
+                        RouteNearByActivity.routeNearByActivity.finish();
+                    }
+
+                    getActivity().onBackPressed();
+                }
             }
         });
         dialog.show();

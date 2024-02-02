@@ -9,7 +9,7 @@
 
     <!--       android:foreground="@drawable/bg_blur"-->
     <FrameLayout
-        android:visibility="visible"
+        android:visibility="gone"
         android:id="@+id/llRedAlertBle"
         android:background="@drawable/gradient_grey"
         android:layout_width="match_parent"

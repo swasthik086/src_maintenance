@@ -124,6 +124,8 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
 
     String endTime;
 
+    private boolean isLastParkedLocation = false;
+
 
 
 
@@ -180,6 +182,7 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
 
                 duration = bundle.getString("rideduration");
                 rideTime = bundle.getString("ridetime");
+                isLastParkedLocation = bundle.getBoolean("LastParkedLocation");
 
             }
         }
@@ -280,6 +283,10 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
         onBackPressed();
         navigateTo(new NavigationFragment(), true);
 
+    }
+
+    public boolean getLastParkedLocation(){
+        return isLastParkedLocation;
     }
 
     public float getLocationAccuracy() {
@@ -585,6 +592,14 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
 //                editor.apply();
           //      Toast.makeText(app, ""+endTime, Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
+
+                if(isLastParkedLocation){
+
+                    Intent intent = new Intent(NavigationActivity.this, LastParkedLocationActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                    startActivity(intent);
+                }
 
             }
         });

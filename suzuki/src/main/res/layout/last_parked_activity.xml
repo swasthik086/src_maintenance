@@ -87,7 +87,7 @@
 
         android:layout_alignParentBottom="true"
         android:background="#212121"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/llHeaderNavDetails"
