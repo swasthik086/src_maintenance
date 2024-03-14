@@ -667,6 +667,7 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
             if (map == null)
                 return;
             this.mapplsMap = map;
+            map.enableTraffic(true);  // MMI changes
             mapplsMap.getStyle(new Style.OnStyleLoaded() {
                 @Override
                 public void onStyleLoaded(@NonNull Style style) {

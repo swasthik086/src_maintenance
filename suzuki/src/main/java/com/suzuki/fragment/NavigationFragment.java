@@ -71,6 +71,8 @@ import com.mappls.sdk.navigation.NavLocation;
 import com.mappls.sdk.navigation.NavigationApplication;
 import com.mappls.sdk.navigation.NavigationFormatter;
 import com.mappls.sdk.navigation.NavigationLocationProvider;
+import com.mappls.sdk.navigation.camera.INavigation;
+import com.mappls.sdk.navigation.camera.NavigationCamera;
 import com.mappls.sdk.navigation.data.WayPoint;
 import com.mappls.sdk.navigation.events.NavEvent;
 import com.mappls.sdk.navigation.iface.INavigationListener;
@@ -101,9 +103,8 @@ import com.suzuki.application.SuzukiApplication;
 import com.suzuki.broadcaster.BleConnection;
 import com.suzuki.broadcaster.BluetoothCheck;
 import com.suzuki.broadcaster.MapShortDistBroadcast;
-import com.suzuki.maps.camera.INavigation;
 import com.suzuki.maps.camera.MathUtils;
-import com.suzuki.maps.camera.NavigationCamera;
+
 import com.suzuki.maps.camera.ProgressChangeListener;
 import com.suzuki.maps.camera.RouteInformation;
 import com.suzuki.maps.plugins.BearingIconPlugin;
@@ -159,8 +160,7 @@ public class NavigationFragment extends Fragment implements
         MapplsMap.OnMoveListener,
         LocationChangedListener,
         INavigationListener,
-        INavigation,
-        OnMapReadyCallback {
+        OnMapReadyCallback, INavigation {
 
     private boolean isItSaveForFragmentTransaction = true;
     private final boolean mFragmentTransactionSave = true;
@@ -941,8 +941,29 @@ public int saved_speed, top_speeds;
                 break;
 
             case R.id.reset_bounds_button:
+                // MMI changes line no(944-964)
+//                if (camera != null)
+//                   // camera.updateCameraTrackingMode(false);
+//
+//                List<NavigationStep> routeDirectionIfs = app.getRouteDirections();
+//
+//
+//                ArrayList<LatLng> points = new ArrayList<>();
+//
+//
+//                for (NavigationStep routeDirectionInfo : routeDirectionIfs) {
+//                    NavLocation navLocation = routeDirectionInfo.getNavLocation();
+//                    if (navLocation != null)
+//                        points.add(new LatLng(navLocation.getLatitude(), navLocation.getLongitude()));
+//                }
+//                if (points.size() > 1) {
+//                    LatLngBounds bounds = new LatLngBounds.Builder().includes(points).build();
+//
+//                    mapmyIndiaMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0));
+//                }
+
                 if (camera != null)
-                    camera.updateCameraTrackingLocation(false);
+                    camera.updateCameraTrackingMode(NavigationCamera.NAVIGATION_TRACKING_MODE_NONE); // MMI changes
                 List<NavigationStep> routeDirectionIfs = app.getRouteDirections();
 
 
@@ -1322,38 +1343,40 @@ if (adviseInfo!=null){
      * the {@link Location} from navigation service
      */
     private void initCamera() {
-        camera = new NavigationCamera(mapmyIndiaMap, this, locationPlugin);
+        // MMI changes line no: 1347-1354
+//        camera = new NavigationCamera(mapmyIndiaMap, this, locationPlugin);
+//        camera.start(null);
+
+        camera = new NavigationCamera(mapmyIndiaMap);
+        camera.addProgressChangeListener(this);
         camera.start(null);
+        // for camera move according to marker move
+        camera.updateCameraTrackingMode(NavigationCamera.NAVIGATION_TRACKING_MODE_GPS);
     }
 
     @RequiresPermission(anyOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     public void locationModeNavigation(boolean enable) {
-
         try {
             if (mapmyIndiaMap == null)
                 return;
 
             if (enable) {
-                if (locationPlugin != null) {
-                    locationPlugin.setLocationEngine(navigationLocationEngine);
-                    locationPlugin.setRenderMode(RenderMode.GPS);
-                }
-
+// MMI changes (removed inside if condition)
 
                 app.getLocationProvider().setLocationChangedListener(this);
 
                 Location location = getLocationForNavigation();
-                if (locationPlugin != null)
+
+                if (locationPlugin != null && !((NavigationActivity) getActivity()).getMapView().isDestroyed())   //MMI changes
                     locationPlugin.forceLocationUpdate(location);
+
+                mapmyIndiaMap.getLocationComponent().setLocationEngine(new NavigationLocationEngine());   // MMI changes
+
                 followMe(true);
 
             } else {
 
-                if (locationPlugin != null) {
-                    mapmyIndiaMap.getLocationComponent().setLocationEngine(LocationEngineProvider.getBestLocationEngine(getActivity()));
-                    locationPlugin.setRenderMode(RenderMode.NORMAL);
-                }
-
+                mapmyIndiaMap.getLocationComponent().setLocationEngine(LocationEngineProvider.getBestLocationEngine(getActivity())); // MMI changes
                 app.getLocationProvider().setLocationChangedListener(null);
                 CameraPosition.Builder builder = new CameraPosition.Builder().bearing(0).tilt(0);
 
@@ -1361,6 +1384,43 @@ if (adviseInfo!=null){
 
 
             }
+            // MMI changes (commented the try block)
+
+//        try {
+//            if (mapmyIndiaMap == null)
+//                return;
+//
+//            if (enable) {
+//                if (locationPlugin != null) {
+//                    locationPlugin.setLocationEngine(navigationLocationEngine);
+//                    locationPlugin.setRenderMode(RenderMode.GPS);
+//                }
+//
+//
+//                app.getLocationProvider().setLocationChangedListener(this);
+//
+//                Location location = getLocationForNavigation();
+//                if (locationPlugin != null)
+//                    locationPlugin.forceLocationUpdate(location);
+//                followMe(true);
+//
+//            } else {
+//
+//                if (locationPlugin != null) {
+//                    mapmyIndiaMap.getLocationComponent().setLocationEngine(LocationEngineProvider.getBestLocationEngine(getActivity()));
+//                    locationPlugin.setRenderMode(RenderMode.NORMAL);
+//                }
+//
+//                app.getLocationProvider().setLocationChangedListener(null);
+//                CameraPosition.Builder builder = new CameraPosition.Builder().bearing(0).tilt(0);
+//
+//                mapmyIndiaMap.moveCamera(CameraUpdateFactory.newCameraPosition(builder.build()));
+//
+//
+//            }
+//        } catch (Exception e) {
+//            Timber.e(e);
+//        }
         } catch (Exception e) {
             Timber.e(e);
         }
@@ -1403,7 +1463,8 @@ if (adviseInfo!=null){
 
 
         if (camera != null && followButton != camera.isTrackingEnabled())
-            camera.updateCameraTrackingLocation(followButton);
+            //   camera.updateCameraTrackingLocation(followButton);   // MMI changes
+            camera.updateCameraTrackingMode(followButton?NavigationCamera.NAVIGATION_TRACKING_MODE_GPS:NavigationCamera.NAVIGATION_TRACKING_MODE_NONE); // MMI changes
 
 
         if (!followButton) {
@@ -1748,13 +1809,14 @@ if (adviseInfo!=null){
                     startActivity(intent);
                 }
                 else {
-                    if (RouteActivity.routeActivity != null) {
-                        RouteActivity.routeActivity.finish();
-                    } else if (RouteNearByActivity.routeNearByActivity != null) {
-                        RouteNearByActivity.routeNearByActivity.finish();
-                    }
+                    // MMI changes commented the if and else condiition
+//                    if (RouteActivity.routeActivity != null) {
+//                        RouteActivity.routeActivity.finish();
+//                    } else if (RouteNearByActivity.routeNearByActivity != null) {
+//                        RouteNearByActivity.routeNearByActivity.finish();
+//                    }
 
-                    getActivity().onBackPressed();
+                    getActivity().finish(); // MMI changes instead of onBackPressed used finish()
                 }
             }
         });
@@ -2208,11 +2270,11 @@ if (adviseInfo!=null){
             );
         }
     }
-
-    @Override
-    public void setProgressChangeListener(@Nullable ProgressChangeListener progressChangeListener) {
-        this.progressChangeListener = progressChangeListener;
-    }
+// MMI changes commented the setprogesschangelistener
+//    @Override
+//    public void setProgressChangeListener(@Nullable ProgressChangeListener progressChangeListener) {
+//        this.progressChangeListener = progressChangeListener;
+//    }
 
     private void initViews(View view) {
         initAnimations();
@@ -2312,7 +2374,8 @@ if (adviseInfo!=null){
     private void nextPreviousButtonPressed(boolean isLeft) {
         nextInstructionContainer.setVisibility(GONE);
         if (camera != null)
-            camera.updateCameraTrackingLocation(false);
+            // camera.updateCameraTrackingLocation(false); // MMI changes
+            camera.updateCameraTrackingMode(NavigationCamera.NAVIGATION_TRACKING_MODE_NONE); // MMI changes
 
 
         if (mFollowMeButton.getVisibility() != View.VISIBLE)
@@ -2345,7 +2408,8 @@ if (adviseInfo!=null){
         try {
             if (mapmyIndiaMap != null) {
                 if (camera != null)
-                    camera.updateCameraTrackingLocation(false);
+                    //  camera.updateCameraTrackingLocation(false); // MMI changes
+                    camera.updateCameraTrackingMode(NavigationCamera.NAVIGATION_TRACKING_MODE_NONE); // MMI changes
 
             }
             List<NavigationStep> adviseArrayList = app.getRouteDirections();
@@ -2374,6 +2438,16 @@ if (adviseInfo!=null){
         } catch (Exception e) {
             Timber.e(e);
         }
+    }
+// MMI changes added two override methods
+    @Override
+    public void setProgressChangeListener(@Nullable com.mappls.sdk.navigation.camera.ProgressChangeListener progressChangeListener) {
+
+    }
+
+    @Override
+    public void removeProgressChangeListener(@Nullable com.mappls.sdk.navigation.camera.ProgressChangeListener progressChangeListener) {
+
     }
 
     class MyLocalBroadcastReceiver extends BroadcastReceiver {

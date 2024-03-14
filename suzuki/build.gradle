@@ -201,6 +201,8 @@ dependencies {
     implementation 'com.github.QuadFlask:colorpicker:0.0.15'
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0'
     implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
-    implementation 'com.mappls.sdk:navigation-camera:1.0.0'
+   // implementation 'com.mappls.sdk:navigation-camera:1.0.0'
+    implementation 'com.mappls.sdk:navigation-camera:1.0.1'
+
     implementation 'com.mappls.sdk:navigation-sdk:0.13.1'
 }
