@@ -2,6 +2,7 @@ package com.suzuki.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,8 @@ public class RealmFavouriteAdapter extends RecyclerView.Adapter<RealmRecentHolde
 
         viewHolder.trpName.setText(list.get(position).getTrip_name());
 
+       // Log.e("trip_name",list.get(position).getTrip_name());
+
         if (position < (list.size() - 1)) viewHolder.view.setVisibility(View.VISIBLE);
         else viewHolder.view.setVisibility(View.GONE);
 
@@ -77,7 +80,7 @@ public class RealmFavouriteAdapter extends RecyclerView.Adapter<RealmRecentHolde
                         list.get(position).getDestination_long(), list.get(position).getTrip_name(),
                         list.get(position).getRideTime(), list.get(position).getTotalDistance(),
                         String.valueOf(list.get(position).getTopSpeed()), String.valueOf(list.get(position).getRideTimeLt10()), list.get(position).getPointLocationRealmModels(),
-                        list.get(position).getstartTime(),list.get(position).getETA());
+                        list.get(position).getstartTime(),list.get(position).getETA(), list.get(position).getVehicleType());
             }
         });
 
@@ -86,9 +89,9 @@ public class RealmFavouriteAdapter extends RecyclerView.Adapter<RealmRecentHolde
             public void onClick(View v) {
                 if (list.get(position).isFavorite()) {
 //                    clickedItem.adapterItemIsClicked(list.get(position).getId(), "fav", false, list.get(position).getDate(), list.get(position).getDateTime(), list.get(position).getTime(), list.get(position).getStartlocation(), list.get(position).getEndlocation());
-                    clickedItem.adapterItemIsClicked(list.get(position).getId(), "fav", false, list.get(position).getDate(), list.get(position).getDateTime(), list.get(position).getTime(), list.get(position).getStartlocation(), list.get(position).getEndlocation(), list.get(position).getCurrent_lat(), list.get(position).getCurrent_long(), list.get(position).getDestination_lat(), list.get(position).getDestination_long(), list.get(position).getTrip_name(), list.get(position).getRideTime(), list.get(position).getTotalDistance(), String.valueOf(list.get(position).getTopSpeed()), String.valueOf(list.get(position).getRideTimeLt10()),list.get(position).getPointLocationRealmModels(),list.get(position).getstartTime(),list.get(position).getETA());
+                    clickedItem.adapterItemIsClicked(list.get(position).getId(), "fav", false, list.get(position).getDate(), list.get(position).getDateTime(), list.get(position).getTime(), list.get(position).getStartlocation(), list.get(position).getEndlocation(), list.get(position).getCurrent_lat(), list.get(position).getCurrent_long(), list.get(position).getDestination_lat(), list.get(position).getDestination_long(), list.get(position).getTrip_name(), list.get(position).getRideTime(), list.get(position).getTotalDistance(), String.valueOf(list.get(position).getTopSpeed()), String.valueOf(list.get(position).getRideTimeLt10()),list.get(position).getPointLocationRealmModels(),list.get(position).getstartTime(),list.get(position).getETA(),list.get(position).getVehicleType());
 
-                } else clickedItem.adapterItemIsClicked(list.get(position).getId(), "fav", true, list.get(position).getDate(), list.get(position).getDateTime(), list.get(position).getTime(), list.get(position).getStartlocation(), list.get(position).getEndlocation(), list.get(position).getCurrent_lat(), list.get(position).getCurrent_long(), list.get(position).getDestination_lat(), list.get(position).getDestination_long(), list.get(position).getTrip_name(), list.get(position).getRideTime(), list.get(position).getTotalDistance(), String.valueOf(list.get(position).getTopSpeed()), String.valueOf(list.get(position).getRideTimeLt10()),list.get(position).getPointLocationRealmModels(),list.get(position).getstartTime(),list.get(position).getETA());
+                } else clickedItem.adapterItemIsClicked(list.get(position).getId(), "fav", true, list.get(position).getDate(), list.get(position).getDateTime(), list.get(position).getTime(), list.get(position).getStartlocation(), list.get(position).getEndlocation(), list.get(position).getCurrent_lat(), list.get(position).getCurrent_long(), list.get(position).getDestination_lat(), list.get(position).getDestination_long(), list.get(position).getTrip_name(), list.get(position).getRideTime(), list.get(position).getTotalDistance(), String.valueOf(list.get(position).getTopSpeed()), String.valueOf(list.get(position).getRideTimeLt10()),list.get(position).getPointLocationRealmModels(),list.get(position).getstartTime(),list.get(position).getETA(),list.get(position).getVehicleType());
             }
         });
 

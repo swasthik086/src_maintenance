@@ -1000,7 +1000,7 @@ public class LastParkedLocationActivity extends BaseActivity implements OnMapRea
     public void onMapReady(MapplsMap mapboxMap) {
         this.mapboxMap = mapboxMap;
 
-        //mapboxMap.getUiSettings().enableLogoClick(false);
+        mapboxMap.getUiSettings().enableLogoClick(false);
 
 
         mapboxMap.getStyle(new Style.OnStyleLoaded() {

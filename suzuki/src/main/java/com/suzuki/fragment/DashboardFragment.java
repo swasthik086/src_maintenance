@@ -47,6 +47,7 @@ import android.provider.Settings;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -219,7 +220,22 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         //RelativeLayout rlodo = (RelativeLayout) view.findViewById(R.id.rlodo);
         //fuelGif = view.findViewById(R.id.fuel_gif);
 
-        ProfileName.setText(getContext().getSharedPreferences("user_data", MODE_PRIVATE).getString("name", ""));
+        //ProfileName.setText(getContext().getSharedPreferences("user_data", MODE_PRIVATE).getString("name", ""));
+
+        String name = "WELCOME "+getContext().getSharedPreferences("user_data", MODE_PRIVATE).getString("name", "").trim();
+        if (name.length() > 15) {
+            //ProfileName.setText(name.substring(0, 15));
+            ProfileName.setText(name);
+            ProfileName.setSelected(true);
+            ProfileName.setSingleLine();
+            ProfileName.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            ProfileName.setMarqueeRepeatLimit(-1);
+            ProfileName.setFocusableInTouchMode(true);
+            ProfileName.requestFocus();
+        } else {
+            ProfileName.setText(name);
+            ProfileName.setSelected(false);
+        }
 
         fuelGif = (GifView) view.findViewById(R.id.fuel_gif);
 
@@ -701,8 +717,19 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
 
                     if (riderProfile.getName() != null) {
 
-                        //userName = riderProfile.getName();
-                        ProfileName.setText(getContext().getSharedPreferences("user_data", MODE_PRIVATE).getString("name", ""));
+                        String name = "WELCOME "+getContext().getSharedPreferences("user_data", MODE_PRIVATE).getString("name", "");
+        if (name.length() > 15) {
+            //ProfileName.setText(name.substring(0, 15));
+            ProfileName.setText(name);
+            ProfileName.setSelected(true);
+            ProfileName.setSingleLine();
+            ProfileName.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            ProfileName.setFocusableInTouchMode(true);
+            ProfileName.requestFocus();
+        } else {
+            ProfileName.setText(name);
+            ProfileName.setSelected(false);
+        }
 //                        rideCount.setText(String.valueOf(riderProfile.getRideCounts()));
                         //checkBikeData(riderProfile.getUserSelectedImage(), riderProfile.getBikeModel());
 

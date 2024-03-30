@@ -832,7 +832,9 @@ public int saved_speed, top_speeds;
             endPoint.setLongitude(Double.parseDouble(String.valueOf(app.getELocation().longitude)));
         }
         if (directionPolylinePlugin != null) {
-            directionPolylinePlugin.setTrips(listOfPoint, null, endPoint, app.getViaPoints(), app.getTrip().routes()); // need to add way point
+        //    directionPolylinePlugin.setTrips(listOfPoint, null, endPoint, app.getViaPoints(), app.getTrip().routes()); // need to add way point
+            directionPolylinePlugin.setTrips(listOfPoint, null, endPoint, app.getViaPoints(), MapplsNavigationHelper.getInstance().getDirectionsResponse().routes());
+
             directionPolylinePlugin.setEnabled(true);
         }
     }
@@ -1462,10 +1464,10 @@ if (adviseInfo!=null){
             return;
 
 
-        if (camera != null && followButton != camera.isTrackingEnabled())
+       /* if (camera != null && followButton != camera.isTrackingEnabled())
             //   camera.updateCameraTrackingLocation(followButton);   // MMI changes
             camera.updateCameraTrackingMode(followButton?NavigationCamera.NAVIGATION_TRACKING_MODE_GPS:NavigationCamera.NAVIGATION_TRACKING_MODE_NONE); // MMI changes
-
+*/
 
         if (!followButton) {
             if (mFollowMeButton.getVisibility() != View.VISIBLE && llRedAlertBle.getVisibility() !=View.VISIBLE)
@@ -1487,7 +1489,12 @@ if (adviseInfo!=null){
             }
             if (bearingIconPlugin != null)
                 bearingIconPlugin.setBearingLayerVisibility(false);
+
+
         }
+             if (camera != null && followButton != camera.isTrackingEnabled())
+            //   camera.updateCameraTrackingLocation(followButton);
+            camera.updateCameraTrackingMode(followButton?NavigationCamera.NAVIGATION_TRACKING_MODE_GPS:NavigationCamera.NAVIGATION_TRACKING_MODE_NONE);
 
     }
 

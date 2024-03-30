@@ -427,6 +427,8 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
         });
 
         divSpinner.setOnItemSelectedListener(this);
+
+        getCurrentPlace();
     }
 
     private void makeRequest() {

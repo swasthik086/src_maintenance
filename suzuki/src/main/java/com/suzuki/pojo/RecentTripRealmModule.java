@@ -28,6 +28,8 @@ private  String setETA;
     private int topSpeed;
     private int ridetimeLt10;
 
+    private String vehicleType;
+
     private RealmList<ViaPointLocationRealmModel> pointLocationRealmModels = new RealmList<>();
 
     public RealmList<ViaPointLocationRealmModel> getPointLocationRealmModels() {
@@ -189,5 +191,13 @@ private  String setETA;
 
     public String getETA() {
         return setETA;
+    }
+
+    public String getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(String vehicleType) {
+        this.vehicleType = vehicleType;
     }
 }

@@ -42,6 +42,7 @@ import com.mappls.sdk.maps.location.modes.CameraMode;
 import com.mappls.sdk.maps.location.modes.RenderMode;
 import com.mappls.sdk.maps.location.permissions.PermissionsListener;
 import com.mappls.sdk.maps.location.permissions.PermissionsManager;
+import com.mappls.sdk.navigation.MapplsNavigationHelper;
 import com.mappls.sdk.navigation.NavLocation;
 import com.mappls.sdk.navigation.NavigationFormatter;
 import com.mappls.sdk.services.api.OnResponseCallback;
@@ -125,6 +126,8 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
     String endTime;
 
     private boolean isLastParkedLocation = false;
+
+    private String vehicleType;
 
 
 
@@ -373,6 +376,13 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
                 SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
                 int saved_speed = prefs.getInt("new_top_speed", 0);
 
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("vehicle_data", MODE_PRIVATE);
+                vehicleType = sharedPreferences.getString("vehicle_type","");
+
+                if(vehicleType!=null) {
+                    //tvVehicleType.setText(vehicleType);
+                }
+
                 //getting end time from navigation
 
 
@@ -410,6 +420,10 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
                 recentTripRealmModule.setDestination_long(String.valueOf(destinyLong));
                 recentTripRealmModule.setDateTime(date);
                 recentTripRealmModule.setTopSpeed(top_speeds);
+                if(vehicleType!=null) {
+                    recentTripRealmModule.setVehicleType(vehicleType);
+                }
+
 
                 Log.e("Top_speed_saved", String.valueOf(top_speeds));
 
@@ -585,6 +599,7 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
                 if(DataRequestManager.isSaveTripsClikced) {
                     addTripDataToRealm();
                 }
+                MapplsNavigationHelper.getInstance().stopNavigation();
                 navigationModeEnabled = "0";
 //                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(NavigationActivity.this);
 //                SharedPreferences.Editor editor = preferences.edit();
@@ -599,6 +614,9 @@ public class NavigationActivity extends BaseMapActivity implements MapplsMap.Inf
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
                     startActivity(intent);
+                }
+                else{
+                    finish();
                 }
 
             }

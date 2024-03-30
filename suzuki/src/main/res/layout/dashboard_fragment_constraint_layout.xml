@@ -32,6 +32,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
             <TextView
                 android:id="@+id/static_welcome"
                 android:layout_width="wrap_content"
@@ -48,25 +56,27 @@
                 app:layout_constraintEnd_toStartOf="@id/ProfileName"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/ProfileName"
-                android:layout_width="wrap_content"
+                android:layout_width="170dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:ellipsize="end"
+                android:ellipsize="marquee"
                 android:letterSpacing="0.03"
                 android:lineSpacingExtra="0sp"
-                android:text="Prajwal"
+                android:maxLines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:scrollHorizontally="true"
+                android:text="WELCOME USER"
                 android:textAllCaps="true"
                 android:textColor="#ffffff"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/static_welcome"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:visibility="visible"/>
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView

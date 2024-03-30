@@ -185,9 +185,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
                 if(!prefs.contains("FirstTime")){
                     if (!switchSaveAllTrips.isChecked()){
 
-                        SharedPreferences.Editor editor = prefs.edit();
+                       /* SharedPreferences.Editor editor = prefs.edit();
                         editor.putBoolean("FirstTime",true);
-                        editor.commit();
+                        editor.commit();*/
 
                         dontSaveTripsAlert("Do you want to turn OFF Save All Trips?");
 
@@ -913,7 +913,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
 
     public void saveTripsDisclaimer(String message) {
         Dialog dialog = new Dialog(getContext(), R.style.custom_dialog);
-        dialog.setContentView(R.layout.custom_dialog_for_savetrips);
+        dialog.setContentView(R.layout.custom_dialog_trips_desclaimer);
 
         TextView tvAlertText = dialog.findViewById(R.id.etTripName);
         tvAlertText.setText(message);
@@ -949,6 +949,17 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
             editor.putBoolean("isSaveTripsChecked",false);
             editor.apply();
             dialog.dismiss();
+
+            final SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(getActivity());
+            if(!prefs.contains("FirstTime")){
+
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean("FirstTime",true);
+                editor.commit();
+
+                //dontSaveTripsAlert("Do you want to turn OFF Save All Trips?");
+
+            }
         });
 
         ivCross.setOnClickListener(new View.OnClickListener() {

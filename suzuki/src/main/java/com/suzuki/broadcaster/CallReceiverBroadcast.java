@@ -262,10 +262,17 @@ public class CallReceiverBroadcast extends BroadcastReceiver {
                                 m.setAccessible(true);
                                 telephonyService = (ITelephony) m.invoke(tm);
 
-                                if ((number != null)) {
-                                    telephonyService.endCall();
+                                if (telephonyService != null && number != null) {
+                                    try {
+                                        telephonyService.endCall();
+                                    } catch (Exception e) {
+                                        Log.e("tag", "Error ending call", e);
+                                    }
+
                                     sendSMS(number);
                                     Log.d("tag", "sendSMS onReceive: 1 ringing");
+                                } else {
+                                    Log.e("tag", "telephonyService or number is null");
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

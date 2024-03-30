@@ -25,6 +25,8 @@ public class FavouriteTripRealmModule extends RealmObject implements Comparable<
     private  int topSpeed;
     private  int rideTimeLt10;
 
+    private String vehicleType;
+
 
 
     private RealmList<ViaPointLocationRealmModel> pointLocationRealmModels = new RealmList<>();
@@ -192,4 +194,11 @@ public class FavouriteTripRealmModule extends RealmObject implements Comparable<
     }
 
 
+    public String getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(String vehicleType) {
+        this.vehicleType = vehicleType;
+    }
 }

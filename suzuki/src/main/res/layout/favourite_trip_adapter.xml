@@ -206,8 +206,8 @@
                         <CheckBox
                             android:id="@+id/cbCustomMsgCheck"
 
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
                             android:background="@drawable/checkbox_layout"
                             android:button="@null"
                             android:visibility="visible" />

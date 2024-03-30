@@ -73,7 +73,7 @@ public class DragDropRecyclerViewAdapter extends RecyclerView.Adapter<DragDropRe
         } else if (mapListCustomClassArrayList.get(position).getName().contentEquals("Fuel Station")) {
             holder.ivdragDropIcon.setImageResource(R.drawable.gas_icon);
         } else if (mapListCustomClassArrayList.get(position).getName().contentEquals("Hospitals")) {
-            holder.ivdragDropIcon.setImageResource(R.drawable.hos);
+            holder.ivdragDropIcon.setImageResource(R.drawable.hos_building2);  //TO DO1
         } else if (mapListCustomClassArrayList.get(position).getName().contentEquals("Banks and ATM")) {
             holder.ivdragDropIcon.setImageResource(R.drawable.atm);
         } else if (mapListCustomClassArrayList.get(position).getName().contentEquals("Food and Restaurants")) {

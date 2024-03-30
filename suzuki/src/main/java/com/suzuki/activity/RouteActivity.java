@@ -1160,7 +1160,6 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
         int day = c.get(Calendar.DAY_OF_MONTH);
 
         int year = c.get(Calendar.YEAR);
-
         String[] monthName = {"JAN", "FEB",
                 "MAR", "APR", "MAY", "JUN", "JUL",
                 "AUG", "SEP", "OCT", "NOV",

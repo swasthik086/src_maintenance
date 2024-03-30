@@ -55,6 +55,8 @@ public class RealmRecentAdapter extends RecyclerView.Adapter<RealmRecentHolder> 
         viewHolder.Startloc.setText(list.get(position).getStartlocation());
         viewHolder.Endloc.setText(list.get(position).getEndlocation());
 
+        viewHolder.trpName.setText(list.get(position).getTrip_name());
+
         if (position < (list.size() - 1)) viewHolder.view.setVisibility(View.VISIBLE);
         else viewHolder.view.setVisibility(View.GONE);
 
@@ -72,7 +74,8 @@ public class RealmRecentAdapter extends RecyclerView.Adapter<RealmRecentHolder> 
                         list.get(position).getDestination_lat(), list.get(position).getDestination_long(),
                         list.get(position).getTrip_name(), list.get(position).getRideTime(), list.get(position).getTotalDistance(),
                         String.valueOf(list.get(position).getTopSpeed()), String.valueOf(list.get(position).getRidetimeLt10()),
-                        list.get(position).getPointLocationRealmModels(),list.get(position).getstartTime(),list.get(position).getETA());
+                        list.get(position).getPointLocationRealmModels(),list.get(position).getstartTime(),list.get(position).getETA(),
+                        list.get(position).getVehicleType());
               //  Toast.makeText(context, ""+ list.get(position).getCurrent_lat()+list.get(position).getCurrent_long(), Toast.LENGTH_SHORT).show();
             }
 
@@ -91,7 +94,8 @@ public class RealmRecentAdapter extends RecyclerView.Adapter<RealmRecentHolder> 
                             list.get(position).getDestination_lat(), list.get(position).getDestination_long(),
                             list.get(position).getTrip_name(), list.get(position).getRideTime(), list.get(position).getTotalDistance(),
                             String.valueOf(list.get(position).getTopSpeed()), String.valueOf(list.get(position).getRidetimeLt10()),
-                            list.get(position).getPointLocationRealmModels(),list.get(position).getstartTime(),list.get(position).getETA());
+                            list.get(position).getPointLocationRealmModels(),list.get(position).getstartTime(),list.get(position).getETA(),
+                            list.get(position).getVehicleType());
                 } else {
                     clickedItem.adapterItemIsClicked(list.get(position).getId(), "fav", true, list.get(position).getDate(),
                             list.get(position).getDateTime(), list.get(position).getTime(), list.get(position).getStartlocation(),
@@ -100,7 +104,8 @@ public class RealmRecentAdapter extends RecyclerView.Adapter<RealmRecentHolder> 
                             list.get(position).getTotalDistance(), String.valueOf(list.get(position).getTopSpeed()),
                             String.valueOf(list.get(position).getRidetimeLt10()), list.get(position).getPointLocationRealmModels(),
                             list.get(position).getstartTime(),
-                            list.get(position).getETA());
+                            list.get(position).getETA(),
+                            list.get(position).getVehicleType());
                 }
             }
         });
@@ -114,7 +119,8 @@ public class RealmRecentAdapter extends RecyclerView.Adapter<RealmRecentHolder> 
                         list.get(position).getEndlocation(), list.get(position).getCurrent_lat(), list.get(position).getCurrent_long(),
                         list.get(position).getDestination_lat(), list.get(position).getDestination_long(), list.get(position).getTrip_name(),
                         list.get(position).getRideTime(), list.get(position).getTotalDistance(), String.valueOf(list.get(position).getTopSpeed()),
-                        String.valueOf(list.get(position).getRidetimeLt10()), list.get(position).getPointLocationRealmModels(),list.get(position).getstartTime(),list.get(position).getETA());
+                        String.valueOf(list.get(position).getRidetimeLt10()), list.get(position).getPointLocationRealmModels(),list.get(position).getstartTime(),list.get(position).getETA(),
+                        list.get(position).getVehicleType());
             }
         });
     }

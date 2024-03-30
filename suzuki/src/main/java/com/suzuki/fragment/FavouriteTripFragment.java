@@ -153,12 +153,12 @@ public class FavouriteTripFragment extends Fragment implements IOnclickFromAdapt
 
 
     @Override
-    public void adapterItemIsClicked(int clickedPositon, String actionToPerform, boolean clicked, String date, Date dateTime, String time, String startLoc, String endLoc, String cuurent_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String rideTime, String totalDistance, String topspeed, String timelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList, String startTime,String endTime) {
+    public void adapterItemIsClicked(int clickedPositon, String actionToPerform, boolean clicked, String date, Date dateTime, String time, String startLoc, String endLoc, String cuurent_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String rideTime, String totalDistance, String topspeed, String timelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList, String startTime,String endTime, String vehicleType) {
 
         if (actionToPerform.contentEquals("fav")) {
 
 
-            addFavouriteTripDataToRealm(date, dateTime, clickedPositon, time, startLoc, endLoc, clicked, cuurent_lat, current_long, destiny_lat, destiny_long, tripName, rideTime, totalDistance, topspeed, timelt10,viaPointRealmList,startTime,endTime);
+            addFavouriteTripDataToRealm(date, dateTime, clickedPositon, time, startLoc, endLoc, clicked, cuurent_lat, current_long, destiny_lat, destiny_long, tripName, rideTime, totalDistance, topspeed, timelt10,viaPointRealmList,startTime,endTime, vehicleType);
 
             updateRecentData(realm, clickedPositon, clicked);
 
@@ -196,6 +196,7 @@ public class FavouriteTripFragment extends Fragment implements IOnclickFromAdapt
                 in.putExtra("rideStartTime", startTime);
                 in.putExtra("rideEndTime", endTime);
                 in.putExtra("viaPointList", viaPointList);
+                in.putExtra("vehicleType", vehicleType);
                 startActivity(in);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -243,7 +244,7 @@ public class FavouriteTripFragment extends Fragment implements IOnclickFromAdapt
 
     }
 
-    private void addFavouriteTripDataToRealm(String date, Date dateTime, int id, String time, String startLoc, String endLoc, boolean clicked, String current_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String rideTime, String totalDistance, String topspeed, String timelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList,String startTime, String endTime) {
+    private void addFavouriteTripDataToRealm(String date, Date dateTime, int id, String time, String startLoc, String endLoc, boolean clicked, String current_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String rideTime, String totalDistance, String topspeed, String timelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList,String startTime, String endTime, String vehicleType) {
         Realm realm = Realm.getDefaultInstance();
         try {
 
@@ -284,6 +285,7 @@ public class FavouriteTripFragment extends Fragment implements IOnclickFromAdapt
                                 favouriteTripRealmModule.setTotalDistance(totalDistance);
                                 favouriteTripRealmModule.setTopSpeed(Integer.parseInt(topspeed));
                                 favouriteTripRealmModule.setRideTimeLt10(Integer.parseInt(timelt10));
+                                favouriteTripRealmModule.setVehicleType(vehicleType);
                                 realm.insert(favouriteTripRealmModule);
 
                                 RealmResults<FavouriteTripRealmModule> resultsafte = realm.where(FavouriteTripRealmModule.class).findAll();
@@ -312,6 +314,7 @@ public class FavouriteTripFragment extends Fragment implements IOnclickFromAdapt
                                 favtripUpdateModel.setTotalDistance(totalDistance);
                                 favouriteTripRealmModule.setTopSpeed(Integer.parseInt(topspeed));
                                 favouriteTripRealmModule.setRideTimeLt10(Integer.parseInt(timelt10));
+                                favouriteTripRealmModule.setVehicleType(vehicleType);
                                 realm.insertOrUpdate(favtripUpdateModel);
                                 RealmResults<FavouriteTripRealmModule> resultsafte = realm.where(FavouriteTripRealmModule.class).findAll();
 

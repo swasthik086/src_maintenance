@@ -1969,7 +1969,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
     }
 
     @Override
-    public void adapterItemIsClicked(int clickedPositon, String actionToPerform, boolean clicked, String date, Date dateTime, String time, String startLoc, String endLoc, String cuurent_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String rideTime, String totalDistance, String topspeed, String timelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList, String startTime,String endTime) {
+    public void adapterItemIsClicked(int clickedPositon, String actionToPerform, boolean clicked, String date, Date dateTime, String time, String startLoc, String endLoc, String cuurent_lat, String current_long, String destiny_lat, String destiny_long, String tripName, String rideTime, String totalDistance, String topspeed, String timelt10, RealmList<ViaPointLocationRealmModel> viaPointRealmList, String startTime,String endTime, String vehicleType) {
 
     }
 
@@ -2887,7 +2887,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
                 } else if (mapListItem.get(0).getName().contentEquals("Fuel Station")) {
                     TFab1.setImageResource(R.drawable.gas_icon);
                 } else if (mapListItem.get(0).getName().contentEquals("Hospitals")) {
-                    TFab1.setImageResource(R.drawable.hos);
+                    TFab1.setImageResource(R.drawable.hos_building2);
                 } else if (mapListItem.get(0).getName().contentEquals("Banks and ATM")) {
                     TFab1.setImageResource(R.drawable.atm);
                 } else if (mapListItem.get(0).getName().contentEquals("Food and Restaurants")) {
@@ -2914,7 +2914,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
                 } else if (mapListItem.get(1).getName().contentEquals("Fuel Station")) {
                     TFab2.setImageResource(R.drawable.gas_icon);
                 } else if (mapListItem.get(1).getName().contentEquals("Hospitals")) {
-                    TFab2.setImageResource(R.drawable.hos);
+                    TFab2.setImageResource(R.drawable.hos_building2);
                 } else if (mapListItem.get(1).getName().contentEquals("Banks and ATM")) {
                     TFab2.setImageResource(R.drawable.atm);
                 } else if (mapListItem.get(1).getName().contentEquals("Food and Restaurants")) {
@@ -2941,7 +2941,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
                 } else if (mapListItem.get(2).getName().contentEquals("Fuel Station")) {
                     TFab3.setImageResource(R.drawable.gas_icon);
                 } else if (mapListItem.get(2).getName().contentEquals("Hospitals")) {
-                    TFab3.setImageResource(R.drawable.hos);
+                    TFab3.setImageResource(R.drawable.hos_building2);
                 } else if (mapListItem.get(2).getName().contentEquals("Banks and ATM")) {
                     TFab3.setImageResource(R.drawable.atm);
                 } else if (mapListItem.get(2).getName().contentEquals("Food and Restaurants")) {
@@ -2968,7 +2968,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
                 } else if (mapListItem.get(3).getName().contentEquals("Fuel Station")) {
                     TFab4.setImageResource(R.drawable.gas_icon);
                 } else if (mapListItem.get(3).getName().contentEquals("Hospitals")) {
-                    TFab4.setImageResource(R.drawable.hos);
+                    TFab4.setImageResource(R.drawable.hos_building2);
                 } else if (mapListItem.get(3).getName().contentEquals("Banks and ATM")) {
                     TFab4.setImageResource(R.drawable.atm);
                 } else if (mapListItem.get(3).getName().contentEquals("Food and Restaurants")) {

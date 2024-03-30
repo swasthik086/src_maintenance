@@ -59,7 +59,10 @@ import static com.suzuki.utils.Common.BikeBleName;
 
 
 public class HelpActivity extends AppCompatActivity implements OnClickListener {
-    static boolean flag = true;
+    private boolean flag = true;
+    private boolean General_flag = true;
+    private boolean Contact_flag = true;
+    private boolean Legal_flag = true;
 
     ImageView imArrowHelp, closeBtn;
     Button submitBtn;
@@ -126,14 +129,14 @@ public class HelpActivity extends AppCompatActivity implements OnClickListener {
         riderLoc = sharedPreferences.getString("location","");
 
         linearGeneral.setOnClickListener(v -> {
-            if (flag) {
+            if (General_flag) {
                 llFirstLayout.setVisibility(View.VISIBLE);
                 ivGen.setImageResource(R.drawable.help_drop);
-                flag = false;
+                General_flag = false;
             } else {
                 llFirstLayout.setVisibility(View.GONE);
                 ivGen.setImageResource(R.drawable.general);
-                flag = true;
+                General_flag = true;
             }
         });
 
@@ -142,14 +145,14 @@ public class HelpActivity extends AppCompatActivity implements OnClickListener {
         final LinearLayout llSecondLayout = (LinearLayout) findViewById(R.id.llInLayout2);
 
         linearContact.setOnClickListener(v -> {
-            if (flag) {
+            if (Contact_flag) {
                 llSecondLayout.setVisibility(View.VISIBLE);
                 ivCont.setImageResource(R.drawable.help_drop);
-                flag = false;
+                Contact_flag = false;
             } else {
                 llSecondLayout.setVisibility(View.GONE);
                 ivCont.setImageResource(R.drawable.general);
-                flag = true;
+                Contact_flag = true;
             }
         });
 
@@ -158,16 +161,16 @@ public class HelpActivity extends AppCompatActivity implements OnClickListener {
         final LinearLayout llThirdLayout = (LinearLayout) findViewById(R.id.llInLayout3);
 
         linearLegal.setOnClickListener(v -> {
-            if (flag) {
+            if (Legal_flag) {
                 llThirdLayout.setVisibility(View.VISIBLE);
                 ivLeg.setImageResource(R.drawable.help_drop);
 
-                flag = false;
+                Legal_flag = false;
             } else {
                 llThirdLayout.setVisibility(View.GONE);
                 ivLeg.setImageResource(R.drawable.general);
 
-                flag = true;
+                Legal_flag = true;
             }
         });
 
