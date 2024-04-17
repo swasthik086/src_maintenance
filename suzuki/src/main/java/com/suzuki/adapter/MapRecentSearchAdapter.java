@@ -57,11 +57,13 @@ public class MapRecentSearchAdapter extends BaseAdapter {
         MapRecentRealmModule module = results.get(position);
         assert module != null;
         holder.titleTv.setText(module.getPlaceName());
-        if (module.getAlternateName().length()<=1){
+        if (module.getAlternateName()!=null&&module.getAlternateName().length()<=1){
             holder.alternateNameTv.setVisibility(View.GONE);
         } else {
-            holder.alternateNameTv.setVisibility(View.VISIBLE);
-            holder.alternateNameTv.setText(module.getAlternateName());
+            if(module.getAlternateName()!=null) {
+                holder.alternateNameTv.setVisibility(View.VISIBLE);
+                holder.alternateNameTv.setText(module.getAlternateName());
+            }
         }
         holder.addressTv.setText(module.getAddress());
 
