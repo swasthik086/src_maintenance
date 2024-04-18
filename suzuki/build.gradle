@@ -204,5 +204,5 @@ dependencies {
    // implementation 'com.mappls.sdk:navigation-camera:1.0.0'
     implementation 'com.mappls.sdk:navigation-camera:1.0.1'
 
-    implementation 'com.mappls.sdk:navigation-sdk:0.13.12'
+    implementation 'com.mappls.sdk:navigation-sdk:0.13.1'
 }

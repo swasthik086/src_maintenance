@@ -1651,13 +1651,13 @@ if (adviseInfo!=null){
 
     }
 
-   /* @Override
+  @Override
     public void onWayPointReached(String name) {
         ViaPoints = true;
         routeProgress = false;
         Toast.makeText(getContext(), "Via Point Reached " + name, Toast.LENGTH_SHORT).show();
     }
-*/
+
     @Override
     public void onEvent(@Nullable NavEvent navEvent) {
 
@@ -1779,12 +1779,12 @@ if (adviseInfo!=null){
 
     }
 
-    @Override
+  /*  @Override
     public void onWayPointReached(WayPoint wayPoint) {
         ViaPoints = true;
         routeProgress = false;
         Toast.makeText(getContext(), "Via Point Reached " + wayPoint.getSpokenName(), Toast.LENGTH_SHORT).show();
-    }
+    }*/
 
 
     public void showExitNavigationAlert(Context context, INavigationListener iNavigationListener) {
