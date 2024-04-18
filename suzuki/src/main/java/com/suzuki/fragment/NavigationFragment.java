@@ -1736,11 +1736,11 @@ if (adviseInfo!=null){
             }
             if (mapmyIndiaMap != null)
                 drawPolyLine();
-            int color = getCongestionPercentage(MapplsNavigationHelper.getInstance().getCurrentRoute().legs().get(0).annotation().congestion(),
-                    MapplsNavigationHelper.getInstance().getNodeIndex());
+           /* int color = getCongestionPercentage(MapplsNavigationHelper.getInstance().getCurrentRoute().legs().get(0).annotation().congestion(),
+                    MapplsNavigationHelper.getInstance().getNodeIndex());*/
             text_view_reach_eta.setTextColor(ContextCompat.getColor(
                     getContext(),
-                    color
+                    R.color.white
             ));
 
 
@@ -1980,11 +1980,11 @@ if (adviseInfo!=null){
 
     private void getMapDataToDevice(AdviseInfo adviseInfo) {
 
-        int color = getCongestionPercentage(MapplsNavigationHelper.getInstance().getCurrentRoute().legs().get(0).annotation().congestion(),
-                MapplsNavigationHelper.getInstance().getNodeIndex());
+      /*  int color = getCongestionPercentage(MapplsNavigationHelper.getInstance().getCurrentRoute().legs().get(0).annotation().congestion(),
+                MapplsNavigationHelper.getInstance().getNodeIndex());*/
         text_view_reach_eta.setTextColor(ContextCompat.getColor(
                 getContext(),
-                color
+                R.color.white
         ));
         text_view_reach_eta.setText("ETA - " + adviseInfo.getEta());
         text_view_total_distance_left.setText("DTG - " + NavigationFormatter.getFormattedDistance(adviseInfo.getLeftDistance(), (SuzukiApplication) getApplicationContext()));
