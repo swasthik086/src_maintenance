@@ -984,7 +984,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
         BikeBleName.observe(requireActivity(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                if (s.isEmpty()) {
+                if (s != null && s.isEmpty()) {
                     llRedAlertBle.setVisibility(View.VISIBLE);
                 }
 

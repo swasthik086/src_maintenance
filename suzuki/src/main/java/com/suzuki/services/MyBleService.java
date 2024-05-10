@@ -1,5 +1,6 @@
 package com.suzuki.services;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -10,6 +11,7 @@ import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Binder;
 import android.os.Build;
@@ -19,6 +21,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -38,6 +41,7 @@ import com.suzuki.utils.Common;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -117,8 +121,20 @@ public class MyBleService extends Service {
                             getConnectionStatus(staticConnectionStatus, getApplicationContext());
                             userStatus = false;
 
+                            if (ActivityCompat.checkSelfPermission(MyBleService.this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                                // TODO: Consider calling
+                                //    ActivityCompat#requestPermissions
+                                // here to request the missing permissions, and then overriding
+                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                //                                          int[] grantResults)
+                                // to handle the case where the user grants the permission. See the documentation
+                                // for ActivityCompat#requestPermissions for more details.
+                                return;
+                            }
                             bluetoothadapter.enable();
-                        } else BLE_ENABLED = true;
+                        } else {
+                            BLE_ENABLED = true;
+                        }
                     }
 
                     if (!connectionStarted && !staticConnectionStatus && !IsManualConnection && prev_cluster_macAddr != null && !prev_cluster_macAddr.equals("") ) {
@@ -338,6 +354,20 @@ public class MyBleService extends Service {
                             byte[] charValue = characteristic.getValue();
 
                             EventBus.getDefault().post(new ClusterStatusPktPojo(new String(charValue), data));
+
+                           /* StringBuilder hexString = new StringBuilder();
+                            for (byte b : data) {
+                                String hex = Integer.toHexString(Byte.toUnsignedInt(b));
+                                if (hex.length() == 1) {
+                                    hexString.append('0');
+                                }
+                                hexString.append(hex).append(' ');
+                            }
+
+
+                            Log.e("Onconnect_myble43", hexString.toString());
+                            // String str = new String(PKT);
+                            Log.e("Data Packet Cluster",hexString.toString());*/
                         }
                     });
         } catch (Exception e) {
@@ -400,13 +430,13 @@ public class MyBleService extends Service {
                 localBroadcastManager.sendBroadcast(new Intent("closeDialogActivity"));
 
                 try{
-                    DEVICESCAN_OBJ.finish();
+                    // DEVICESCAN_OBJ.finish();
                 }catch (Exception e){
                     Log.e(EXCEPTION,getClass().getName()+" onConnectSuccess "+String.valueOf(e));
                 }
 
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     Log.e(EXCEPTION,getClass().getName()+" onConnectSuccess_2 "+String.valueOf(e));
                 }

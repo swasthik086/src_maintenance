@@ -124,6 +124,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -146,13 +147,13 @@ import static com.suzuki.activity.HomeScreenActivity.mBoundService;
 import static com.suzuki.activity.RouteNearByActivity.startClicked;
 import static com.suzuki.application.SuzukiApplication.calculateCheckSum;
 import static com.suzuki.broadcaster.BluetoothCheck.BLUETOOTH_STATE;
+import static com.suzuki.fragment.DashboardFragment.BLE_CONNECTED;
 import static com.suzuki.fragment.DashboardFragment.staticConnectionStatus;
 
 import static com.suzuki.fragment.DashboardFragment.NoSignal;
 import static com.suzuki.utils.Common.BikeBleName;
 import static com.suzuki.utils.Common.EXCEPTION;
-
-
+import static com.suzuki.utils.Common.FIRST_TIME;
 
 
 public class NavigationFragment extends Fragment implements
@@ -222,6 +223,10 @@ public int saved_speed, top_speeds;
     private int counter=0;
     private long DELAY=300;
     private boolean lastparkedlocation = false;
+
+    private int sendCount = 0;
+
+    private boolean initialSendingDone = false;
 
 
     private final Runnable gpsRunnable = new Runnable() {
@@ -456,12 +461,12 @@ public int saved_speed, top_speeds;
     public void onConnectionEvent(EvenConnectionPojo event) {
 
         if (!BLUETOOTH_STATE) {
-            staticConnectionStatus = false;
+            BLE_CONNECTED = false;
 
-            Intent i = new Intent("status").putExtra("status", staticConnectionStatus);
+            Intent i = new Intent("status").putExtra("status", BLE_CONNECTED);
             requireActivity().sendBroadcast(i);
 
-            if (staticConnectionStatus)
+            if (BLE_CONNECTED)
             {
                 llRedAlertBle.setVisibility(View.GONE);
                 top_strip_layout.setVisibility(View.VISIBLE);
@@ -521,7 +526,7 @@ public int saved_speed, top_speeds;
     private void  setBluetoothStatus() {
 
         if (BLUETOOTH_STATE) {
-            if (staticConnectionStatus) {
+            if (BLE_CONNECTED) {
                 llRedAlertBle.setVisibility(View.GONE);
                 soundFab.setVisibility(View.VISIBLE);
 
@@ -717,6 +722,10 @@ public int saved_speed, top_speeds;
         });
 
         navigationModeEnabled="1";//resetting
+
+        // sendUserInfoPacket();
+
+
         updateDisplay.run();
 
         tvCustomTextBtn.setOnClickListener(v -> {
@@ -784,6 +793,36 @@ public int saved_speed, top_speeds;
         }
         requireContext().registerReceiver(this.mConnReceiver,
                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
+    }
+
+    private void sendUserInfoPacket() {
+      /*  byte[] PKT_Userinfo = getSmartPhoneUSERINFOPKT(getApplicationContext().getSharedPreferences("user_data", MODE_PRIVATE).getString("name", ""));
+        if (mBoundService != null) {
+            for (int i = 0; i < 3; i++) {
+                final int count = i + 1;
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBoundService.writeDataFromAPPtoDevice(PKT_Userinfo, 36);
+                        Log.d("Packet sent", "Count: " + count);
+                    }
+                }, i * 50);
+            }
+        }*/
+       /* byte[] PKT_Userinfo = getSmartPhoneUSERINFOPKT(getApplicationContext().getSharedPreferences("user_data", MODE_PRIVATE).getString("name", ""));
+        if (mBoundService != null && sendCount < 3) {
+            mBoundService.writeDataFromAPPtoDevice(PKT_Userinfo, 36);
+            sendCount++;
+        }*/
+        byte[] PKT_Userinfo = getSmartPhoneUSERINFOPKT(getApplicationContext().getSharedPreferences("user_data", MODE_PRIVATE).getString("name", ""));
+        if (mBoundService != null && sendCount < 5) {
+            mBoundService.writeDataFromAPPtoDevice(PKT_Userinfo, 36);
+            sendCount++;
+            handler.postDelayed(this::sendUserInfoPacket, 200);
+
+            Log.e("Data Packet count1", String.valueOf(sendCount));
+        }
 
     }
 
@@ -1207,6 +1246,8 @@ if (adviseInfo!=null){
             app.stopNavigation();
             dismissSnackBar();
         }
+
+        //  sendUserInfoPacket();
 
         /*IntentFilter intentFilter = new IntentFilter(
                 "shortdist");
@@ -1651,12 +1692,12 @@ if (adviseInfo!=null){
 
     }
 
-  @Override
+ /* @Override
     public void onWayPointReached(String name) {
         ViaPoints = true;
         routeProgress = false;
         Toast.makeText(getContext(), "Via Point Reached " + name, Toast.LENGTH_SHORT).show();
-    }
+    }*/
 
     @Override
     public void onEvent(@Nullable NavEvent navEvent) {
@@ -1778,13 +1819,12 @@ if (adviseInfo!=null){
         showExitNavigationAlert(getActivity(), this);
 
     }
-
-  /*  @Override
+    @Override
     public void onWayPointReached(WayPoint wayPoint) {
         ViaPoints = true;
         routeProgress = false;
         Toast.makeText(getContext(), "Via Point Reached " + wayPoint.getSpokenName(), Toast.LENGTH_SHORT).show();
-    }*/
+    }
 
 
     public void showExitNavigationAlert(Context context, INavigationListener iNavigationListener) {
@@ -2453,7 +2493,7 @@ if (adviseInfo!=null){
             Timber.e(e);
         }
     }
-// MMI changes added two override methods
+
     @Override
     public void setProgressChangeListener(@Nullable com.mappls.sdk.navigation.camera.ProgressChangeListener progressChangeListener) {
 
@@ -2517,7 +2557,15 @@ if (adviseInfo!=null){
 
     private void sendNavigationData(int directionSymbol, String shortdistance, String shortDistanceUnit, String eta, String remainingDist, String remainigDistanceUnit, String navigationStatus, String navigationModeStatus) {
 
-        if (mBoundService != null) {
+        if (mBoundService != null && BLE_CONNECTED ) {
+
+            if (!initialSendingDone) {
+                sendUserInfoPacket();
+                if (sendCount > 3) {
+                    initialSendingDone = true;
+                    sendCount = 0;
+                }
+            }
 
             if(Settings.System.getInt(HOME_SCREEN_OBJ.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0)==1) navigationStatus="0";
 
@@ -2528,17 +2576,84 @@ if (adviseInfo!=null){
                 Log.e(EXCEPTION,"sendNavigationData: "+String.valueOf(ex));
             }
 
-            byte[] PKT = GetNavigationPkt(maneuverID, dataShortDistance, shortDistanceUnit, eta, remainingDist, remainigDistanceUnit, navigationStatus, navigationModeStatus);
-            if(mBoundService!=null) mBoundService.writeDataFromAPPtoDevice(PKT,31);
-          /*  logNavigationPacket(PKT);
-            String str = new String(PKT);
+            if(initialSendingDone) {
 
-            Logger.log(getContext(),"NavigationPacket"+String.valueOf(str));*/
+                byte[] PKT = GetNavigationPkt(maneuverID, dataShortDistance, shortDistanceUnit, eta, remainingDist, remainigDistanceUnit, navigationStatus, navigationModeStatus);
+                if (mBoundService != null) mBoundService.writeDataFromAPPtoDevice(PKT, 31);
+
+                //String Str = new String(PKT);
+            }
+            //if(BLE_CONNECTED) {
+                /*byte[] PKT_Userinfo = getSmartPhoneUSERINFOPKT(getApplicationContext().getSharedPreferences("user_data", MODE_PRIVATE).getString("name", ""));
+                if (mBoundService != null&& sendCount <3){
+                    mBoundService.writeDataFromAPPtoDevice(PKT_Userinfo, 36);
+                    sendCount++;
+                }*/
+            //  sendUserInfoPacket();
+
+
         }
-        else{
-            /*
-          Logger.log(getContext(),"NF - sendNavigationData - mBoundService-=null");*/
+        else {
+            sendCount = 0;
+            initialSendingDone = false;
         }
+    }
+
+    private byte[] getSmartPhoneUSERINFOPKT(String data) {
+        String PhoneData;
+        byte[] RetArray = new byte[30];
+        try {
+            if (data.length() <= 22) {
+
+                for (int i = data.length(); i <= 22; i++) {
+                    data += "\0";
+                }
+                PhoneData = "?"/*Start of Frame*/ + "6"/*Frame ID*/ + data/*Data to icd*/ /* */ + "\0\0\0\0\0"/*Fill 0s at reserved byte positions*/ /*End of Frame*/;
+
+            } else {
+
+                data = "\0";
+                PhoneData = "?"/*Start of Frame*/ + "6"/*Frame ID*/ + data/*Phone data to icd*/ + "\0\0\0\0\0"/*Fill 0s at reserved byte positions*/ /*End of Frame*/;
+            }
+
+            RetArray = PhoneData.getBytes(StandardCharsets.UTF_8);
+            RetArray[0] = (byte) 0xA5;
+
+
+            for (int k = 22; k <= 26; k++) {
+                RetArray[k] = (byte) 0xFF;
+            }
+
+            //  Log.e("value_checl",String.valueOf(value));
+            /*  if( value == 500){
+                //First time user connects
+                RetArray[27] = (byte) 0x46;
+            }
+            else
+            {
+                //Second time user connects
+                RetArray[27] = (byte) 0x52;
+            }*/
+
+//            RetArray[27] = (byte) 0x46;
+
+//            Realm realm = Realm.getDefaultInstance();
+//            RiderProfileModule riderProfile = realm.where(RiderProfileModule.class).equalTo("id", 1).findFirst();
+
+//            SharedPreferences sharedPreferences = HOME_SCREEN_OBJ.getSharedPreferences("BLE_DEVICE", Context.MODE_PRIVATE);
+            if(FIRST_TIME){
+                RetArray[27] = (byte) 0x46;
+            } else RetArray[27] = (byte) 0x52;
+
+            RetArray[28] = calculateCheckSum(RetArray);
+
+            RetArray[29] = (byte) 0x7F;
+
+            calculateCheckSum(RetArray);
+
+        } catch(Exception ignored){ }
+
+        return RetArray;
     }
 
     private BroadcastReceiver mConnReceiver = new BroadcastReceiver() {
