@@ -42,6 +42,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
@@ -139,20 +140,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-import static com.mappls.sdk.maps.Mappls.getApplicationContext;
+
 import static com.suzuki.activity.HomeScreenActivity.TOAST_DURATION;
-import static com.suzuki.activity.RouteNearByActivity.tripID;
-import static com.suzuki.application.SuzukiApplication.calculateCheckSum;
 import static com.suzuki.fragment.DashboardFragment.staticConnectionStatus;
-import static com.suzuki.fragment.MapMainFragment.currentlocation;
 import static com.suzuki.utils.Common.BikeBleName;
 import static com.suzuki.utils.Common.EXCEPTION;
-import static com.suzuki.fragment.MapMainFragment.eLocation;
 
 
-public  class RouteActivity extends BaseActivity implements OnMapReadyCallback,   MapplsMap.OnMapLongClickListener,
-        PermissionsListener, StartDragListener, ViaPointAdapter.AddressChanged, ViaPointAdapter.deleteViaPoint,ViaPointAdapter.Updation , ViaPointAdapter.LayoutDelete {
 
+public  class RouteActivity extends AppCompatActivity {
+}
     public MapView mapView;
     LocationComponent locationComponent;
     LocationEngineCallback<LocationEngineResult> locationEngineCallback = new LocationEngineCallback<LocationEngineResult>()

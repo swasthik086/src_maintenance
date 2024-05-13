@@ -2,7 +2,7 @@ package com.suzuki.fragment;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
-import static com.mappls.sdk.maps.Mappls.getApplicationContext;
+
 import static com.suzuki.R.layout.dashboard_fragment_constraint_layout;
 import static com.suzuki.activity.DeviceListingScanActivity.DEVICESCAN_OBJ;
 import static com.suzuki.activity.HomeScreenActivity.CALL_CLEAR;
@@ -196,7 +196,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         Typeface typefaceRobotoRegular = Typeface.createFromAsset(getContext().getAssets(), "fonts/Roboto-Regular.ttf");
         if (bluetoothadapter != null) BLUETOOTH_STATE = true;
         else BLUETOOTH_STATE = false;
-        app = getMyApplication();
+      //  app = getMyApplication();
 //        layoutTop = (RelativeLayout) view.findViewById(R.id.layoutTop);
         rlButtonConnect = view.findViewById(R.id.rlButtonConnect);
         rlButtonWhiePair = view.findViewById(R.id.rlButtonWhiePair);
@@ -251,7 +251,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         btAdapter = BluetoothAdapter.getDefaultAdapter();
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        WindowManager windowmanager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager windowmanager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
         windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
 
         settingsPojos = realm.where(SettingsPojo.class).findAll();
@@ -381,7 +381,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
 
         overlapImage.setOnClickListener(v -> startActivity(new Intent(getActivity(), ZoomProfileImageActivity.class)));
 
-        sharedPreferences= getApplicationContext().getSharedPreferences("DASHBOARD", MODE_PRIVATE);
+        sharedPreferences= getActivity().getSharedPreferences("DASHBOARD", MODE_PRIVATE);
 
         ClassName = getClass().getName();
 
@@ -397,7 +397,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
             }
         });
 
-        sharedPreferences = getApplicationContext().getSharedPreferences("vehicle_data",MODE_PRIVATE);
+        sharedPreferences = getActivity().getSharedPreferences("vehicle_data",MODE_PRIVATE);
         FuelLevel = sharedPreferences.getInt("fuel_level",0);
 
         viewRecord();
@@ -640,7 +640,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         Location currentLoc = new CurrentLoc().getCurrentLoc(getContext());
         if (currentLoc != null && (!isRegionFixed)) {
             try {
-                getMyApplication().setRegion(currentLoc.getLatitude(), currentLoc.getLongitude());
+                //getMyApplication().setRegion(currentLoc.getLatitude(), currentLoc.getLongitude());
             } catch (Exception ignored) {
             }
         }
@@ -674,7 +674,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
     }*/
 
     public void viewRecord() {
-        sharedPreferences = getApplicationContext().getSharedPreferences("vehicle_data", MODE_PRIVATE);
+        sharedPreferences = getActivity().getSharedPreferences("vehicle_data", MODE_PRIVATE);
         type = sharedPreferences.getString("vehicle_type","");
         model = sharedPreferences.getString("vehicle_name","");
         variant = sharedPreferences.getInt("vehicle_model",0);
@@ -695,7 +695,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
 
                     String ride_count = String.valueOf(riderProfile.getRideCounts());
                     rideCount.setText(ride_count);
-                    sharedPreferences = getApplicationContext().getSharedPreferences("vehicle_data",MODE_PRIVATE);
+                    sharedPreferences = getActivity().getSharedPreferences("vehicle_data",MODE_PRIVATE);
                     editor = sharedPreferences.edit();
                     editor.putString("ride_count", ride_count);
                     editor.apply();
@@ -924,7 +924,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
                             Calendar c = Calendar.getInstance();
                             finaltime = simpleDateFormat.format(c.getTime());
 
-                            sharedPreferences = getApplicationContext().getSharedPreferences("vehicle_data",MODE_PRIVATE);
+                            sharedPreferences = getActivity().getSharedPreferences("vehicle_data",MODE_PRIVATE);
                             speedAlert = sharedPreferences.getInt("speed",0);
 
                             speedAlertForDashboard = String.format("%03d", speedAlert);
@@ -955,7 +955,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
 
                         } else {
                             Log.e("statuspacket", String.valueOf(i));
-                            sendUSERINFOtoDashboard(getApplicationContext().getSharedPreferences("user_data", MODE_PRIVATE).getString("name", ""));
+                            sendUSERINFOtoDashboard(getActivity().getSharedPreferences("user_data", MODE_PRIVATE).getString("name", ""));
                             i++;
                             wrong_fuel_data_discarded=false;
                         }
@@ -1642,10 +1642,10 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         updateBluetoothStatusToUI(status);
     }
 
-    public SuzukiApplication getMyApplication() {
-//        if (((SuzukiApplication) getActivity().getApplication()) != null)
-        return ((SuzukiApplication) getActivity().getApplication());
-    }
+//    public SuzukiApplication getMyApplication() {
+////        if (((SuzukiApplication) getActivity().getApplication()) != null)
+//        return ((SuzukiApplication) getActivity().getApplication());
+//    }
 
     private static void updateBluetoothStatusToUI(final boolean status) {
         new Handler(Looper.getMainLooper()).post(() -> {
@@ -1723,16 +1723,16 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
                 else FuelLevel = 0;
 
                 getActivity().runOnUiThread(() -> {
-                    SharedPreferences.Editor editors = getApplicationContext().getSharedPreferences("top_speed", Context.MODE_MULTI_PROCESS).edit();
+                    SharedPreferences.Editor editors = getActivity().getSharedPreferences("top_speed", Context.MODE_MULTI_PROCESS).edit();
                     editors.putInt("top_speed", top_speeds);
                     editors.apply();
 
-                    SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
+                    SharedPreferences prefs = getActivity().getSharedPreferences("top_speed", MODE_PRIVATE);
                     int saved_speed = prefs.getInt("top_speed", 0);//"No name defined" is the default value.
 
                     if (navigationStarted==true){
                         if (top_speeds>=saved_speed){
-                            SharedPreferences.Editor edit = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE).edit();
+                            SharedPreferences.Editor edit = getActivity().getSharedPreferences("top_speed", MODE_PRIVATE).edit();
                             edit.putInt("new_top_speed", top_speeds);
                             edit.commit();
                         }
@@ -1741,7 +1741,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
                     String odometer_reading = Integer.parseInt(Odometer) + " " + "km";
                     tvOdometer.setText(odometer_reading);
 
-                    sharedPreferences = getApplicationContext().getSharedPreferences("vehicle_data",MODE_PRIVATE);
+                    sharedPreferences = getActivity().getSharedPreferences("vehicle_data",MODE_PRIVATE);
                     editor = sharedPreferences.edit();
                     editor.putString("odometer",odometer_reading);
                     editor.apply();
@@ -1920,7 +1920,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
 
 
         //image data
-        sharedPreferences = getApplicationContext().getSharedPreferences("vehicle_data", MODE_PRIVATE);
+        sharedPreferences = getActivity().getSharedPreferences("vehicle_data", MODE_PRIVATE);
         type = sharedPreferences.getString("vehicle_type","");
         model = sharedPreferences.getString("vehicle_name","");
         variant = sharedPreferences.getInt("vehicle_model",0);

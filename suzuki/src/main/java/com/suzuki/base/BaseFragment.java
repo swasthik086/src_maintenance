@@ -1,7 +1,7 @@
  package com.suzuki.base;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.mappls.sdk.maps.Mappls.getApplicationContext;
+
 import static com.suzuki.application.SuzukiApplication.calculateCheckSum;
 
 import android.app.AlertDialog;
@@ -77,16 +77,16 @@ public class BaseFragment extends Fragment {
                 editor.apply();*/
 
                 int top_speeds= Integer.parseInt(Cluster_data.substring(2,5));
-                SharedPreferences.Editor editors = getApplicationContext().getSharedPreferences("top_speed", Context.MODE_MULTI_PROCESS).edit();
+                SharedPreferences.Editor editors = getActivity().getSharedPreferences("top_speed", Context.MODE_MULTI_PROCESS).edit();
                 editors.putInt("top_speed", top_speeds);
                 editors.apply();
 
-                SharedPreferences prefs = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE);
+                SharedPreferences prefs = getActivity().getSharedPreferences("top_speed", MODE_PRIVATE);
                 int saved_speed = prefs.getInt("top_speed", 0);//"No name defined" is the default value.
 
 
                 if (top_speeds>=saved_speed){
-                    SharedPreferences.Editor edit = getApplicationContext().getSharedPreferences("top_speed", MODE_PRIVATE).edit();
+                    SharedPreferences.Editor edit = getActivity().getSharedPreferences("top_speed", MODE_PRIVATE).edit();
                     edit.putInt("new_top_speed", top_speeds);
                     edit.apply();
                 }

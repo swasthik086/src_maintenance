@@ -8,11 +8,13 @@
     android:layout_height="match_parent">
 
 
+<!--
 
     <com.mappls.sdk.maps.MapView
         android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+-->
 
     <RelativeLayout
         android:id="@+id/rlMaplayout"

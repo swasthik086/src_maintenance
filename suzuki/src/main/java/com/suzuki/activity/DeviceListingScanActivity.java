@@ -117,9 +117,9 @@ public class DeviceListingScanActivity extends BaseActivity implements View.OnCl
     public static final int PERMISSION_REQUEST_BLUETOOTH_SCAN = 123;
     public static final int PERMISSION_REQUEST_BLUETOOTH_CONNECT = 101;
 
-    public SuzukiApplication getMyApplication() {
-        return ((SuzukiApplication) this.getApplication());
-    }
+//    public SuzukiApplication getMyApplication() {
+//        return ((SuzukiApplication) this.getApplication());
+//    }
 
     Handler handler;
 
@@ -140,7 +140,7 @@ public class DeviceListingScanActivity extends BaseActivity implements View.OnCl
                 .setOperateTimeout(5000);
 
         realm = Realm.getDefaultInstance();
-        app = getMyApplication();
+    //    app = getMyApplication();
         viewRecord();
 
         Intent intent = getIntent();
