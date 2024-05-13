@@ -1,1 +1,1 @@
-include ':suzuki', ':meowbottomnavigation', ':FastBleLib'
+include ':suzuki', ':FastBleLib'

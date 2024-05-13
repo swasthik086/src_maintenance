@@ -29,11 +29,11 @@ allprojects {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
     defaultConfig {
         applicationId "suzuki.com.suzuki"
         minSdkVersion 23
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode 73
         versionName "2.15.08.09"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -103,7 +103,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.core:core-ktx:1.9.0'
-    implementation project(':meowbottomnavigation')
+    implementation 'com.etebarian:meow-bottom-navigation:1.2.0'
+//    implementation project(':meowbottomnavigation')
 
     // Import the BoM for the Firebase platform
     implementation platform('com.google.firebase:firebase-bom:26.1.1')
@@ -150,7 +151,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.1.1'*/
 
     implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
-    implementation 'me.jahirfiquitiva:FABsMenu:1.1.4'
+//    implementation 'me.jahirfiquitiva:FABsMenu:1.1.4'
 
     // Recommended: Add the Firebase SDK for Google Analytics.
     implementation 'com.google.firebase:firebase-analytics:18.0.0'
@@ -172,7 +173,7 @@ dependencies {
 
     //auto start
     implementation 'com.github.judemanutd:autostarter:1.0.8'
-    compile 'com.stepstone.apprating:app-rating:2.3.1'
+    implementation 'com.stepstone.apprating:app-rating:2.3.1'
     implementation platform('com.google.firebase:firebase-bom:28.3.1')
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'

@@ -84,7 +84,7 @@ public class MyBleService extends Service {
     public void onCreate() {
         try {
             Log.e("bleservice","checking");
-            timerService.scheduleAtFixedRate(new TimerTask() {
+            timerService.schedule(new TimerTask() {
 
                 @Override
                 public void run() {

@@ -28,14 +28,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        app:mbn_circleColor="@color/app_theme_color"
         app:mbn_backgroundBottomColor="#434343"
-        app:mbn_selectedIconBackgroundColor="#3dcbff"
         app:mbn_countBackgroundColor="#FFDDDD"
         app:mbn_countTextColor="@color/app_theme_color"
-
         app:mbn_defaultIconColor="@color/app_theme_color"
         app:mbn_rippleColor="@color/app_theme_color"
-        app:mbn_selectedIconColor="@color/app_theme_color"
+        app:mbn_selectedIconColor="@color/black"
         app:mbn_shadowColor="#1f212121" />
 
 </FrameLayout>

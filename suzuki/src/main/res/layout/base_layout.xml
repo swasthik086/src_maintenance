@@ -367,111 +367,174 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/auto_complete_list_item" />
 
-        <jahirfiquitiva.libs.fabsmenu.FABsMenuLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="50dp"
-            fab:fabs_menu_clickableOverlay="true"
-            fab:fabs_menu_overlayColor="@android:color/transparent">
+            android:layout_marginBottom="68dp"
+            tools:context=".MainActivity"
+            tools:ignore="HardcodedText">
 
-            <jahirfiquitiva.libs.fabsmenu.FABsMenu
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/FabMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|start"
-                android:clipChildren="true"
-                fab:fab_expandDirection="up"
-                fab:fab_labelsPosition="right"
-                fab:fab_menuMargins="16dp"
-                fab:fab_moreButtonBackgroundColor="@color/float_button_color"
-                fab:fab_moreButtonPlusIcon="@drawable/location_more"
-                fab:fab_moreButtonRippleColor="@color/white"
-                fab:fab_moreButtonSize="normal">
+                android:layout_gravity="end"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/location_more"
+                fab:backgroundTint="@color/float_button_color"
+                fab:rippleColor="@color/float_button_color"
+                app:fabSize="normal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-                <jahirfiquitiva.libs.fabsmenu.TitleFAB
-                    android:id="@+id/TFab1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    fab:backgroundTint="@color/float_button_color"
-                    fab:fabSize="mini"
-                    fab:fab_title="Suzuki service"
-                    fab:fab_title_backgroundColor="@color/float_button_color"
-                    fab:fab_title_textColor="@color/white"
-                    fab:rippleColor="@color/float_button_color"
-                    fab:srcCompat="@drawable/suzuki_logo" />
-                <!-- This is the item that appears at the top of the menu -->
-                <jahirfiquitiva.libs.fabsmenu.TitleFAB
-                    android:id="@+id/TFab2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    fab:backgroundTint="@color/float_button_color"
-                    fab:fabSize="mini"
-                    fab:fab_title="Fuel station"
-                    fab:fab_title_backgroundColor="@color/float_button_color"
-                    fab:fab_title_textColor="@color/white"
-                    fab:rippleColor="@color/float_button_color"
-                    fab:srcCompat="@drawable/gas_icon" />
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/TFMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:fabSize="mini"
+                fab:backgroundTint="@color/float_button_color"
+                fab:rippleColor="@color/float_button_color"
+                app:layout_constraintBottom_toTopOf="@+id/FabMenu"
+                app:layout_constraintEnd_toEndOf="@+id/FabMenu"
+                app:layout_constraintStart_toStartOf="@+id/FabMenu"
+                app:srcCompat="@drawable/more_menu_map_icon" />
 
-                <jahirfiquitiva.libs.fabsmenu.TitleFAB
-                    android:id="@+id/TFab3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    fab:backgroundTint="@color/float_button_color"
-                    fab:fabSize="mini"
-                    fab:fab_title="Favorite route"
-                    fab:fab_title_backgroundColor="@color/float_button_color"
-                    fab:fab_title_textColor="@color/white"
-                    fab:rippleColor="@color/float_button_color"
-                    fab:srcCompat="@drawable/fav_menu_icon" />
+            <TextView
+                android:id="@+id/TFMore_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="More"
+                android:textColor="@color/white"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:background="@color/float_button_color"
+                app:layout_constraintBottom_toBottomOf="@+id/TFMore"
+                app:layout_constraintStart_toEndOf="@+id/TFMore"
+                app:layout_constraintTop_toTopOf="@+id/TFMore" />
 
-                <jahirfiquitiva.libs.fabsmenu.TitleFAB
-                    android:id="@+id/TFab4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    fab:backgroundTint="@color/float_button_color"
-                    fab:fabSize="mini"
-                    fab:fab_title="Hospitals"
-                    fab:fab_title_backgroundColor="@color/float_button_color"
-                    fab:fab_title_textColor="@color/white"
-                    fab:rippleColor="@color/float_button_color"
-                    fab:srcCompat="@drawable/hos" />
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/TFab4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:fabSize="mini"
+                fab:backgroundTint="@color/float_button_color"
+                fab:rippleColor="@color/float_button_color"
+                app:layout_constraintBottom_toTopOf="@+id/TFMore"
+                app:layout_constraintEnd_toEndOf="@+id/TFMore"
+                app:layout_constraintStart_toStartOf="@+id/TFMore"
+                app:srcCompat="@drawable/hos" />
 
-                <!-- This item will appear just above the menu FAB -->
-                <jahirfiquitiva.libs.fabsmenu.TitleFAB
-                    android:id="@+id/TFMore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+            <TextView
+                android:id="@+id/TFab4_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Hospitals"
+                android:textColor="@color/white"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:background="@color/float_button_color"
+                app:layout_constraintBottom_toBottomOf="@+id/TFab4"
+                app:layout_constraintStart_toEndOf="@+id/TFab4"
+                app:layout_constraintTop_toTopOf="@+id/TFab4" />
 
-                    fab:backgroundTint="@color/float_button_color"
-                    fab:fabSize="mini"
-                    fab:fab_title="More"
-                    fab:fab_title_backgroundColor="@color/float_button_color"
-                    fab:fab_title_textColor="@color/white"
-                    fab:rippleColor="@color/float_button_color"
-                    fab:srcCompat="@drawable/more_menu_map_icon" />
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/TFab3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:fabSize="mini"
+                fab:backgroundTint="@color/float_button_color"
+                fab:rippleColor="@color/float_button_color"
+                app:layout_constraintBottom_toTopOf="@+id/TFab4"
+                app:layout_constraintEnd_toEndOf="@+id/TFab4"
+                app:layout_constraintStart_toStartOf="@+id/TFab4"
+                app:srcCompat="@drawable/fav_menu_icon" />
 
-            </jahirfiquitiva.libs.fabsmenu.FABsMenu>
+            <TextView
+                android:id="@+id/TFab3_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Favorite route"
+                android:textColor="@color/white"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:background="@color/float_button_color"
+                app:layout_constraintBottom_toBottomOf="@+id/TFab3"
+                app:layout_constraintStart_toEndOf="@+id/TFab3"
+                app:layout_constraintTop_toTopOf="@+id/TFab3" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/TFab2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:fabSize="mini"
+                fab:backgroundTint="@color/float_button_color"
+                fab:rippleColor="@color/float_button_color"
+                app:layout_constraintBottom_toTopOf="@+id/TFab3"
+                app:layout_constraintEnd_toEndOf="@+id/TFab3"
+                app:layout_constraintStart_toStartOf="@+id/TFab3"
+                app:srcCompat="@drawable/gas_icon" />
+
+            <TextView
+                android:id="@+id/TFab2_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Fuel station"
+                android:textColor="@color/white"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:background="@color/float_button_color"
+                app:layout_constraintBottom_toBottomOf="@+id/TFab2"
+                app:layout_constraintStart_toEndOf="@+id/TFab2"
+                app:layout_constraintTop_toTopOf="@+id/TFab2" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/TFab1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:fabSize="mini"
+                fab:backgroundTint="@color/float_button_color"
+                fab:rippleColor="@color/float_button_color"
+                app:layout_constraintBottom_toTopOf="@+id/TFab2"
+                app:layout_constraintEnd_toEndOf="@+id/TFab2"
+                app:layout_constraintStart_toStartOf="@+id/TFab2"
+                app:srcCompat="@drawable/suzuki_logo" />
+
+            <TextView
+                android:id="@+id/TFab1_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Suzuki service"
+                android:textColor="@color/white"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:background="@color/float_button_color"
+                app:layout_constraintBottom_toBottomOf="@+id/TFab1"
+                app:layout_constraintStart_toEndOf="@+id/TFab1"
+                app:layout_constraintTop_toTopOf="@+id/TFab1" />
 
 
-            <!--<jahirfiquitiva.libs.fabsmenu.TitleFAB-->
-            <!--android:layout_width="50dp"-->
-            <!--android:layout_height="50dp"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_marginRight="20dp"-->
-            <!--android:layout_marginBottom="60dp"-->
-            <!--fab:backgroundTint="@color/app_bar_color"-->
-            <!--fab:fabSize="mini"-->
-            <!--fab:fab_enableTitleClick="true"-->
-            <!--fab:fab_title=""-->
-            <!--fab:fab_title_textColor="@color/colorAccent"-->
-            <!--fab:rippleColor="@color/colorAccent"-->
-            <!--fab:srcCompat="@drawable/current_loc" />-->
-
-        </jahirfiquitiva.libs.fabsmenu.FABsMenuLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <RelativeLayout
             android:id="@+id/rlCurrentLocation"

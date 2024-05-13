@@ -1,7 +1,6 @@
 package com.suzuki.fragment;
 
 import static android.os.Looper.getMainLooper;
-import static android.view.View.GONE;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -60,14 +59,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import com.mappls.sdk.maps.MapView;
 import com.mappls.sdk.maps.MapplsMap;
 import com.mappls.sdk.maps.OnMapReadyCallback;
 import com.mappls.sdk.maps.Style;
-import com.mappls.sdk.maps.annotations.Icon;
-import com.mappls.sdk.maps.annotations.IconFactory;
 import com.mappls.sdk.maps.annotations.Marker;
 import com.mappls.sdk.maps.annotations.MarkerOptions;
 import com.mappls.sdk.maps.camera.CameraUpdateFactory;
@@ -121,7 +119,6 @@ import com.suzuki.pojo.MapWorkAndHomeRealmModule;
 import com.suzuki.pojo.ViaPointLocationRealmModel;
 import com.suzuki.utils.CheckInternet;
 import com.suzuki.utils.Common;
-import com.suzuki.utils.DataRequestManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -131,15 +128,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import jahirfiquitiva.libs.fabsmenu.FABsMenu;
-import jahirfiquitiva.libs.fabsmenu.FABsMenuListener;
-import jahirfiquitiva.libs.fabsmenu.TitleFAB;
 import timber.log.Timber;
 
 import static com.suzuki.activity.HomeScreenActivity.TOAST_DURATION;
@@ -191,7 +184,8 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
 
     String dataToNearBy;
     RelativeLayout rlCurrentLocation;
-    TitleFAB TFMore, TFab3, TFab2, TFab1, TFab4;
+    FloatingActionButton TFMore, TFab3, TFab2, TFab1, TFab4;
+    TextView TFMoreTv, TFab3Tv, TFab2Tv, TFab1Tv, TFab4Tv;
     RecyclerView rvDragDropCats, rvNearbyAutosuggest;
     DragDropRecyclerViewAdapter mAdapter;
     boolean mapIsReady = false;
@@ -213,7 +207,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
     RealmResults<MapListRealmModule> mapListItem;
     Realm realm;
     ArrayList<MapListCustomClass> mapListCustomClassArrayList;
-    FABsMenu FabMenu;
+    FloatingActionButton FabMenu;
     ListView recentSearchLV;
     MapRecentSearchAdapter recentSearchAdapter;
     ConstraintLayout recentHomelayout, homeConstraintLayout, workConstraintLayout;
@@ -228,6 +222,8 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
     private String setHomeAddressHint = "Search your Home Address", setWorkAddressHint = "Search your Work Address";
     private Common common;
 
+    private Boolean isAllFabsVisible = false;
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -241,12 +237,33 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
         mapView = view.findViewById(R.id.map_view);
         realm = Realm.getDefaultInstance();
         apiProgressBar = view.findViewById(R.id.api_progress_bar);
+
         FabMenu = view.findViewById(R.id.FabMenu);
+
         TFMore = view.findViewById(R.id.TFMore);
         TFab3 = view.findViewById(R.id.TFab3);
         TFab2 = view.findViewById(R.id.TFab2);
         TFab1 = view.findViewById(R.id.TFab1);
         TFab4 = view.findViewById(R.id.TFab4);
+
+        TFMoreTv = view.findViewById(R.id.TFMore_text);
+        TFab3Tv = view.findViewById(R.id.TFab3_text);
+        TFab2Tv = view.findViewById(R.id.TFab2_text);
+        TFab1Tv = view.findViewById(R.id.TFab1_text);
+        TFab4Tv = view.findViewById(R.id.TFab4_text);
+
+        TFMoreTv.setVisibility(View.GONE);
+        TFab3Tv.setVisibility(View.GONE);
+        TFab2Tv.setVisibility(View.GONE);
+        TFab1Tv.setVisibility(View.GONE);
+        TFab4Tv.setVisibility(View.GONE);
+
+        TFMore.hide();
+        TFab3.hide();
+        TFab2.hide();
+        TFab1.hide();
+        TFab4.hide();
+
         etSearchLoc = view.findViewById(R.id.etSearchLoc);
         rlMainLayout = view.findViewById(R.id.rlMainLayout);
         etNearbySearchLoc = view.findViewById(R.id.etNearbySearchLoc);
@@ -457,6 +474,23 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
             return true;
         });
 
+        FabMenu.setOnClickListener(v -> {
+
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(etSearchLoc.getWindowToken(), 0);
+
+            rvNearbyAutosuggest.setVisibility(View.GONE);
+            mSuggestionListView.setVisibility(View.GONE);
+//                recentSearchLayout.setVisibility(View.GONE);
+            setRecentLayoutVisibility(false);
+
+            if (isAllFabsVisible){
+                collapseFab();
+            } else {
+                expandFab();
+            }
+        });
+
         recentSearchLV.setOnItemClickListener((parent, view12, position, id) -> {
             if (orderedRecentSearchResult == null)
                 return;
@@ -525,7 +559,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
         rlMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FabMenu.collapse();
+                collapseFab();
                 etSearchLoc.setCursorVisible(false);
             }
         });
@@ -534,7 +568,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    FabMenu.collapse();
+                    collapseFab();
 //                    FabMenu.setVisibility(View.INVISIBLE);
 //                    rlCurrentLocation.setVisibility(View.INVISIBLE);
 
@@ -549,7 +583,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    FabMenu.collapse();
+                    collapseFab();
                 }
             }
         });
@@ -560,7 +594,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
             public boolean onTouch(View v, MotionEvent event) {
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    FabMenu.collapse();
+                    collapseFab();
                     String etNearby = etNearbySearchLoc.getText().toString();
                     String etSearch = etSearchLoc.getText().toString();
                     if (etNearby.length() < 1 && etSearch.length() < 1) {
@@ -580,7 +614,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
 
         etSearchLoc.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                FabMenu.collapse();
+                collapseFab();
                 String etNearby = etNearbySearchLoc.getText().toString();
                 String etSearch = etSearchLoc.getText().toString();
                 if (etNearby.length() < 1 && etSearch.length() < 1) {
@@ -594,7 +628,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
         llSearchBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FabMenu.collapse();
+                collapseFab();
                 String etNearby = etNearbySearchLoc.getText().toString();
                 String etSearch = etSearchLoc.getText().toString();
                 if (etNearby.length() < 1 && etSearch.length() < 1) {
@@ -605,7 +639,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
         etNearbySearchLoc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FabMenu.collapse();
+                collapseFab();
                 String etNearby = etNearbySearchLoc.getText().toString();
                 String etSearch = etSearchLoc.getText().toString();
                 if (etNearby.length() < 1 && etSearch.length() < 1) {
@@ -636,7 +670,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
         rlSearchBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FabMenu.collapse();
+                collapseFab();
                 String etNearby = etNearbySearchLoc.getText().toString();
                 String etSearch = etSearchLoc.getText().toString();
                 if (etNearby.length() < 1 && etSearch.length() < 1) {
@@ -646,7 +680,8 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
         });
 
         mapView.setOnTouchListener((v, event) -> {
-            FabMenu.collapseImmediately();
+//            FabMenu.collapseImmediately();
+            collapseFab();
             etSearchLoc.clearFocus();
 
             etSearchLoc.setText("");
@@ -709,7 +744,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
                     rvNearbyAutosuggest.setVisibility(View.GONE);
                     mSuggestionListView.setVisibility(View.GONE);
                 }
-                FabMenu.collapse();
+                collapseFab();
 
                 rvNearbyAutosuggest.setVisibility(View.GONE);
                 if (currentlocation != null) {
@@ -765,7 +800,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
 
             }
         });
-        FabMenu.setMenuListener(new FABsMenuListener() {
+        /*FabMenu.setMenuListener(new FABsMenuListener() {
             @Override
             public void onMenuClicked(FABsMenu fabsMenu) {
                 super.onMenuClicked(fabsMenu);
@@ -798,10 +833,10 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
 //                etNearbySearchLoc.setVisibility(View.GONE);
 //                etSearchLoc.setVisibility(View.VISIBLE);
             }
-        });
+        });*/
 
         TFMore.setOnClickListener(v -> {
-            FabMenu.collapse();
+            collapseFab();
 
             Dialog dialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -863,7 +898,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                FabMenu.collapse();
+//                collapseFab();
                 rvNearbyAutosuggest.setVisibility(View.GONE);
             }
 
@@ -935,7 +970,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
             @Override
             public void onClick(View v) {
                 etSearchLoc.getText().clear();
-                FabMenu.collapse();
+                collapseFab();
 
                 if (etSearchLoc != null) {
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -1565,7 +1600,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
     }
 
     private void getNearBy(double latitude, double longitude, String data) {
-       mapboxMap.clear();
+        mapboxMap.clear();
 
         MapplsNearby mapplsNearby = MapplsNearby.builder()
                 .setLocation(latitude, longitude)
@@ -1776,7 +1811,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
 
             if (location != null) {
 //                ((HomeScreenActivity) getActivity()).navigateTo(RouteFragment.newInstance(eLocation, fromLocation), true);
-           //     Toast.makeText(getActivity(), "" + fromLocation, Toast.LENGTH_SHORT).show();
+                //     Toast.makeText(getActivity(), "" + fromLocation, Toast.LENGTH_SHORT).show();
 
 //                this.eLocation = eLocation;
 //                Log.d("loccccdd", "--" + eLocation.placeName + "--" + eLocation.placeAddress);
@@ -1786,7 +1821,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
                 if (placeName != null && address != null && fromLocation != null) {
 
                     if (nearby) {
-                   //     Toast.makeText(getActivity(), "7", Toast.LENGTH_SHORT).show();
+                        //     Toast.makeText(getActivity(), "7", Toast.LENGTH_SHORT).show();
 
 //                        Intent in = new Intent(getActivity(), RouteNearByActivity.class);
                         Intent in = new Intent(getActivity(), RouteActivity.class);
@@ -1944,7 +1979,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
 
 //        Intent in = new Intent(getActivity(), RouteNearByActivity.class);
         Intent in = new Intent(getActivity(), RouteActivity.class);
-        FabMenu.collapse();
+        collapseFab();
         etSearchLoc.setVisibility(View.VISIBLE);
         etNearbySearchLoc.setVisibility(View.GONE);
         rvNearbyAutosuggest.setVisibility(View.GONE);
@@ -1996,97 +2031,97 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
 
 
     public interface TextSearchListener {
-            void showProgress();
+        void showProgress();
 
-            void hideProgress();
-        }
+        void hideProgress();
+    }
 
-        void hideKey() {
-            if (getActivity() == null)
-                return;
-            if (etSearchLoc != null) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null)
-                    imm.hideSoftInputFromWindow(etSearchLoc.getWindowToken(), 0);
-            }
+    void hideKey() {
+        if (getActivity() == null)
+            return;
+        if (etSearchLoc != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null)
+                imm.hideSoftInputFromWindow(etSearchLoc.getWindowToken(), 0);
         }
+    }
 
 
     private void showProgress() {
-            try {
-                if (getActivity() == null)
-                    return;
+        try {
+            if (getActivity() == null)
+                return;
 //            ((HomeActivity) getActivity()).showProgress();
-            }
-            catch (Exception e) {
-                Timber.e(e);
-            }
         }
+        catch (Exception e) {
+            Timber.e(e);
+        }
+    }
 
-        private void hideProgress() {
-            try {
-                if (getActivity() == null)
-                    return;
+    private void hideProgress() {
+        try {
+            if (getActivity() == null)
+                return;
 //            ((HomeActivity) getActivity()).hideProgress();
-            } catch (Exception e) {
-                Timber.e(e);
-            }
+        } catch (Exception e) {
+            Timber.e(e);
         }
+    }
 
 
-        @Override
-        public void onMapReady(MapplsMap mapboxMap) {
+    @Override
+    public void onMapReady(MapplsMap mapboxMap) {
 
         /*if (new CurrentLoc().nightTime()) {
             mapboxMap.setStyle(Style.NIGHT_MODE);
         }*/
-            mapboxMap.getUiSettings().enableLogoClick(false);
-            mapboxMap.addOnMapClickListener(new MapplsMap.OnMapClickListener() {
-                @Override
-                public boolean onMapClick(@NonNull LatLng latLng) {
-                    return false;
+        mapboxMap.getUiSettings().enableLogoClick(false);
+        mapboxMap.addOnMapClickListener(new MapplsMap.OnMapClickListener() {
+            @Override
+            public boolean onMapClick(@NonNull LatLng latLng) {
+                return false;
+            }
+        });
+
+
+        this.mapboxMap = mapboxMap;
+        mapboxMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                enableLocationComponent(style);
+            }
+        });
+        mapboxMap.setMinZoomPreference(3);
+        mapboxMap.setMaxZoomPreference(18.5);
+
+
+        //
+        final Marker[] tapMarker = {null};
+
+        mapboxMap.addOnMapLongClickListener(new MapplsMap.OnMapLongClickListener() {
+            @Override
+            public boolean onMapLongClick(@NonNull LatLng latLng) {
+                MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(latLng));
+                if (tapMarker[0] != null) {
+                    mapboxMap.removeMarker(tapMarker[0]);
                 }
-            });
+                tapMarker[0] = mapboxMap.addMarker(markerOptions);
 
+                if (addressSetting) { // user wants to set address
 
-            this.mapboxMap = mapboxMap;
-            mapboxMap.getStyle(new Style.OnStyleLoaded() {
-                @Override
-                public void onStyleLoaded(@NonNull Style style) {
-                    enableLocationComponent(style);
+                    // directly get the data
+                    getDetailsFromReverseGeoCode(tapMarker[0]);
+
+                } else {
+                    showConfirmationDialog(tapMarker[0]);
                 }
-            });
-            mapboxMap.setMinZoomPreference(3);
-            mapboxMap.setMaxZoomPreference(18.5);
+
+                return false;
+            }
+        });
 
 
-            //
-            final Marker[] tapMarker = {null};
-
-            mapboxMap.addOnMapLongClickListener(new MapplsMap.OnMapLongClickListener() {
-                @Override
-                public boolean onMapLongClick(@NonNull LatLng latLng) {
-                    MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(latLng));
-                    if (tapMarker[0] != null) {
-                        mapboxMap.removeMarker(tapMarker[0]);
-                    }
-                    tapMarker[0] = mapboxMap.addMarker(markerOptions);
-
-                    if (addressSetting) { // user wants to set address
-
-                        // directly get the data
-                        getDetailsFromReverseGeoCode(tapMarker[0]);
-
-                    } else {
-                        showConfirmationDialog(tapMarker[0]);
-                    }
-
-                    return false;
-                }
-            });
-
-
-            //custom marker
+        //custom marker
 //        MarkerOptions markerOptions =  new MarkerOptions().position(point).icon(icon);
 //        Marker marker = mapboxMap.addMarker(markerOptions);
 //        String tittle = "loc";
@@ -2102,29 +2137,29 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
 //                return  view;
 //            }
 //        });
-            if (getActivity() == null)
-                return;
+        if (getActivity() == null)
+            return;
 
-            mapboxMap.getStyle(new Style.OnStyleLoaded() {
-                @Override
-                public void onStyleLoaded(@NonNull Style style) {
-                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                            ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        mapboxMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-                        common.showToast("Location permission is not given", TOAST_DURATION);
-                        requestLocationPermission();
-                        return;
-                    }
-                    mapboxMap.getLocationComponent().activateLocationComponent(LocationComponentActivationOptions.builder(getActivity(), style).build());
-                    mapboxMap.getLocationComponent().setLocationComponentEnabled(true);
-                    mapIsReady = true;
+                    common.showToast("Location permission is not given", TOAST_DURATION);
+                    requestLocationPermission();
+                    return;
                 }
-            });
+                mapboxMap.getLocationComponent().activateLocationComponent(LocationComponentActivationOptions.builder(getActivity(), style).build());
+                mapboxMap.getLocationComponent().setLocationComponentEnabled(true);
+                mapIsReady = true;
+            }
+        });
 
 
-            if (currentlocation != null) {
+        if (currentlocation != null) {
 
-                apiProgressBar.setVisibility(View.GONE);
+            apiProgressBar.setVisibility(View.GONE);
 
              /*   IconFactory iconFactory = IconFactory.getInstance(getActivity());
                 Icon icon = iconFactory.fromResource(R.drawable.marker);
@@ -2137,174 +2172,174 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
                 marker.setPosition(new LatLng(currentlocation));
            //     marker.setIcon(icon);
                 mapboxMap.addMarker(markerOptions);*/
-            }
+        }
 
-            try {
-                mapboxMap.enableTraffic(true);
+        try {
+            mapboxMap.enableTraffic(true);
 //                TrafficPlugin trafficPlugin = new TrafficPlugin(mapView, mapboxMap);
 //                trafficPlugin.enableFreeFlow(true);
-            } catch (Exception e) {
-                Timber.e(e);
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+
+        directionPolylinePlugin = new DirectionPolylinePlugin(mapView, mapboxMap);
+        mapboxMap.getStyle(new Style.OnStyleLoaded() {
+            @Override
+            public void onStyleLoaded(@NonNull Style style) {
+                enableLocationComponent(style);
             }
+        });
 
-            directionPolylinePlugin = new DirectionPolylinePlugin(mapView, mapboxMap);
-            mapboxMap.getStyle(new Style.OnStyleLoaded() {
-                @Override
-                public void onStyleLoaded(@NonNull Style style) {
-                    enableLocationComponent(style);
-                }
-            });
-
-            _bearingIconPlugin = new BearingIconPlugin(mapView, mapboxMap);
-            mapboxMap.setMaxZoomPreference(18.5);
-            mapboxMap.setMinZoomPreference(4);
+        _bearingIconPlugin = new BearingIconPlugin(mapView, mapboxMap);
+        mapboxMap.setMaxZoomPreference(18.5);
+        mapboxMap.setMinZoomPreference(4);
 
 
-            setCompassDrawable();
-            mapboxMap.getUiSettings().setLogoMargins(40, dpToPx(190), 40, dpToPx(120));
-            mapboxMap.getUiSettings().setCompassMargins(40, dpToPx(150), 40, dpToPx(40));
+        setCompassDrawable();
+        mapboxMap.getUiSettings().setLogoMargins(40, dpToPx(190), 40, dpToPx(120));
+        mapboxMap.getUiSettings().setCompassMargins(40, dpToPx(150), 40, dpToPx(40));
 
 
-        }
+    }
 
-        public void showExitAlert(String message) {
-            Dialog dialog = new Dialog(getContext(), R.style.custom_dialog);
-            dialog.setContentView(R.layout.custom_dialog);
+    public void showExitAlert(String message) {
+        Dialog dialog = new Dialog(getContext(), R.style.custom_dialog);
+        dialog.setContentView(R.layout.custom_dialog);
 
-            TextView tvAlertText = dialog.findViewById(R.id.tvAlertText);
+        TextView tvAlertText = dialog.findViewById(R.id.tvAlertText);
 
-            tvAlertText.setText(message);
-
-
-            ImageView ivCross = dialog.findViewById(R.id.ivCross);
-            ivCross.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.cancel();
-
-                }
-            });
-
-            ImageView ivCheck = dialog.findViewById(R.id.ivCheck);
+        tvAlertText.setText(message);
 
 
-            ivCheck.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.cancel();
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+        ImageView ivCross = dialog.findViewById(R.id.ivCross);
+        ivCross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
 
-                }
-            });
-            dialog.show();
-        }
-
-        private void requestLocationPermission() {
-            showExitAlert("Location permission is used to enable application's built-in map and navigation feature.\n" +
-                    "Location data will only be accessed to display user's current location, set route and enable navigation.\n" +
-                    "Please allow location access permission to use map and navigation.");
-        }
-
-        private void showConfirmationDialog(Marker marker) {
-            Dialog dialog = new Dialog(requireContext(), R.style.custom_dialog);
-            dialog.setContentView(R.layout.custom_dialog);
-
-            TextView tvAlertText = dialog.findViewById(R.id.tvAlertText);
-            tvAlertText.setText("Are you sure to navigate to this point ?");
-            ImageView ivCross = dialog.findViewById(R.id.ivCross);
-            ivCross.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    marker.remove();
-                    dialog.cancel();
-                }
-            });
-
-            ImageView ivCheck = dialog.findViewById(R.id.ivCheck);
-
-
-            ivCheck.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.cancel();
-                    marker.remove();
-                    getDetailsFromReverseGeoCode(marker);
-                }
-            });
-            dialog.show();
-        }
-
-        private void getDetailsFromReverseGeoCode(@NotNull Marker marker) {
-            double lat = marker.getPosition().getLatitude();
-            double lng = marker.getPosition().getLongitude();
-
-            progressBar.setVisibility(View.VISIBLE);
-
-            if (lat <= 0 || lng <= 0) {
-                common.showToast("Invalid Location", TOAST_DURATION);
-                return;
             }
+        });
 
-            MapplsReverseGeoCode mapplsReverseGeoCode = MapplsReverseGeoCode.builder()
-                    .setLocation(lat, lng)
-                    .build();
-            MapplsReverseGeoCodeManager.newInstance(mapplsReverseGeoCode).call(new OnResponseCallback<PlaceResponse>() {
-                @Override
-                public void onSuccess(PlaceResponse response) {
-                    //Handle Response
+        ImageView ivCheck = dialog.findViewById(R.id.ivCheck);
 
-                    Timber.d(new Gson().toJson(response));
-                    Timber.d("lat : " + lat + " lng : " + lng);
-                    progressBar.setVisibility(View.GONE);
-                    if (response == null || response.getPlaces().size() < 1) {
 
-                        common.showToast("Issue in fetching details", TOAST_DURATION);
-                        return;
-                    }
+        ivCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
 
-                    String address = response.getPlaces().get(0).getFormattedAddress();
-                    String place = response.getPlaces().get(0).getLocality();
-                    String poi = response.getPlaces().get(0).getPoi();
-                    if (place.length() < 2) {
-                        place = poi;
-                    }
+            }
+        });
+        dialog.show();
+    }
 
-                    ELocation eLocation1 = new ELocation();
+    private void requestLocationPermission() {
+        showExitAlert("Location permission is used to enable application's built-in map and navigation feature.\n" +
+                "Location data will only be accessed to display user's current location, set route and enable navigation.\n" +
+                "Please allow location access permission to use map and navigation.");
+    }
 
-                    eLocation1.latitude = Double.valueOf(lat + "");
-                    eLocation1.longitude = Double.valueOf(lng + "");
-                    eLocation1.placeAddress = address;
-                    eLocation1.placeName = place;
+    private void showConfirmationDialog(Marker marker) {
+        Dialog dialog = new Dialog(requireContext(), R.style.custom_dialog);
+        dialog.setContentView(R.layout.custom_dialog);
+
+        TextView tvAlertText = dialog.findViewById(R.id.tvAlertText);
+        tvAlertText.setText("Are you sure to navigate to this point ?");
+        ImageView ivCross = dialog.findViewById(R.id.ivCross);
+        ivCross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                marker.remove();
+                dialog.cancel();
+            }
+        });
+
+        ImageView ivCheck = dialog.findViewById(R.id.ivCheck);
+
+
+        ivCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                marker.remove();
+                getDetailsFromReverseGeoCode(marker);
+            }
+        });
+        dialog.show();
+    }
+
+    private void getDetailsFromReverseGeoCode(@NotNull Marker marker) {
+        double lat = marker.getPosition().getLatitude();
+        double lng = marker.getPosition().getLongitude();
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        if (lat <= 0 || lng <= 0) {
+            common.showToast("Invalid Location", TOAST_DURATION);
+            return;
+        }
+
+        MapplsReverseGeoCode mapplsReverseGeoCode = MapplsReverseGeoCode.builder()
+                .setLocation(lat, lng)
+                .build();
+        MapplsReverseGeoCodeManager.newInstance(mapplsReverseGeoCode).call(new OnResponseCallback<PlaceResponse>() {
+            @Override
+            public void onSuccess(PlaceResponse response) {
+                //Handle Response
+
+                Timber.d(new Gson().toJson(response));
+                Timber.d("lat : " + lat + " lng : " + lng);
+                progressBar.setVisibility(View.GONE);
+                if (response == null || response.getPlaces().size() < 1) {
+
+                    common.showToast("Issue in fetching details", TOAST_DURATION);
+                    return;
+                }
+
+                String address = response.getPlaces().get(0).getFormattedAddress();
+                String place = response.getPlaces().get(0).getLocality();
+                String poi = response.getPlaces().get(0).getPoi();
+                if (place.length() < 2) {
+                    place = poi;
+                }
+
+                ELocation eLocation1 = new ELocation();
+
+                eLocation1.latitude = Double.valueOf(lat + "");
+                eLocation1.longitude = Double.valueOf(lng + "");
+                eLocation1.placeAddress = address;
+                eLocation1.placeName = place;
 //                            eLocation.entryLatitude = eLatitude;
 //                            eLocation.entryLongitude = eLongitude;
-                    eLocation = eLocation1;
+                eLocation = eLocation1;
 
 
-                    marker.remove();
-                    if (addressSetting) {
-                        if (workAddressSetting) {
-                            showAddressConfirmationDialog(place, poi,
-                                    address, eLocation.latitude, eLocation.longitude, true);
+                marker.remove();
+                if (addressSetting) {
+                    if (workAddressSetting) {
+                        showAddressConfirmationDialog(place, poi,
+                                address, eLocation.latitude, eLocation.longitude, true);
 //                        setWorkAddress(place, poi,
 //                                address, eLocation.latitude, eLocation.longitude);
-                        } else {
-                            showAddressConfirmationDialog(place, poi,
-                                    address, eLocation.latitude, eLocation.longitude, false);
+                    } else {
+                        showAddressConfirmationDialog(place, poi,
+                                address, eLocation.latitude, eLocation.longitude, false);
 //                        setHomeAddress(place, poi,
 //                                address, eLocation.latitude, eLocation.longitude);
-                        }
-                    } else {
-                        getDirections(eLocation.latitude, eLocation.longitude, false);
                     }
-
+                } else {
+                    getDirections(eLocation.latitude, eLocation.longitude, false);
                 }
 
-                @Override
-                public void onError(int code, String message) {
-                    //Handle Error
-                    progressBar.setVisibility(View.GONE);
-                }
-            });
+            }
+
+            @Override
+            public void onError(int code, String message) {
+                //Handle Error
+                progressBar.setVisibility(View.GONE);
+            }
+        });
 
 
 //        MapmyIndiaReverseGeoCode.builder()
@@ -2364,173 +2399,173 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
 //            }
 //        });
 
-        }
+    }
 
-        private void showAddressConfirmationDialog(String place, String poi, String address,
-                                                   Double latitude, Double longitude, boolean workAddress) {
-            String msg = getString(R.string.confirm_home_address);
-            if (workAddress)
-                msg = getString(R.string.confirm_work_address);
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setCancelable(false);
-            builder.setTitle(msg);
-            builder.setMessage(address + ".\n\n\n" + getString(R.string.want_to_proceed));
-            builder.setPositiveButton("Yes", (dialog, which) -> {
-                dialog.dismiss();
-                if (workAddress) {
-                    setWorkAddress(place, poi, address, latitude, longitude);
-                } else {
-                    setHomeAddress(place, poi, address, latitude, longitude);
-                }
-            });
+    private void showAddressConfirmationDialog(String place, String poi, String address,
+                                               Double latitude, Double longitude, boolean workAddress) {
+        String msg = getString(R.string.confirm_home_address);
+        if (workAddress)
+            msg = getString(R.string.confirm_work_address);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setCancelable(false);
+        builder.setTitle(msg);
+        builder.setMessage(address + ".\n\n\n" + getString(R.string.want_to_proceed));
+        builder.setPositiveButton("Yes", (dialog, which) -> {
+            dialog.dismiss();
+            if (workAddress) {
+                setWorkAddress(place, poi, address, latitude, longitude);
+            } else {
+                setHomeAddress(place, poi, address, latitude, longitude);
+            }
+        });
 
-            builder.setNegativeButton("No", (dialog, which) -> {
-                common.showToast("Please select different address", TOAST_DURATION);
-                dialog.dismiss();
-            });
+        builder.setNegativeButton("No", (dialog, which) -> {
+            common.showToast("Please select different address", TOAST_DURATION);
+            dialog.dismiss();
+        });
 
-            builder.create();
-            builder.show();
+        builder.create();
+        builder.show();
 
-        }
+    }
 
-        public void setCompassDrawable() {
+    public void setCompassDrawable() {
 
-            mapView.getCompassView().setBackgroundResource(R.drawable.compass_background);
-            assert mapboxMap.getUiSettings() != null;
-            mapboxMap.getUiSettings().setCompassImage(ContextCompat.getDrawable(getActivity(), R.drawable.compass_north_up));
-            int padding = dpToPx(8);
-            int elevation = dpToPx(18);
-            mapView.getCompassView().setPadding(padding, padding, padding, padding);
-            ViewCompat.setElevation(mapView.getCompassView(), elevation);
-        }
+        mapView.getCompassView().setBackgroundResource(R.drawable.compass_background);
+        assert mapboxMap.getUiSettings() != null;
+        mapboxMap.getUiSettings().setCompassImage(ContextCompat.getDrawable(getActivity(), R.drawable.compass_north_up));
+        int padding = dpToPx(8);
+        int elevation = dpToPx(18);
+        mapView.getCompassView().setPadding(padding, padding, padding, padding);
+        ViewCompat.setElevation(mapView.getCompassView(), elevation);
+    }
 
-        public SuzukiApplication getMyApplication() {
+    public SuzukiApplication getMyApplication() {
 
 //        if (((SuzukiApplication) getActivity().getApplication()) != null)
-            if(isAdded()) {
-                return ((SuzukiApplication) requireActivity().getApplication());
-            }
-            else
-                return null;
-
+        if(isAdded()) {
+            return ((SuzukiApplication) requireActivity().getApplication());
         }
+        else
+            return null;
 
-        @Subscribe(threadMode = ThreadMode.MAIN)
-        public void onConnectionEvent(EvenConnectionPojo event) {
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onConnectionEvent(EvenConnectionPojo event) {
 
 
-            if (BLUETOOTH_STATE) {
+        if (BLUETOOTH_STATE) {
 
+
+        } else {
+            staticConnectionStatus = false;
+
+            Intent i = new Intent("status").putExtra("status", staticConnectionStatus);
+            getActivity().sendBroadcast(i);
+            if (staticConnectionStatus) {
+                llRedAlertBle.setVisibility(View.GONE);
 
             } else {
-                staticConnectionStatus = false;
-
-                Intent i = new Intent("status").putExtra("status", staticConnectionStatus);
-                getActivity().sendBroadcast(i);
-                if (staticConnectionStatus) {
-                    llRedAlertBle.setVisibility(View.GONE);
-
-                } else {
-                    llRedAlertBle.setVisibility(View.VISIBLE);
-                }
+                llRedAlertBle.setVisibility(View.VISIBLE);
             }
         }
+    }
 
-        private void enableLocationComponent(Style style) {
-            if (ActivityCompat.checkSelfPermission(getActivity(),
-                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(getActivity(),
-                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }else{
+    private void enableLocationComponent(Style style) {
+        if (ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }else{
 
-                LocationComponentOptions options = LocationComponentOptions.builder(getActivity())
-                        .trackingGesturesManagement(true)
-                        .build();
+            LocationComponentOptions options = LocationComponentOptions.builder(getActivity())
+                    .trackingGesturesManagement(true)
+                    .build();
 
-                // .accuracyColor(ContextCompat.getColor(getActivity(), R.color.colorAccent))
-                //                        .foregroundDrawable(R.drawable.location_pointer)
+            // .accuracyColor(ContextCompat.getColor(getActivity(), R.color.colorAccent))
+            //                        .foregroundDrawable(R.drawable.location_pointer)
 
 
 // Get an instance of the component LocationComponent
-                locationComponent = mapboxMap.getLocationComponent();
-                LocationComponentActivationOptions locationComponentActivationOptions = LocationComponentActivationOptions.builder(getActivity(), style)
-                        .locationComponentOptions(options)
-                        .build();
+            locationComponent = mapboxMap.getLocationComponent();
+            LocationComponentActivationOptions locationComponentActivationOptions = LocationComponentActivationOptions.builder(getActivity(), style)
+                    .locationComponentOptions(options)
+                    .build();
 // Activate with options
-                locationComponent.activateLocationComponent(locationComponentActivationOptions);
+            locationComponent.activateLocationComponent(locationComponentActivationOptions);
 // Enable to make component visiblelocationEngine
 
-                locationComponent.setLocationComponentEnabled(true);
-                locationEngine = locationComponent.getLocationEngine();
+            locationComponent.setLocationComponentEnabled(true);
+            locationEngine = locationComponent.getLocationEngine();
 
-                LocationEngineCallback<LocationEngineResult> locationEngineCallback = new LocationEngineCallback<LocationEngineResult>() {
-                    @Override
-                    public void onSuccess(LocationEngineResult locationEngineResult) {
-                        if(locationEngineResult.getLastLocation() != null) {
-                            Location location = locationEngineResult.getLastLocation();
+            LocationEngineCallback<LocationEngineResult> locationEngineCallback = new LocationEngineCallback<LocationEngineResult>() {
+                @Override
+                public void onSuccess(LocationEngineResult locationEngineResult) {
+                    if(locationEngineResult.getLastLocation() != null) {
+                        Location location = locationEngineResult.getLastLocation();
 
 
-                            currentlocation =location ;
-                            if (!isRegionFixed) { // first check region is already set or not
-                                if (getMyApplication() != null)
-                                    getMyApplication().setRegion(location.getLatitude(), location.getLongitude());
-                            }
+                        currentlocation =location ;
+                        if (!isRegionFixed) { // first check region is already set or not
+                            if (getMyApplication() != null)
+                                getMyApplication().setRegion(location.getLatitude(), location.getLongitude());
+                        }
 
 //        Log.d("locccc", "onloc chang--" + eLocation.placeName);
 //        getReverseGeoCode(currentlocation.getLatitude(), currentlocation.getLongitude());
-                            try {
-                                if (location.getLatitude() <= 0)
-                                    return;
-                                if (!firstFix) {
-                                    mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location), 16), 500);
-                                    firstFix = true;
+                        try {
+                            if (location.getLatitude() <= 0)
+                                return;
+                            if (!firstFix) {
+                                mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location), 16), 500);
+                                firstFix = true;
 //                Log.d("locccc", "onloc chang--" + eLocation.placeName);
-                                    getReverseGeoCode(location.getLatitude(), location.getLongitude());
+                                getReverseGeoCode(location.getLatitude(), location.getLongitude());
 //                fromLocation = "Axiom";
-                                    if(getMyApplication()!=null) {
-                                        app = getMyApplication();
-                                        app.setCurrentLocation(location);
-                                    }
-
-
-
+                                if(getMyApplication()!=null) {
+                                    app = getMyApplication();
+                                    app.setCurrentLocation(location);
                                 }
 
-//            getReverseGeoCode(location.getLatitude(), location.getLongitude());
-                               // app.setCurrentLocation(location);
-                            } catch (Exception e) {
-                                //ignore
+
+
                             }
+
+//            getReverseGeoCode(location.getLatitude(), location.getLongitude());
+                            // app.setCurrentLocation(location);
+                        } catch (Exception e) {
+                            //ignore
                         }
                     }
+                }
 
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
+                @Override
+                public void onFailure(@NonNull Exception e) {
 
-                    }
-                };
-                LocationEngineRequest request = new LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
-                        .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
-                        .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME).build();
-                assert locationEngine != null;
-                locationEngine.requestLocationUpdates(request, locationEngineCallback, getMainLooper());
-                locationEngine.getLastLocation(locationEngineCallback);
+                }
+            };
+            LocationEngineRequest request = new LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
+                    .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
+                    .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME).build();
+            assert locationEngine != null;
+            locationEngine.requestLocationUpdates(request, locationEngineCallback, getMainLooper());
+            locationEngine.getLastLocation(locationEngineCallback);
 // Set the component's camera mode
-                locationComponent.setCameraMode(CameraMode.TRACKING);
-                locationComponent.setRenderMode(RenderMode.COMPASS);
-
-            }
+            locationComponent.setCameraMode(CameraMode.TRACKING);
+            locationComponent.setRenderMode(RenderMode.COMPASS);
 
         }
+
+    }
 
 //    private void enableLocationComponent() {
 //        // Check if permissions are enabled and if not request
@@ -2679,10 +2714,10 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
 //    }
 
 
-        @Override
-        public void onMapError(int i, String s) {
-            Log.d("errr", "-" + s + "---" + i);
-        }
+    @Override
+    public void onMapError(int i, String s) {
+        Log.d("errr", "-" + s + "---" + i);
+    }
 
    /* @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -2690,91 +2725,91 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
         mapView.onCreate(savedInstanceState);
     }*/
 
-        @Override
-        public void onDestroyView() {
-            super.onDestroyView();
-            mapView.onDestroy();
-            getActivity().unregisterReceiver(mReceiver);
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mapView.onDestroy();
+        getActivity().unregisterReceiver(mReceiver);
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mapView.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mapView.onStop();
+        if (locationEngine != null) {
+            locationEngine.removeLocationUpdates(locationEngineCallback);
         }
+        EventBus.getDefault().unregister(this);
+    }
 
-
-        @Override
-        public void onStart() {
-            super.onStart();
-            mapView.onStart();
-            EventBus.getDefault().register(this);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+        if (locationEngine != null) {
+            locationEngine.removeLocationUpdates(locationEngineCallback);
         }
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
 
-        @Override
-        public void onStop() {
-            super.onStop();
-            mapView.onStop();
-            if (locationEngine != null) {
-                locationEngine.removeLocationUpdates(locationEngineCallback);
-            }
-            EventBus.getDefault().unregister(this);
-        }
+        mapView.onPause();
 
-        @Override
-        public void onDestroy() {
-            super.onDestroy();
-            mapView.onDestroy();
-            if (locationEngine != null) {
-                locationEngine.removeLocationUpdates(locationEngineCallback);
-            }
-        }
+        if (locationEngine != null)
+            locationEngine.removeLocationUpdates(locationEngineCallback);
 
-        @Override
-        public void onPause() {
-            super.onPause();
+    }
 
-            mapView.onPause();
+    @Override
+    public void onResume() {
+        super.onResume();
 
-            if (locationEngine != null)
-                locationEngine.removeLocationUpdates(locationEngineCallback);
-
-        }
-
-        @Override
-        public void onResume() {
-            super.onResume();
-
-            mapView.onResume();
-            if (locationEngine != null) {
+        mapView.onResume();
+        if (locationEngine != null) {
 //                locationEngine.requestLocationUpdates(locationEngineCallback);
 //                locationEngine.addLocationEngineListener(this);
-            }
-
-            getRecentSearches(realm);
-
-            // first time we want to set FabMenu and currentLoc to visible as well as focus on search loc
-
         }
 
-        @Override
-        public void onLowMemory() {
-            super.onLowMemory();
-            mapView.onLowMemory();
-        }
+        getRecentSearches(realm);
 
-        public static DirectionPolylinePlugin getDirectionPolylinePlugin() {
-            return directionPolylinePlugin;
-        }
+        // first time we want to set FabMenu and currentLoc to visible as well as focus on search loc
 
-        @Override
-        public void onExplanationNeeded(List<String> permissionsToExplain) {
-        }
+    }
 
-        @Override
-        public void onPermissionResult(boolean granted) {
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
 
-        }
+    public static DirectionPolylinePlugin getDirectionPolylinePlugin() {
+        return directionPolylinePlugin;
+    }
 
-        @Override
-        public boolean onMapLongClick(@NonNull LatLng latLng) {
-            return false;
-        }
+    @Override
+    public void onExplanationNeeded(List<String> permissionsToExplain) {
+    }
+
+    @Override
+    public void onPermissionResult(boolean granted) {
+
+    }
+
+    @Override
+    public boolean onMapLongClick(@NonNull LatLng latLng) {
+        return false;
+    }
 
 //        @Override
 //        public void requestDrag(RecyclerView.ViewHolder viewHolder) {
@@ -2782,443 +2817,485 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
 //        }
 
 
-        @Override
-        public void onSaveInstanceState(Bundle outState) {
-            super.onSaveInstanceState(outState);
-            mapView.onSaveInstanceState(outState);
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+
+    public static NavLocation getUserLocation() {
+        if (currentlocation != null) {
+            NavLocation loc = new NavLocation("router");
+            loc.setLatitude(currentlocation.getLatitude());
+            loc.setLongitude(currentlocation.getLongitude());
+            return loc;
+        } else {
+            return null;
         }
+    }
 
 
-        public static NavLocation getUserLocation() {
-            if (currentlocation != null) {
-                NavLocation loc = new NavLocation("router");
-                loc.setLatitude(currentlocation.getLatitude());
-                loc.setLongitude(currentlocation.getLongitude());
-                return loc;
-            } else {
-                return null;
-            }
+    public void clearPOIs() {
+        try {
+            if (mapboxMap == null)
+                return;
+            mapboxMap.removeAnnotations();
+            if (directionPolylinePlugin != null)
+                directionPolylinePlugin.onDidFinishLoadingStyle();
+        } catch (Exception e) {
+            Timber.e(e);
         }
+    }
 
 
-        public void clearPOIs() {
-            try {
-                if (mapboxMap == null)
-                    return;
-                mapboxMap.removeAnnotations();
-                if (directionPolylinePlugin != null)
-                    directionPolylinePlugin.onDidFinishLoadingStyle();
-            } catch (Exception e) {
-                Timber.e(e);
-            }
-        }
+    private void readMapItemRecords(Realm realm, Dialog dialog, Context context) {
 
 
-        private void readMapItemRecords(Realm realm, Dialog dialog, Context context) {
-
-
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
 
 
 //                mapListItem = realm.where(MapListRealmModule.class).findAll();
-                    mapListItem = realm.where(MapListRealmModule.class)
-                            .sort("id", Sort.ASCENDING)
-                            .findAll();
+                mapListItem = realm.where(MapListRealmModule.class)
+                        .sort("id", Sort.ASCENDING)
+                        .findAll();
 
-                }
-            });
-
-            mapListCustomClassArrayList = new ArrayList<>();
-
-
-            for (int i = 0; i < mapListItem.size(); i++) {
-
-                MapListCustomClass mapListCustomClass = new MapListCustomClass();
-                mapListCustomClass.setId(mapListItem.get(i).getId());
-                mapListCustomClass.setName(mapListItem.get(i).getName());
-                mapListCustomClassArrayList.add(mapListCustomClass);
             }
+        });
+
+        mapListCustomClassArrayList = new ArrayList<>();
 
 
-            rvDragDropCats = dialog.findViewById(R.id.rvDragDropCats);
-            rvDragDropCats.setLayoutManager(new LinearLayoutManager(context));
-            mAdapter = new DragDropRecyclerViewAdapter(mapListCustomClassArrayList, this, this);
-            rvDragDropCats.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        for (int i = 0; i < mapListItem.size(); i++) {
 
-
-            ItemTouchHelper.Callback callback =
-                    new ItemMoveCallback(mAdapter);
-            touchHelper = new ItemTouchHelper(callback);
-            touchHelper.attachToRecyclerView(rvDragDropCats);
-
-
-            rvDragDropCats.setAdapter(mAdapter);
-
+            MapListCustomClass mapListCustomClass = new MapListCustomClass();
+            mapListCustomClass.setId(mapListItem.get(i).getId());
+            mapListCustomClass.setName(mapListItem.get(i).getName());
+            mapListCustomClassArrayList.add(mapListCustomClass);
         }
 
 
-        private void readMapItemRecords(Realm realm) {
+        rvDragDropCats = dialog.findViewById(R.id.rvDragDropCats);
+        rvDragDropCats.setLayoutManager(new LinearLayoutManager(context));
+        mAdapter = new DragDropRecyclerViewAdapter(mapListCustomClassArrayList, this, this);
+        rvDragDropCats.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
 
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
+        ItemTouchHelper.Callback callback =
+                new ItemMoveCallback(mAdapter);
+        touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(rvDragDropCats);
+
+
+        rvDragDropCats.setAdapter(mAdapter);
+
+    }
+
+
+    private void readMapItemRecords(Realm realm) {
+
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
 
 
 //                mapListItem = realm.where(MapListRealmModule.class).findAll();
-                    mapListItem = realm.where(MapListRealmModule.class)
-                            .sort("id", Sort.ASCENDING)
-                            .findAll();
+                mapListItem = realm.where(MapListRealmModule.class)
+                        .sort("id", Sort.ASCENDING)
+                        .findAll();
 
-                }
-            });
-            if (mapListItem.size() == 10) {
+            }
+        });
+        if (mapListItem.size() == 10) {
 
-                TFab1.setTitle(mapListItem.get(0).getName());
-                TFab2.setTitle(mapListItem.get(1).getName());
-                TFab3.setTitle(mapListItem.get(2).getName());
-                TFab4.setTitle(mapListItem.get(3).getName());
+            TFab1Tv.setText(mapListItem.get(0).getName());
+            TFab2Tv.setText(mapListItem.get(1).getName());
+            TFab3Tv.setText(mapListItem.get(2).getName());
+            TFab4Tv.setText(mapListItem.get(3).getName());
 
 
-                if (mapListItem.get(0).getName().contentEquals("Suzuki Service")) {
-                    TFab1.setImageResource(R.drawable.suzuki_logo);
-                } else if (mapListItem.get(0).getName().contentEquals("Fuel Station")) {
-                    TFab1.setImageResource(R.drawable.gas_icon);
-                } else if (mapListItem.get(0).getName().contentEquals("Hospitals")) {
-                    TFab1.setImageResource(R.drawable.hos_building2);
-                } else if (mapListItem.get(0).getName().contentEquals("Banks and ATM")) {
-                    TFab1.setImageResource(R.drawable.atm);
-                } else if (mapListItem.get(0).getName().contentEquals("Food and Restaurants")) {
-                    TFab1.setImageResource(R.drawable.hotel);
-                }
+            if (mapListItem.get(0).getName().contentEquals("Suzuki Service")) {
+                TFab1.setImageResource(R.drawable.suzuki_logo);
+            } else if (mapListItem.get(0).getName().contentEquals("Fuel Station")) {
+                TFab1.setImageResource(R.drawable.gas_icon);
+            } else if (mapListItem.get(0).getName().contentEquals("Hospitals")) {
+                TFab1.setImageResource(R.drawable.hos_building2);
+            } else if (mapListItem.get(0).getName().contentEquals("Banks and ATM")) {
+                TFab1.setImageResource(R.drawable.atm);
+            } else if (mapListItem.get(0).getName().contentEquals("Food and Restaurants")) {
+                TFab1.setImageResource(R.drawable.hotel);
+            }
 //            else if (mapListItem.get(0).getName().contentEquals("Favourites")) {
 //                TFab1.setImageResource(R.drawable.fav_menu_icon);
 //            }
-                else if (mapListItem.get(0).getName().contentEquals("Suzuki Sales")) {
-                    TFab1.setImageResource(R.drawable.suzuki_logo);
-                } else if (mapListItem.get(0).getName().contentEquals("Tyre Repair Shops")) {
-                    TFab1.setImageResource(R.drawable.tire);
-                } else if (mapListItem.get(0).getName().contentEquals("Medical Stores")) {
-                    TFab1.setImageResource(R.drawable.pharmacist);
-                } else if (mapListItem.get(0).getName().contentEquals("Parking")) {
-                    TFab1.setImageResource(R.drawable.parking);
-                } else if (mapListItem.get(0).getName().contentEquals("Convenience Stores")) {
-                    TFab1.setImageResource(R.drawable.shopping_cart);
-                }
+            else if (mapListItem.get(0).getName().contentEquals("Suzuki Sales")) {
+                TFab1.setImageResource(R.drawable.suzuki_logo);
+            } else if (mapListItem.get(0).getName().contentEquals("Tyre Repair Shops")) {
+                TFab1.setImageResource(R.drawable.tire);
+            } else if (mapListItem.get(0).getName().contentEquals("Medical Stores")) {
+                TFab1.setImageResource(R.drawable.pharmacist);
+            } else if (mapListItem.get(0).getName().contentEquals("Parking")) {
+                TFab1.setImageResource(R.drawable.parking);
+            } else if (mapListItem.get(0).getName().contentEquals("Convenience Stores")) {
+                TFab1.setImageResource(R.drawable.shopping_cart);
+            }
 
 
-                if (mapListItem.get(1).getName().contentEquals("Suzuki Service")) {
-                    TFab2.setImageResource(R.drawable.suzuki_logo);
-                } else if (mapListItem.get(1).getName().contentEquals("Fuel Station")) {
-                    TFab2.setImageResource(R.drawable.gas_icon);
-                } else if (mapListItem.get(1).getName().contentEquals("Hospitals")) {
-                    TFab2.setImageResource(R.drawable.hos_building2);
-                } else if (mapListItem.get(1).getName().contentEquals("Banks and ATM")) {
-                    TFab2.setImageResource(R.drawable.atm);
-                } else if (mapListItem.get(1).getName().contentEquals("Food and Restaurants")) {
-                    TFab2.setImageResource(R.drawable.hotel);
-                }
+            if (mapListItem.get(1).getName().contentEquals("Suzuki Service")) {
+                TFab2.setImageResource(R.drawable.suzuki_logo);
+            } else if (mapListItem.get(1).getName().contentEquals("Fuel Station")) {
+                TFab2.setImageResource(R.drawable.gas_icon);
+            } else if (mapListItem.get(1).getName().contentEquals("Hospitals")) {
+                TFab2.setImageResource(R.drawable.hos_building2);
+            } else if (mapListItem.get(1).getName().contentEquals("Banks and ATM")) {
+                TFab2.setImageResource(R.drawable.atm);
+            } else if (mapListItem.get(1).getName().contentEquals("Food and Restaurants")) {
+                TFab2.setImageResource(R.drawable.hotel);
+            }
 //            else if (mapListItem.get(1).getName().contentEquals("Favourites")) {
 //                TFab2.setImageResource(R.drawable.fav_menu_icon);
 //            }
-                else if (mapListItem.get(1).getName().contentEquals("Suzuki Sales")) {
-                    TFab2.setImageResource(R.drawable.suzuki_logo);
-                } else if (mapListItem.get(1).getName().contentEquals("Tyre Repair Shops")) {
-                    TFab2.setImageResource(R.drawable.tire);
-                } else if (mapListItem.get(1).getName().contentEquals("Medical Stores")) {
-                    TFab2.setImageResource(R.drawable.pharmacist);
-                } else if (mapListItem.get(1).getName().contentEquals("Parking")) {
-                    TFab2.setImageResource(R.drawable.parking);
-                } else if (mapListItem.get(1).getName().contentEquals("Convenience Stores")) {
-                    TFab2.setImageResource(R.drawable.shopping_cart);
-                }
+            else if (mapListItem.get(1).getName().contentEquals("Suzuki Sales")) {
+                TFab2.setImageResource(R.drawable.suzuki_logo);
+            } else if (mapListItem.get(1).getName().contentEquals("Tyre Repair Shops")) {
+                TFab2.setImageResource(R.drawable.tire);
+            } else if (mapListItem.get(1).getName().contentEquals("Medical Stores")) {
+                TFab2.setImageResource(R.drawable.pharmacist);
+            } else if (mapListItem.get(1).getName().contentEquals("Parking")) {
+                TFab2.setImageResource(R.drawable.parking);
+            } else if (mapListItem.get(1).getName().contentEquals("Convenience Stores")) {
+                TFab2.setImageResource(R.drawable.shopping_cart);
+            }
 
 
-                if (mapListItem.get(2).getName().contentEquals("Suzuki Service")) {
-                    TFab3.setImageResource(R.drawable.suzuki_logo);
-                } else if (mapListItem.get(2).getName().contentEquals("Fuel Station")) {
-                    TFab3.setImageResource(R.drawable.gas_icon);
-                } else if (mapListItem.get(2).getName().contentEquals("Hospitals")) {
-                    TFab3.setImageResource(R.drawable.hos_building2);
-                } else if (mapListItem.get(2).getName().contentEquals("Banks and ATM")) {
-                    TFab3.setImageResource(R.drawable.atm);
-                } else if (mapListItem.get(2).getName().contentEquals("Food and Restaurants")) {
-                    TFab3.setImageResource(R.drawable.hotel);
-                }
+            if (mapListItem.get(2).getName().contentEquals("Suzuki Service")) {
+                TFab3.setImageResource(R.drawable.suzuki_logo);
+            } else if (mapListItem.get(2).getName().contentEquals("Fuel Station")) {
+                TFab3.setImageResource(R.drawable.gas_icon);
+            } else if (mapListItem.get(2).getName().contentEquals("Hospitals")) {
+                TFab3.setImageResource(R.drawable.hos_building2);
+            } else if (mapListItem.get(2).getName().contentEquals("Banks and ATM")) {
+                TFab3.setImageResource(R.drawable.atm);
+            } else if (mapListItem.get(2).getName().contentEquals("Food and Restaurants")) {
+                TFab3.setImageResource(R.drawable.hotel);
+            }
 //            else if (mapListItem.get(2).getName().contentEquals("Favourites")) {
 //                TFab3.setImageResource(R.drawable.fav_menu_icon);
 //            }
-                else if (mapListItem.get(2).getName().contentEquals("Suzuki Sales")) {
-                    TFab3.setImageResource(R.drawable.suzuki_logo);
-                } else if (mapListItem.get(2).getName().contentEquals("Tyre Repair Shops")) {
-                    TFab3.setImageResource(R.drawable.tire);
-                } else if (mapListItem.get(2).getName().contentEquals("Medical Stores")) {
-                    TFab3.setImageResource(R.drawable.pharmacist);
-                } else if (mapListItem.get(2).getName().contentEquals("Parking")) {
-                    TFab3.setImageResource(R.drawable.parking);
-                } else if (mapListItem.get(2).getName().contentEquals("Convenience Stores")) {
-                    TFab3.setImageResource(R.drawable.shopping_cart);
-                }
+            else if (mapListItem.get(2).getName().contentEquals("Suzuki Sales")) {
+                TFab3.setImageResource(R.drawable.suzuki_logo);
+            } else if (mapListItem.get(2).getName().contentEquals("Tyre Repair Shops")) {
+                TFab3.setImageResource(R.drawable.tire);
+            } else if (mapListItem.get(2).getName().contentEquals("Medical Stores")) {
+                TFab3.setImageResource(R.drawable.pharmacist);
+            } else if (mapListItem.get(2).getName().contentEquals("Parking")) {
+                TFab3.setImageResource(R.drawable.parking);
+            } else if (mapListItem.get(2).getName().contentEquals("Convenience Stores")) {
+                TFab3.setImageResource(R.drawable.shopping_cart);
+            }
 
 
-                if (mapListItem.get(3).getName().contentEquals("Suzuki Service")) {
-                    TFab4.setImageResource(R.drawable.suzuki_logo);
-                } else if (mapListItem.get(3).getName().contentEquals("Fuel Station")) {
-                    TFab4.setImageResource(R.drawable.gas_icon);
-                } else if (mapListItem.get(3).getName().contentEquals("Hospitals")) {
-                    TFab4.setImageResource(R.drawable.hos_building2);
-                } else if (mapListItem.get(3).getName().contentEquals("Banks and ATM")) {
-                    TFab4.setImageResource(R.drawable.atm);
-                } else if (mapListItem.get(3).getName().contentEquals("Food and Restaurants")) {
-                    TFab4.setImageResource(R.drawable.hotel);
-                }
+            if (mapListItem.get(3).getName().contentEquals("Suzuki Service")) {
+                TFab4.setImageResource(R.drawable.suzuki_logo);
+            } else if (mapListItem.get(3).getName().contentEquals("Fuel Station")) {
+                TFab4.setImageResource(R.drawable.gas_icon);
+            } else if (mapListItem.get(3).getName().contentEquals("Hospitals")) {
+                TFab4.setImageResource(R.drawable.hos_building2);
+            } else if (mapListItem.get(3).getName().contentEquals("Banks and ATM")) {
+                TFab4.setImageResource(R.drawable.atm);
+            } else if (mapListItem.get(3).getName().contentEquals("Food and Restaurants")) {
+                TFab4.setImageResource(R.drawable.hotel);
+            }
 //            else if (mapListItem.get(3).getName().contentEquals("Favourites")) {
 //                TFab4.setImageResource(R.drawable.fav_menu_icon);
 //            }
-                else if (mapListItem.get(3).getName().contentEquals("Suzuki Sales")) {
-                    TFab4.setImageResource(R.drawable.suzuki_logo);
-                } else if (mapListItem.get(3).getName().contentEquals("Tyre Repair Shops")) {
-                    TFab4.setImageResource(R.drawable.tire);
-                } else if (mapListItem.get(3).getName().contentEquals("Medical Stores")) {
-                    TFab4.setImageResource(R.drawable.pharmacist);
-                } else if (mapListItem.get(3).getName().contentEquals("Parking")) {
-                    TFab4.setImageResource(R.drawable.parking);
-                } else if (mapListItem.get(3).getName().contentEquals("Convenience Stores")) {
-                    TFab4.setImageResource(R.drawable.shopping_cart);
-                }
-
-
-                TFab1.setOnClickListener(v -> {
-
-                    if (mapListItem.get(0).getName().contentEquals("Favourites")) {
-                        Intent in = new Intent(getActivity(), TripActivity.class);
-                        in.putExtra("fav", "fav");
-                        startActivity(in);
-                        FabMenu.collapse();
-
-                    } else {
-
-                        etNearbySearchLoc.setVisibility(View.VISIBLE);
-                        etSearchLoc.setVisibility(View.GONE);
-                        etNearbySearchLoc.setText(mapListItem.get(0).getName());
-                        FabMenu.collapse();
-                    }
-                });
-
-                TFab2.setOnClickListener(v -> {
-
-                    if (mapListItem.get(1).getName().contentEquals("Favourites")) {
-                        Intent in = new Intent(getActivity(), TripActivity.class);
-                        in.putExtra("fav", "fav");
-                        startActivity(in);
-                        FabMenu.collapse();
-
-                    } else {
-
-                        etNearbySearchLoc.setVisibility(View.VISIBLE);
-                        etSearchLoc.setVisibility(View.GONE);
-                        etNearbySearchLoc.setText(mapListItem.get(1).getName());
-                        FabMenu.collapse();
-
-                    }
-                });
-
-                TFab3.setOnClickListener(v -> {
-
-                    if (mapListItem.get(2).getName().contentEquals("Favourites")) {
-                        Intent in = new Intent(getActivity(), TripActivity.class);
-                        in.putExtra("fav", "fav");
-                        startActivity(in);
-                        FabMenu.collapse();
-
-                    } else {
-                        etNearbySearchLoc.setVisibility(View.VISIBLE);
-                        etSearchLoc.setVisibility(View.GONE);
-
-                        etNearbySearchLoc.setText(mapListItem.get(2).getName());
-                        FabMenu.collapse();
-                    }
-                });
-
-                TFab4.setOnClickListener(v -> {
-
-                    if (mapListItem.get(3).getName().contentEquals("Favourites")) {
-                        Intent in = new Intent(getActivity(), TripActivity.class);
-                        in.putExtra("fav", "fav");
-                        startActivity(in);
-                        FabMenu.collapse();
-
-                    } else {
-                        etNearbySearchLoc.setVisibility(View.VISIBLE);
-                        etSearchLoc.setVisibility(View.GONE);
-                        etNearbySearchLoc.setText(mapListItem.get(3).getName());
-                        FabMenu.collapse();
-                    }
-                });
-            } else {
-//            addMapItemsDataToRealm();
-            }
-        }
-
-        private void addMapItemsDataToRealm() {
-
-            ArrayList<String> stringArrayList = new ArrayList<>();
-            if (stringArrayList.size() > 0) {
-                stringArrayList.clear();
-            }
-            stringArrayList.add(getResources().getString(R.string.suzukiservice));
-            stringArrayList.add(getResources().getString(R.string.fuel));
-            stringArrayList.add(getResources().getString(R.string.hospitals));
-//        stringArrayList.add(getResources().getString(R.string.favourites));
-            stringArrayList.add(getResources().getString(R.string.atm));
-            stringArrayList.add(getResources().getString(R.string.food));
-            stringArrayList.add(getResources().getString(R.string.sales));
-            stringArrayList.add(getResources().getString(R.string.tyrerepair));
-            stringArrayList.add(getResources().getString(R.string.medicals));
-            stringArrayList.add(getResources().getString(R.string.parking));
-            stringArrayList.add(getResources().getString(R.string.convenience));
-
-//        deleteTripRecord();
-            Realm realm = Realm.getDefaultInstance();
-            try {
-                realm.executeTransaction(new Realm.Transaction() {
-
-                    @Override
-                    public void execute(Realm realm) {
-
-                        RealmResults<MapListRealmModule> results = realm.where(MapListRealmModule.class).findAll();
-
-
-                        Log.d("sisiisi", "---" + stringArrayList.size());
-
-                        for (int i = 0; i < stringArrayList.size(); i++) {
-                            MapListRealmModule mapListRealmModule = realm.createObject(MapListRealmModule.class);
-                            mapListRealmModule.setId(i);
-                            mapListRealmModule.setName(stringArrayList.get(i));
-                            realm.insert(mapListRealmModule);
-
-                        }
-
-
-                    }
-                });
-
-            } catch (Exception e) {
-                Log.d("realmex", "--" + e.getMessage());
-
-            }
-
-            readMapItemRecords(realm);
-
-        }
-
-        private void addUpdatedMapListDataToRealm(ArrayList<MapListCustomClass> mapList) {
-
-            Realm realm = Realm.getDefaultInstance();
-            try {
-                realm.executeTransaction(realm1 -> {
-
-
-                    RealmResults<MapListRealmModule> results = realm1.where(MapListRealmModule.class).findAll();
-
-                    results.deleteAllFromRealm();
-
-                    for (int i = 0; i < mapList.size(); i++) {
-
-
-                        MapListRealmModule recentTripRealmModule = realm1.createObject(MapListRealmModule.class);
-
-
-                        recentTripRealmModule.setId(mapList.get(i).getId());
-                        recentTripRealmModule.setName(mapList.get(i).getName());
-
-                        realm1.insert(recentTripRealmModule);
-                    }
-
-
-                });
-
-            } catch (Exception e) {
-                Log.d("realmex", "--" + e.getMessage());
-
+            else if (mapListItem.get(3).getName().contentEquals("Suzuki Sales")) {
+                TFab4.setImageResource(R.drawable.suzuki_logo);
+            } else if (mapListItem.get(3).getName().contentEquals("Tyre Repair Shops")) {
+                TFab4.setImageResource(R.drawable.tire);
+            } else if (mapListItem.get(3).getName().contentEquals("Medical Stores")) {
+                TFab4.setImageResource(R.drawable.pharmacist);
+            } else if (mapListItem.get(3).getName().contentEquals("Parking")) {
+                TFab4.setImageResource(R.drawable.parking);
+            } else if (mapListItem.get(3).getName().contentEquals("Convenience Stores")) {
+                TFab4.setImageResource(R.drawable.shopping_cart);
             }
 
 
-        }
+            TFab1.setOnClickListener(v -> {
 
-        @SuppressLint("LogNotTimber")
-        private void displayLocationSettingsRequest(Context context) {
-            GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
-                    .addApi(LocationServices.API).build();
-            googleApiClient.connect();
+                if (mapListItem.get(0).getName().contentEquals("Favourites")) {
+                    Intent in = new Intent(getActivity(), TripActivity.class);
+                    in.putExtra("fav", "fav");
+                    startActivity(in);
+                    collapseFab();
 
-            LocationRequest locationRequest = LocationRequest.create();
-            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            locationRequest.setInterval(10000);
-            locationRequest.setFastestInterval(10000 / 2);
+                } else {
 
-            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-            builder.setAlwaysShow(true);
-
-            PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
-            result.setResultCallback(result1 -> {
-                final Status status = result1.getStatus();
-                Log.d("sts---", "-" + status.getStatusCode() + "-- " + status.getStatusMessage());
-                switch (status.getStatusCode()) {
-
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        Log.i("loc", "All location settings are satisfied.");
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        Log.i("loc", "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
-                        try {
-
-                            status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
-                        } catch (IntentSender.SendIntentException e) {
-                            Log.i("loc", "PendingIntent unable to execute request.");
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        Log.i("loc", "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
-                        break;
+                    etNearbySearchLoc.setVisibility(View.VISIBLE);
+                    etSearchLoc.setVisibility(View.GONE);
+                    etNearbySearchLoc.setText(mapListItem.get(0).getName());
+                    collapseFab();
                 }
             });
+
+            TFab2.setOnClickListener(v -> {
+
+                if (mapListItem.get(1).getName().contentEquals("Favourites")) {
+                    Intent in = new Intent(getActivity(), TripActivity.class);
+                    in.putExtra("fav", "fav");
+                    startActivity(in);
+                    collapseFab();
+
+                } else {
+
+                    etNearbySearchLoc.setVisibility(View.VISIBLE);
+                    etSearchLoc.setVisibility(View.GONE);
+                    etNearbySearchLoc.setText(mapListItem.get(1).getName());
+                    collapseFab();
+
+                }
+            });
+
+            TFab3.setOnClickListener(v -> {
+
+                if (mapListItem.get(2).getName().contentEquals("Favourites")) {
+                    Intent in = new Intent(getActivity(), TripActivity.class);
+                    in.putExtra("fav", "fav");
+                    startActivity(in);
+                    collapseFab();
+
+                } else {
+                    etNearbySearchLoc.setVisibility(View.VISIBLE);
+                    etSearchLoc.setVisibility(View.GONE);
+
+                    etNearbySearchLoc.setText(mapListItem.get(2).getName());
+                    collapseFab();
+                }
+            });
+
+            TFab4.setOnClickListener(v -> {
+
+                if (mapListItem.get(3).getName().contentEquals("Favourites")) {
+                    Intent in = new Intent(getActivity(), TripActivity.class);
+                    in.putExtra("fav", "fav");
+                    startActivity(in);
+                    collapseFab();
+
+                } else {
+                    etNearbySearchLoc.setVisibility(View.VISIBLE);
+                    etSearchLoc.setVisibility(View.GONE);
+                    etNearbySearchLoc.setText(mapListItem.get(3).getName());
+                    collapseFab();
+                }
+            });
+        } else {
+//            addMapItemsDataToRealm();
+        }
+    }
+
+    private void collapseFab(){
+        TFMoreTv.setVisibility(View.GONE);
+        TFab3Tv.setVisibility(View.GONE);
+        TFab2Tv.setVisibility(View.GONE);
+        TFab1Tv.setVisibility(View.GONE);
+        TFab4Tv.setVisibility(View.GONE);
+
+        TFMore.hide();
+        TFab3.hide();
+        TFab2.hide();
+        TFab1.hide();
+        TFab4.hide();
+
+        if (isAllFabsVisible)
+        FabMenu.animate().rotationBy(135f);
+
+        isAllFabsVisible = false;
+    }
+    private void expandFab(){
+
+        TFMoreTv.setVisibility(View.VISIBLE);
+        TFab3Tv.setVisibility(View.VISIBLE);
+        TFab2Tv.setVisibility(View.VISIBLE);
+        TFab1Tv.setVisibility(View.VISIBLE);
+        TFab4Tv.setVisibility(View.VISIBLE);
+
+        TFMore.show();
+        TFab3.show();
+        TFab2.show();
+        TFab1.show();
+        TFab4.show();
+
+        etSearchLoc.setVisibility(View.GONE);
+        etNearbySearchLoc.setVisibility(View.VISIBLE);
+//        etNearbySearchLoc.setText("");
+
+        if (!isAllFabsVisible)
+        FabMenu.animate().rotationBy(-135f);
+
+        isAllFabsVisible = true;
+    }
+
+    private void addMapItemsDataToRealm() {
+
+        ArrayList<String> stringArrayList = new ArrayList<>();
+        if (stringArrayList.size() > 0) {
+            stringArrayList.clear();
+        }
+        stringArrayList.add(getResources().getString(R.string.suzukiservice));
+        stringArrayList.add(getResources().getString(R.string.fuel));
+        stringArrayList.add(getResources().getString(R.string.hospitals));
+//        stringArrayList.add(getResources().getString(R.string.favourites));
+        stringArrayList.add(getResources().getString(R.string.atm));
+        stringArrayList.add(getResources().getString(R.string.food));
+        stringArrayList.add(getResources().getString(R.string.sales));
+        stringArrayList.add(getResources().getString(R.string.tyrerepair));
+        stringArrayList.add(getResources().getString(R.string.medicals));
+        stringArrayList.add(getResources().getString(R.string.parking));
+        stringArrayList.add(getResources().getString(R.string.convenience));
+
+//        deleteTripRecord();
+        Realm realm = Realm.getDefaultInstance();
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+
+                @Override
+                public void execute(Realm realm) {
+
+                    RealmResults<MapListRealmModule> results = realm.where(MapListRealmModule.class).findAll();
+
+
+                    Log.d("sisiisi", "---" + stringArrayList.size());
+
+                    for (int i = 0; i < stringArrayList.size(); i++) {
+                        MapListRealmModule mapListRealmModule = realm.createObject(MapListRealmModule.class);
+                        mapListRealmModule.setId(i);
+                        mapListRealmModule.setName(stringArrayList.get(i));
+                        realm.insert(mapListRealmModule);
+
+                    }
+
+
+                }
+            });
+
+        } catch (Exception e) {
+            Log.d("realmex", "--" + e.getMessage());
+
         }
 
-        @Override
-        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-            if (requestCode == 101) {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    common.showToast("Location Permission Granted", TOAST_DURATION);
-                    if (mapView != null)
-                        mapView.getMapAsync(this);
+        readMapItemRecords(realm);
+
+    }
+
+    private void addUpdatedMapListDataToRealm(ArrayList<MapListCustomClass> mapList) {
+
+        Realm realm = Realm.getDefaultInstance();
+        try {
+            realm.executeTransaction(realm1 -> {
+
+
+                RealmResults<MapListRealmModule> results = realm1.where(MapListRealmModule.class).findAll();
+
+                results.deleteAllFromRealm();
+
+                for (int i = 0; i < mapList.size(); i++) {
+
+
+                    MapListRealmModule recentTripRealmModule = realm1.createObject(MapListRealmModule.class);
+
+
+                    recentTripRealmModule.setId(mapList.get(i).getId());
+                    recentTripRealmModule.setName(mapList.get(i).getName());
+
+                    realm1.insert(recentTripRealmModule);
                 }
+
+
+            });
+
+        } catch (Exception e) {
+            Log.d("realmex", "--" + e.getMessage());
+
+        }
+
+
+    }
+
+    @SuppressLint("LogNotTimber")
+    private void displayLocationSettingsRequest(Context context) {
+        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
+                .addApi(LocationServices.API).build();
+        googleApiClient.connect();
+
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(10000 / 2);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true);
+
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
+        result.setResultCallback(result1 -> {
+            final Status status = result1.getStatus();
+            Log.d("sts---", "-" + status.getStatusCode() + "-- " + status.getStatusMessage());
+            switch (status.getStatusCode()) {
+
+                case LocationSettingsStatusCodes.SUCCESS:
+                    Log.i("loc", "All location settings are satisfied.");
+                    break;
+                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                    Log.i("loc", "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
+                    try {
+
+                        status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
+                    } catch (IntentSender.SendIntentException e) {
+                        Log.i("loc", "PendingIntent unable to execute request.");
+                    }
+                    break;
+                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                    Log.i("loc", "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
+                    break;
             }
+        });
+    }
 
-        }
-
-        @SuppressLint("LogNotTimber")
-        @Override
-        public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
-        {
-
-            if (requestCode == REQUEST_CHECK_SETTINGS)
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        Log.i("TAG", "User agreed to make required location settings changes.");
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        Log.i("TAG", "User chose not to make required location settings changes.");
-                        Toast.makeText(getContext(), "Gps is not enabled. This will effect location services ", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            super.onActivityResult(requestCode, resultCode, data);
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 101) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                common.showToast("Location Permission Granted", TOAST_DURATION);
+                if (mapView != null)
+                    mapView.getMapAsync(this);
+            }
         }
 
     }
+
+    @SuppressLint("LogNotTimber")
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+
+        if (requestCode == REQUEST_CHECK_SETTINGS)
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    Log.i("TAG", "User agreed to make required location settings changes.");
+                    break;
+                case Activity.RESULT_CANCELED:
+                    Log.i("TAG", "User chose not to make required location settings changes.");
+                    Toast.makeText(getContext(), "Gps is not enabled. This will effect location services ", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+}
 
 
 

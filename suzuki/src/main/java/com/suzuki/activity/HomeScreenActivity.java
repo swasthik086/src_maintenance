@@ -284,16 +284,17 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
 
         preferences = new Preferences(this);
 
-        MeowBottomNavigation.Model modeeeee = new MeowBottomNavigation.Model(1, R.drawable.home_blue, R.drawable.home_black);
+        MeowBottomNavigation.Model modeeeee = new MeowBottomNavigation.Model(1, R.drawable.home_blue);
 
         preferences.clearSharePreference();
         MeowBottomNavigation bottomNavigation = findViewById(R.id.bottomNavigation);
 
         bottomNavigation.add(modeeeee);
 
-        bottomNavigation.add(new MeowBottomNavigation.Model(2, R.drawable.settings_blue, R.drawable.settings_black));
-        bottomNavigation.add(new MeowBottomNavigation.Model(3, R.drawable.map_blue, R.drawable.map_black));
-        bottomNavigation.add(new MeowBottomNavigation.Model(4, R.drawable.more_blue, R.drawable.more_black));
+        bottomNavigation.add(new MeowBottomNavigation.Model(2, R.drawable.settings_blue));
+        bottomNavigation.add(new MeowBottomNavigation.Model(3, R.drawable.map_blue));
+        bottomNavigation.add(new MeowBottomNavigation.Model(4, R.drawable.more_blue));
+        bottomNavigation.show(1, true);
 
         loadFragment(new DashboardFragment());
 
