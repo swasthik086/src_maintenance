@@ -209,14 +209,26 @@ public class NavigationDeviceListingActivity extends AppCompatActivity implement
     }
 
     private void checkforBluetoothConnection() {
-        if (!bluetoothadapter.isEnabled()) bluetoothadapter.enable();
+        if (!bluetoothadapter.isEnabled()) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            bluetoothadapter.enable();
+        }
         else {
             checkPermissions();
-            try{
+            try {
                 bleManager.cancelScan();
 
-            }catch (Exception e){
-                Log.e(EXCEPTION,"ListScan: checkbtconnection: "+String.valueOf(e));
+            } catch (Exception e) {
+                Log.e(EXCEPTION, "ListScan: checkbtconnection: " + String.valueOf(e));
             }
             startScan();
         }
@@ -240,12 +252,14 @@ public class NavigationDeviceListingActivity extends AppCompatActivity implement
         if (handler != null) {
             try {
                 handler.removeCallbacks(runnable);
-            } catch (Exception e) { }
+            } catch (Exception e) {
+            }
         }
     }
 
     @Override
-    public void onClick(View v) { }
+    public void onClick(View v) {
+    }
 
     @SuppressLint("SetTextI18n")
     private void initView() {
@@ -328,6 +342,16 @@ public class NavigationDeviceListingActivity extends AppCompatActivity implement
             ImageView ivCheck = dialog.findViewById(R.id.ivCheck);
 
             ivCheck.setOnClickListener(v1 -> {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
                 bluetoothadapter.disable();
                 onDisconnect = true;
                 bleManager.disconnectAllDevice();
@@ -370,7 +394,7 @@ public class NavigationDeviceListingActivity extends AppCompatActivity implement
                         }
                     });
                 } catch (Exception e) {
-                    Log.e(EXCEPTION,"ListScan: initview: "+String.valueOf(e));
+                    Log.e(EXCEPTION, "ListScan: initview: " + String.valueOf(e));
                 }
                 dialog.cancel();
 
@@ -427,7 +451,7 @@ public class NavigationDeviceListingActivity extends AppCompatActivity implement
 
                         if (bleDevice7.getName() != null) bleName = bleDevice7.getName();
 
-                        if(mBoundService!=null) mBoundService.getServicesList(bleDevice);
+                        if (mBoundService != null) mBoundService.getServicesList(bleDevice);
 
                         Intent intent = new Intent("status").putExtra("status", staticConnectionStatus);
                         sendBroadcast(intent);
@@ -453,19 +477,20 @@ public class NavigationDeviceListingActivity extends AppCompatActivity implement
             try {
                 handler.removeCallbacks(runnable);
             } catch (Exception e) {
-                Log.e(EXCEPTION,"ListScan: connect: "+String.valueOf(e));
+                Log.e(EXCEPTION, "ListScan: connect: " + String.valueOf(e));
             }
         }
 
         bleManager.connect(bleDevice, new BleGattCallback() {
             @Override
             public void onStartConnect() {
-                try{
-                    progress_d=new ProgressDialog(NavigationDeviceListingActivity.this);
+                try {
+                    progress_d = new ProgressDialog(NavigationDeviceListingActivity.this);
                     progress_d.setMessage("Please Wait...");
                     progress_d.setCancelable(false);
                     progress_d.show();
-                }catch (Exception ignored){}
+                } catch (Exception ignored) {
+                }
 
             }
 
@@ -502,28 +527,25 @@ public class NavigationDeviceListingActivity extends AppCompatActivity implement
                     BikeBleName.setValue(bleDevice.getName());
 
 
-
                     update_vehicle_data();
-
 
 
                     prev_cluster_name = BikeBleName.getValue();
                     prev_cluster_macAddr = bleDevice.getMac();
-                    SharedPreferences sharedPreferencesFinal = getSharedPreferences("BLE_DEVICE",Context.MODE_PRIVATE);
+                    SharedPreferences sharedPreferencesFinal = getSharedPreferences("BLE_DEVICE", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferencesFinal.edit();
                     editor.putString("prev_cluster_macAddr", bleDevice.getMac());
 
-                    if (sharedPreferencesFinal.getString("prev_cluster","").equals(BikeBleName.getValue())){
+                    if (sharedPreferencesFinal.getString("prev_cluster", "").equals(BikeBleName.getValue())) {
 
                         FIRST_TIME = false;
-                    }
-                    else FIRST_TIME = true;
+                    } else FIRST_TIME = true;
 
                     editor.putString("prev_cluster_name", BikeBleName.getValue());
                     editor.putString("prev_cluster", BikeBleName.getValue()); //for feedback purpose
                     editor.apply();
 
-finish();
+                    finish();
 //                    if (check_navigation==null){
 //                        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(NavigationDeviceListingActivity.this);//this==context
 //                        if (!prefs.contains("FirstTimeConnection")) {
@@ -548,7 +570,8 @@ finish();
 
                 }
 
-                if(mBoundService!=null) new Handler().postDelayed(() -> mBoundService.getServicesList(bleDevice), 500);
+                if (mBoundService != null)
+                    new Handler().postDelayed(() -> mBoundService.getServicesList(bleDevice), 500);
 
                 new Handler().postDelayed(() -> {
                     try {
@@ -558,7 +581,8 @@ finish();
                         realm.executeTransaction(realm -> {
 
                             BleDataPojo bleDataPojo = realm.where(BleDataPojo.class).equalTo("bleId", 1).findFirst();
-                            if (bleDataPojo == null) bleDataPojo = realm.createObject(BleDataPojo.class, 1);
+                            if (bleDataPojo == null)
+                                bleDataPojo = realm.createObject(BleDataPojo.class, 1);
                             bleDataPojo.setDeviceMacAddress(bleDevice.getMac());
                             bleDataPojo.setDeviceName(bleDevice.getName());
                             bleDataPojo.setReadCharacteristic(service.getCharacteristics().get(1).getUuid().toString());
@@ -569,14 +593,14 @@ finish();
                         });
                     } catch (Exception e) {
 
-                        Log.e(EXCEPTION,"ListScan: connect: "+String.valueOf(e));
+                        Log.e(EXCEPTION, "ListScan: connect: " + String.valueOf(e));
 
                     }
 
-                    SharedPreferences sharedPreferencesFinal = getSharedPreferences("FT",Context.MODE_PRIVATE);
+                    SharedPreferences sharedPreferencesFinal = getSharedPreferences("FT", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferencesFinal.edit();
                     editor.remove("first");
-                    editor.putInt("first",500);
+                    editor.putInt("first", 500);
                     editor.apply();
                     finish();
                 }, 500);
@@ -585,7 +609,7 @@ finish();
             @Override
             public void onDisConnected(boolean isActiveDisConnected, BleDevice bleDevice, BluetoothGatt gatt, int status) {
 
-                Log.e("conn_state","manually disconnected");
+                Log.e("conn_state", "manually disconnected");
                 BikeBleName.setValue("");
                 mDeviceAdapter.removeDevice(bleDevice);
                 mDeviceAdapter.notifyDataSetChanged();
@@ -598,13 +622,22 @@ finish();
                 sendBroadcast(i);
                 getConnectionStatus(staticConnectionStatus, getApplicationContext());
 
-                if ((!onDisconnect && !displayingDisconnectDialog))
-                {
+                if ((!onDisconnect && !displayingDisconnectDialog)) {
                     displayingDisconnectDialog = true;
                     showBluetoothDialog = false;
                     onDisconnect = false;
 
-                    if (!bluetoothadapter.isEnabled()) bluetoothadapter.enable();
+                    if (!bluetoothadapter.isEnabled())
+                        if (ActivityCompat.checkSelfPermission(NavigationDeviceListingActivity.this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                            // TODO: Consider calling
+                            //    ActivityCompat#requestPermissions
+                            // here to request the missing permissions, and then overriding
+                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                            //                                          int[] grantResults)
+                            // to handle the case where the user grants the permission. See the documentation
+                            // for ActivityCompat#requestPermissions for more details.
+                            return;
+                        }bluetoothadapter.enable();
                     connect(global_bleDevice);
                 }
             }

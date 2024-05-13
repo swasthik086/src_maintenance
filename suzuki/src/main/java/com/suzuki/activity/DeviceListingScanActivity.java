@@ -281,7 +281,7 @@ public class DeviceListingScanActivity extends BaseActivity implements View.OnCl
                 }
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             } else {
-               // BluetoothAdapter.getDefaultAdapter().enable();
+                BluetoothAdapter.getDefaultAdapter().enable();
             }
         }
     }

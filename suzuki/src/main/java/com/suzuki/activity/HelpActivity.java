@@ -281,7 +281,7 @@ public class HelpActivity extends AppCompatActivity implements OnClickListener {
         BikeBleName.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                if (s.isEmpty()) {
+                if (s != null && s.isEmpty()) {
                     llRedAlertBle.setVisibility(View.VISIBLE);
                 }
 

@@ -331,8 +331,8 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
 
             placeName = intent.getStringExtra("placeName");
             placeAddress = intent.getStringExtra("placeAddress");
-            destinationLat = intent.getStringExtra("lat");
-            destinationLong = intent.getStringExtra("long");
+           /* destinationLat = intent.getStringExtra("lat");
+            destinationLong = intent.getStringExtra("long");*/
 
             fromAddress = fromLocation;
             tvCurrentloc.setText(fromLocation);

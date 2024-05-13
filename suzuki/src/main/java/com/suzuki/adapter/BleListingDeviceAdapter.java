@@ -1,7 +1,9 @@
 package com.suzuki.adapter;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,8 @@ import static com.suzuki.activity.DeviceListingScanActivity.rlButtonRefresh;
 import static com.suzuki.activity.DeviceListingScanActivity.tvStatus;
 import static com.suzuki.application.SuzukiApplication.getLastConnectedVehicleName;
 import static com.suzuki.application.SuzukiApplication.getOldConnectedDeviceList;
+
+import androidx.core.app.ActivityCompat;
 
 
 public class BleListingDeviceAdapter extends BaseAdapter {
@@ -75,9 +79,18 @@ public class BleListingDeviceAdapter extends BaseAdapter {
                             int pos = bleDeviceList.size();
                             if (getOldConnectedDeviceList() != null && getOldConnectedDeviceList().contains(bleDevice.getName())) {
                                 if (bleDeviceList.size() > 0)
-                                    if (bleDeviceList.get(0).getDevice().getName().equalsIgnoreCase(getLastConnectedVehicleName()))
-                                        pos = 1;
-                                    else pos = 0;
+                                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                                        // TODO: Consider calling
+                                        //    ActivityCompat#requestPermissions
+                                        // here to request the missing permissions, and then overriding
+                                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                        //                                          int[] grantResults)
+                                        // to handle the case where the user grants the permission. See the documentation
+                                        // for ActivityCompat#requestPermissions for more details.
+                                        return;
+                                    }if (bleDeviceList.get(0).getDevice().getName().equalsIgnoreCase(getLastConnectedVehicleName()))
+                                    pos = 1;
+                                else pos = 0;
                             }
                             bleDeviceList.add(pos, bluetoothDeviceList);
                         }
