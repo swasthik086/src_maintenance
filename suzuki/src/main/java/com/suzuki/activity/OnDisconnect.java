@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -49,7 +50,12 @@ public class OnDisconnect extends AppCompatActivity {
         mLocalBroadcastManager.registerReceiver(mBroadcastReceiver, mIntentFilter);
         IntentFilter intentFilterBleStatus = new IntentFilter("disconnect_status");
 
-        registerReceiver(broadcastReceiver, intentFilterBleStatus);
+//        registerReceiver(broadcastReceiver, intentFilterBleStatus);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(broadcastReceiver, intentFilterBleStatus, RECEIVER_EXPORTED);
+        }else {
+            registerReceiver(broadcastReceiver, intentFilterBleStatus);
+        }
     }
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
