@@ -1,5 +1,7 @@
 package com.suzuki.fragment;
 
+import static android.content.Context.RECEIVER_EXPORTED;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -1671,7 +1673,13 @@ public class SettingFragment extends Fragment implements View.OnClickListener, C
             }
         };
 
-        requireActivity().registerReceiver(mReceiver, intentFilter);
+//        requireActivity().registerReceiver(mReceiver, intentFilter);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireActivity().registerReceiver(mReceiver, intentFilter, RECEIVER_EXPORTED);
+        }else {
+            requireActivity().registerReceiver(mReceiver, intentFilter);
+        }
     }
 
     @Override

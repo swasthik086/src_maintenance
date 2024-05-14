@@ -60,6 +60,9 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING"
+        android:minSdkVersion="34" />
+    <uses-permission
         android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation"
         android:foregroundServiceType="location"
@@ -395,7 +398,8 @@
         <service
             android:name=".services.MyBleService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:foregroundServiceType="remoteMessaging"/>
         <!--
 <service
             android:name=".services.AccessService"
@@ -415,6 +419,7 @@
             android:name=".services.NotificationService"
             android:exported="true"
             android:label="@string/app_name"
+            android:foregroundServiceType="remoteMessaging"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />

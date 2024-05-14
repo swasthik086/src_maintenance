@@ -2193,7 +2193,13 @@ public  class RouteActivity extends BaseActivity implements OnMapReadyCallback, 
 
         };
 
-        registerReceiver(mReceiver, intentFilter);
+//        registerReceiver(mReceiver, intentFilter);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(mReceiver, intentFilter, RECEIVER_EXPORTED);
+        }else {
+            registerReceiver(mReceiver, intentFilter);
+        }
     }
 
 

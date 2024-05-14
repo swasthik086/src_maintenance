@@ -2,6 +2,7 @@ package com.suzuki.fragment;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
+import static android.content.Context.RECEIVER_EXPORTED;
 import static com.mappls.sdk.maps.Mappls.getApplicationContext;
 import static com.suzuki.R.layout.dashboard_fragment_constraint_layout;
 import static com.suzuki.activity.DeviceListingScanActivity.DEVICESCAN_OBJ;
@@ -302,7 +303,13 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
             return false;
         });
 
-        getActivity().registerReceiver(broadcastreceiver, intentfilter);
+//        getActivity().registerReceiver(broadcastreceiver, intentfilter);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireActivity().registerReceiver(broadcastreceiver, intentfilter, RECEIVER_EXPORTED);
+        }else {
+            requireActivity().registerReceiver(broadcastreceiver, intentfilter);
+        }
 
         MyListener = new MyPhoneStateListener();
         Tel = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
@@ -1088,7 +1095,13 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
         String prev_conn_cluster = sharedPreferences.getString("blename","");
 
         //registering our receiver
-        requireActivity().registerReceiver(mReceiver, intentFilterBleStatus);
+//        requireActivity().registerReceiver(mReceiver, intentFilterBleStatus);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireActivity().registerReceiver(mReceiver, intentFilterBleStatus, RECEIVER_EXPORTED);
+        }else {
+            requireActivity().registerReceiver(mReceiver, intentFilterBleStatus);
+        }
 
         //don't run scan and try to connect ble here
         /*bleManager = BleManager.getInstance();

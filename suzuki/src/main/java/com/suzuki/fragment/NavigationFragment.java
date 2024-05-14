@@ -19,6 +19,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
@@ -139,6 +140,7 @@ import io.realm.Realm;
 import timber.log.Timber;
 
 import static android.content.Context.MODE_PRIVATE;
+import static android.content.Context.RECEIVER_EXPORTED;
 import static android.view.View.GONE;
 import static com.mappls.sdk.maps.Mappls.getApplicationContext;
 import static com.mappls.sdk.maps.style.layers.PropertyFactory.visibility;
@@ -643,7 +645,13 @@ public int saved_speed, top_speeds;
             }
         };
 
-        requireActivity().registerReceiver(mmReceiver, intentFilter);
+//        requireActivity().registerReceiver(mmReceiver, intentFilter);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireActivity().registerReceiver(mmReceiver, intentFilter, RECEIVER_EXPORTED);
+        }else {
+            requireActivity().registerReceiver(mmReceiver, intentFilter);
+        }
     }
 
     @Override
@@ -791,8 +799,16 @@ public int saved_speed, top_speeds;
                 }
             });
         }
-        requireContext().registerReceiver(this.mConnReceiver,
-                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        /*requireContext().registerReceiver(this.mConnReceiver,
+                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));*/
+
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getActivity().registerReceiver(this.mConnReceiver, intentFilter, RECEIVER_EXPORTED);
+        }else {
+            getActivity().registerReceiver(this.mConnReceiver, intentFilter);
+        }
 
     }
 
@@ -1219,8 +1235,15 @@ if (adviseInfo!=null){
         super.onStart();
 //        updateDisplay.run();
         isItSaveForFragmentTransaction = true;
-        if (getActivity() != null)
-            getActivity().registerReceiver(mBroadcastReceiver, new IntentFilter(NavigationNotification.NAVIGATION_STOP_NAVIGATION_SERVICE_ACTION));
+        IntentFilter intentFilter = new IntentFilter(NavigationNotification.NAVIGATION_STOP_NAVIGATION_SERVICE_ACTION);
+        if (getActivity() != null){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                getActivity().registerReceiver(mBroadcastReceiver, intentFilter, RECEIVER_EXPORTED);
+            }else {
+                getActivity().registerReceiver(mBroadcastReceiver, intentFilter);
+            }
+        }
+//            getActivity().registerReceiver(mBroadcastReceiver, new IntentFilter(NavigationNotification.NAVIGATION_STOP_NAVIGATION_SERVICE_ACTION));
 
 
     }

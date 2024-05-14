@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -1542,7 +1543,13 @@ public class RouteNearByActivity extends BaseActivity implements OnMapReadyCallb
 
         };
 
-        registerReceiver(mReceiver, intentFilter);
+//        registerReceiver(mReceiver, intentFilter);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(mReceiver, intentFilter, RECEIVER_EXPORTED);
+        }else {
+            registerReceiver(mReceiver, intentFilter);
+        }
     }
 
 }

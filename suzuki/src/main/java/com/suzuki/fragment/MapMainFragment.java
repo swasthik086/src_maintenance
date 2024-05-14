@@ -1,5 +1,6 @@
 package com.suzuki.fragment;
 
+import static android.content.Context.RECEIVER_EXPORTED;
 import static android.os.Looper.getMainLooper;
 
 import android.Manifest;
@@ -14,6 +15,7 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -1428,7 +1430,13 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback, Map
 
         };
 
-        getActivity().registerReceiver(mReceiver, intentFilter);
+//        getActivity().registerReceiver(mReceiver, intentFilter);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireActivity().registerReceiver(mReceiver, intentFilter, RECEIVER_EXPORTED);
+        }else {
+            requireActivity().registerReceiver(mReceiver, intentFilter);
+        }
     }
 
     private void onSuggestionListItemClicked(View view) {

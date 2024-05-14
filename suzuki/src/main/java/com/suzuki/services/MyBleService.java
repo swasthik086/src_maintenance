@@ -1,5 +1,8 @@
 package com.suzuki.services;
 
+import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK;
+import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING;
+
 import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -12,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.pm.ServiceInfo;
 import android.graphics.Color;
 import android.os.Binder;
 import android.os.Build;
@@ -213,7 +217,14 @@ public class MyBleService extends Service {
                 .setSmallIcon(R.drawable.suzuki_logo)
                 .setColor(Color.TRANSPARENT)
                 .build();
-        startForeground(1,notification);
+//        startForeground(1,notification);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            startForeground(1, notification);
+        } else {
+            startForeground(1, notification,
+                    FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

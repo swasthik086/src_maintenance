@@ -116,7 +116,13 @@ public class NotificationService extends NotificationListenerService {
         //nlservicereciver = new NLServiceReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("NOTIFICATION_LISTENER_SERVICE_EXAMPLE");
-        registerReceiver(nlservicereciver, filter);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(nlservicereciver, filter, RECEIVER_EXPORTED);
+        }else {
+            registerReceiver(nlservicereciver, filter);
+        }
+//        registerReceiver(nlservicereciver, filter);
     }
 
     @Override

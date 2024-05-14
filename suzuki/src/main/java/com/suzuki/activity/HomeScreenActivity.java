@@ -1,5 +1,7 @@
 package com.suzuki.activity;
 
+import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING;
+
 import android.Manifest;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
@@ -162,13 +164,25 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
             filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
             filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
             filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-            this.registerReceiver(BLE_CHECK, filter);
+//            this.registerReceiver(BLE_CHECK, filter);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                this.registerReceiver(BLE_CHECK, filter,RECEIVER_EXPORTED);
+            }else {
+                this.registerReceiver(BLE_CHECK, filter);
+            }
         }
 
         {
             IncomingSms = new IncomingSms();
             IntentFilter filter = new IntentFilter();
-            this.registerReceiver(IncomingSms, filter);
+//            this.registerReceiver(IncomingSms, filter);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                this.registerReceiver(IncomingSms, filter,RECEIVER_EXPORTED);
+            }else {
+                this.registerReceiver(IncomingSms, filter);
+            }
         }
 
 
@@ -322,7 +336,12 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
         serviceIntent = new Intent(this, MyBleService.class);
         try {
 
-            startService(serviceIntent);
+//            startService(serviceIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService ( serviceIntent );
+            } else {
+                startService ( serviceIntent );
+            }
 
         } catch (Exception e) {
 
@@ -339,6 +358,11 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
 
         try {
             startService(mServiceIntent);
+           /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService ( mServiceIntent );
+            } else {
+                startService ( mServiceIntent );
+            }*/
 
         } catch (Exception e) {
             Log.d(EXCEPTION, "HomescreenActivity_Oncreate_startService: exception: " + e);
@@ -1153,7 +1177,12 @@ public class HomeScreenActivity extends BaseActivity implements LocationListener
             }
         };
 
-        registerReceiver(mReceiver, intentFilter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(mReceiver, intentFilter, RECEIVER_EXPORTED);
+        }else {
+            registerReceiver(mReceiver, intentFilter);
+        }
+
     }
 
     public void setBluetoothStatusExit() {

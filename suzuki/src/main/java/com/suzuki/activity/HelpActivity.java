@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -516,6 +517,12 @@ public class HelpActivity extends AppCompatActivity implements OnClickListener {
                 } else llRedAlertBle.setVisibility(View.VISIBLE);
             }
         };
-        this.registerReceiver(mReceiver, intentFilter);
+//        this.registerReceiver(mReceiver, intentFilter);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            this.registerReceiver(mReceiver, intentFilter, RECEIVER_EXPORTED);
+        }else {
+            this.registerReceiver(mReceiver, intentFilter);
+        }
     }
 }

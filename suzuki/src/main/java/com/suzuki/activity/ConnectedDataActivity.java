@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -252,7 +253,13 @@ public class ConnectedDataActivity extends AppCompatActivity {
             }
         };
         //registering our receiver
-        registerReceiver(mReceiver, intentFilter);
+//        registerReceiver(mReceiver, intentFilter);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(mReceiver, intentFilter, RECEIVER_EXPORTED);
+        }else {
+            registerReceiver(mReceiver, intentFilter);
+        }
 
     }
 
