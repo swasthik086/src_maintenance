@@ -305,11 +305,7 @@ public class DashboardFragment extends BaseFragment implements View.OnClickListe
 
 //        getActivity().registerReceiver(broadcastreceiver, intentfilter);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requireActivity().registerReceiver(broadcastreceiver, intentfilter, RECEIVER_EXPORTED);
-        }else {
-            requireActivity().registerReceiver(broadcastreceiver, intentfilter);
-        }
+
 
         MyListener = new MyPhoneStateListener();
         Tel = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
